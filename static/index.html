@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MidtermVibe — Ôn Thi Midterm AI & Infrastructure</title>
+  
+  <!-- Claude Signature Editorial Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Playfair+Display:ital,wght@0,500..800;1,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="theme-claude-editorial">
+  <div class="app-layout">
+    
+    <!-- TOP HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand">
+          <div class="brand-claude-icon">
+            ✳
+          </div>
+          <span class="brand-name">MidtermVibe</span>
+          <span class="badge-claude-pill">TÀI LIỆU ÔN THI</span>
+        </div>
+        <div class="header-divider"></div>
+        <div class="breadcrumb" id="breadcrumbNav">
+          <span class="crumb-root">Phase 1 & Track 2</span>
+          <i data-lucide="chevron-right" class="crumb-icon"></i>
+          <span class="crumb-current" id="currentViewTitle">Trang chủ</span>
+        </div>
+      </div>
+      
+      <div class="header-center">
+        <div class="search-bar">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="text" id="globalSearchInput" placeholder="Tìm kiếm trong 1.305 câu hỏi & slide... (Ctrl+K hoặc /)" />
+          <span class="search-shortcut">/</span>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div class="stat-pill" title="Tỷ lệ làm đúng">
+          <i data-lucide="award" class="stat-icon text-success"></i>
+          <span id="headerAccuracy">0%</span>
+        </div>
+        <div class="stat-pill" title="Tổng số câu đã làm">
+          <i data-lucide="check-circle-2" class="stat-icon text-terracotta"></i>
+          <span id="headerCompletedCount">0/1305</span>
+        </div>
+        <button id="toggleRightPanelBtn" class="btn-icon" title="Mở Ghi chú & Cheatsheet">
+          <i data-lucide="sidebar"></i>
+        </button>
+      </div>
+    </header>
+    
+    <!-- MAIN CONTAINER -->
+    <div class="main-body">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar-left">
+        <div class="sidebar-section">
+          <span class="sidebar-label">CHẾ ĐỘ HỌC TẬP</span>
+          <nav class="nav-menu">
+            <button class="nav-item active" data-view="home">
+              <i data-lucide="home"></i>
+              <span>Trang chủ</span>
+            </button>
+            <button class="nav-item" data-view="random-quiz">
+              <i data-lucide="shuffle"></i>
+              <span>Luyện đề ngẫu nhiên</span>
+            </button>
+            <button class="nav-item" data-view="topic-quiz">
+              <i data-lucide="book-open"></i>
+              <span>Ôn tập theo Day</span>
+            </button>
+          </nav>
+        </div>
+        
+        <div class="sidebar-section mt-auto">
+          <span class="sidebar-label">BỘ LỌC CHUYÊN ĐỀ</span>
+          <div class="filter-group">
+            <label class="filter-label">Track:</label>
+            <div class="custom-dropdown" id="trackDropdown">
+              <button type="button" class="custom-dropdown-btn" id="trackDropdownBtn">
+                <span class="dropdown-selected-text">Tất cả Track (Toàn diện)</span>
+                <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+              </button>
+              <div class="custom-dropdown-menu">
+                <div class="custom-dropdown-item active" data-val="all">
+                  <span>Tất cả Track (Toàn diện)</span>
+                  <i data-lucide="check" class="item-check"></i>
+                </div>
+                <div class="custom-dropdown-item" data-val="Phase 1">
+                  <span>Phase 1: COMP2010 (Agent AI)</span>
+                  <i data-lucide="check" class="item-check"></i>
+                </div>
+                <div class="custom-dropdown-item" data-val="Track 2">
+                  <span>Track 2: BIOM3010 (Infra/LLMOps)</span>
+                  <i data-lucide="check" class="item-check"></i>
+                </div>
+              </div>
+              <input type="hidden" id="filterTrackSelect" value="all" />
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Độ khó:</label>
+            <div class="custom-dropdown" id="diffDropdown">
+              <button type="button" class="custom-dropdown-btn" id="diffDropdownBtn">
+                <span class="dropdown-selected-text">Mọi độ khó</span>
+                <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+              </button>
+              <div class="custom-dropdown-menu">
+                <div class="custom-dropdown-item active" data-val="all">
+                  <span>Mọi độ khó</span>
+                  <i data-lucide="check" class="item-check"></i>
+                </div>
+                <div class="custom-dropdown-item" data-val="Easy">
+                  <span>Dễ (Easy)</span>
+                  <i data-lucide="check" class="item-check"></i>
+                </div>
+                <div class="custom-dropdown-item" data-val="Medium">
+                  <span>Trung bình (Medium)</span>
+                  <i data-lucide="check" class="item-check"></i>
+                </div>
+                <div class="custom-dropdown-item" data-val="Hard">
+                  <span>Nâng cao (Hard)</span>
+                  <i data-lucide="check" class="item-check"></i>
+                </div>
+              </div>
+              <input type="hidden" id="filterDiffSelect" value="all" />
+            </div>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- CENTER CONTENT WORKSPACE -->
+      <main class="content-workspace">
+        
+        <!-- VIEW 0: HOME / TRANG CHỦ -->
+        <section id="viewHome" class="view-panel active">
+          
+          <div class="home-hero-card">
+            <div class="home-hero-badge">
+              <span class="badge-claude-pill">✳ HỆ THỐNG ÔN THI MIDTERM 2026</span>
+            </div>
+            
+            <h1 class="home-hero-title font-editorial">
+              Nền tảng Luyện thi Chuyên sâu <br />
+              <span class="text-terracotta italic">AI Agents & Hạ Tầng LLMOps</span>
+            </h1>
+            
+            <p class="home-hero-subtitle">
+              Tổng hợp toàn diện <strong>1.305 câu hỏi trắc nghiệm kiến trúc</strong> và bài học tinh gọn từ <strong>29 chuyên đề</strong> (Phase 1: COMP2010 và Track 2: BIOM3010).
+            </p>
+            
+            <!-- Quick Stats Bar -->
+            <div class="home-stats-strip">
+              <div class="home-stat-item">
+                <span class="home-stat-num font-editorial">29</span>
+                <span class="home-stat-lbl">Chuyên đề (Day 01 - 28)</span>
+              </div>
+              <div class="home-stat-divider"></div>
+              <div class="home-stat-item">
+                <span class="home-stat-num font-editorial">1.305</span>
+                <span class="home-stat-lbl">Câu hỏi chuyên sâu</span>
+              </div>
+              <div class="home-stat-divider"></div>
+              <div class="home-stat-item">
+                <span class="home-stat-num font-editorial">45</span>
+                <span class="home-stat-lbl">Câu hỏi / Chuyên đề</span>
+              </div>
+              <div class="home-stat-divider"></div>
+              <div class="home-stat-item">
+                <span class="home-stat-num font-editorial">100%</span>
+                <span class="home-stat-lbl">Kèm giải thích & trích dẫn</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Home Quick Action Cards Grid -->
+          <div class="home-actions-grid mt-4">
+            
+            <!-- Card 1: Random Quiz -->
+            <div class="home-action-card card" id="homeGoRandomQuiz">
+              <div class="action-card-header">
+                <div class="action-card-icon bg-terracotta-light text-terracotta">
+                  <i data-lucide="shuffle"></i>
+                </div>
+                <span class="badge-editorial badge-editorial-track">Toàn diện</span>
+              </div>
+              <h3 class="font-editorial action-card-title">Luyện Đề Ngẫu Nhiên</h3>
+              <p class="action-card-desc">
+                Tạo đề thi trắc nghiệm ngẫu nhiên từ kho 1.305 câu hỏi, hỗ trợ lọc theo Track và Độ khó.
+              </p>
+              <div class="action-card-footer">
+                <span class="action-card-link text-terracotta font-bold">Bắt đầu làm bài ➔</span>
+              </div>
+            </div>
+            
+            <!-- Card 2: Topic Mastery -->
+            <div class="home-action-card card" id="homeGoTopicQuiz">
+              <div class="action-card-header">
+                <div class="action-card-icon bg-success-light text-success">
+                  <i data-lucide="book-open"></i>
+                </div>
+                <span class="badge-editorial badge-editorial-day">29 Days</span>
+              </div>
+              <h3 class="font-editorial action-card-title">Ôn Tập Theo Day</h3>
+              <p class="action-card-desc">
+                Tập trung rèn luyện 45 câu hỏi trọng tâm cho từng bài học cụ thể từ Day 01 đến Day 28.
+              </p>
+              <div class="action-card-footer">
+                <span class="action-card-link text-success font-bold">Xem danh sách chuyên đề ➔</span>
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+
+        <!-- VIEW 1: QUIZ / EXAM VIEW (REAL EXAM MODE: NO IMMEDIATE ANSWER, SUBMIT AT END) -->
+        <section id="viewRandomQuiz" class="view-panel">
+          
+          <!-- Top Navigation & Badges -->
+          <div class="quiz-nav-top">
+            <button class="btn-back" id="quizBackBtn">
+              <div class="btn-back-circle">
+                <i data-lucide="chevron-left"></i>
+              </div>
+              <span id="quizBackBtnText">Trang chủ</span>
+            </button>
+            
+            <div class="quiz-top-tags">
+              <span class="badge-editorial badge-editorial-track" id="qTrackBadge">Phase 1: COMP2010</span>
+              <span class="badge-editorial badge-editorial-day" id="qDayBadge">Day 01</span>
+              <span class="badge-editorial badge-editorial-diff" id="qDiffBadge">Medium</span>
+              <button class="btn-submit-exam-top hidden" id="topSubmitExamBtn">
+                <i data-lucide="send"></i> Nộp bài thi
+              </button>
+            </div>
+          </div>
+
+          <!-- Question Palette (Wrap Grid, NO horizontal scrollbar) -->
+          <div class="exam-palette-container" id="examPaletteContainer">
+            <div class="palette-header-row">
+              <div class="palette-label font-editorial" id="paletteLabel">Bảng câu hỏi:</div>
+              <div class="palette-legend">
+                <span><span class="legend-dot answered"></span> Đã làm</span>
+                <span><span class="legend-dot current"></span> Đang làm</span>
+                <span><span class="legend-dot unanswered"></span> Chưa làm</span>
+              </div>
+            </div>
+            <div class="palette-grid" id="paletteGrid">
+              <!-- Rendered via JS: 1 2 3 ... 30 in clean wrapping grid -->
+            </div>
+          </div>
+          
+          <!-- Exam Result Card (Shows when submitted) -->
+          <div class="exam-result-banner card hidden" id="examResultBanner">
+            <div class="result-score-circle">
+              <span class="result-score-num font-editorial" id="examScorePercent">0%</span>
+              <span class="result-score-label">Điểm số</span>
+            </div>
+            <div class="result-info">
+              <h2 class="font-editorial result-title" id="examResultTitle">Hoàn thành bài thi!</h2>
+              <p class="result-desc" id="examResultDesc">Bạn đã trả lời đúng 0/30 câu hỏi.</p>
+              <div class="result-actions">
+                <button class="btn-submit-terracotta" id="examReviewBtn">
+                  Xem lại đáp án & giải thích chi tiết
+                </button>
+                <button class="btn btn-secondary" id="examRetakeBtn">
+                  <i data-lucide="refresh-cw"></i> Làm đề thi mới
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Question Title in Claude Serif -->
+          <h1 class="question-editorial-title font-editorial" id="qQuestionText">
+            Đang tải nội dung câu hỏi...
+          </h1>
+          
+          <!-- Sleek Clean Card -->
+          <div class="sleek-quiz-card" id="quizMainCard">
+            
+            <!-- Card Header: Step counter -->
+            <div class="card-counter-row">
+              <span class="exam-mode-badge" id="examModeBadge">ĐỀ THI TỔNG HỢP</span>
+              <span class="question-counter-pill" id="quizProgressText">1/30</span>
+            </div>
+            
+            <!-- Radio Options List with dividers -->
+            <div class="sleek-options-list" id="optionsContainer"></div>
+            
+            <!-- Explanation Box (ONLY visible in Review Mode or Day Practice Mode) -->
+            <div class="explanation-box hidden" id="explanationBox">
+              <div class="explanation-header">
+                <i data-lucide="info" class="explanation-icon"></i>
+                <span class="explanation-title font-editorial" id="explanationStatus">Giải thích chi tiết</span>
+              </div>
+              <p class="explanation-text" id="explanationContent"></p>
+              <div class="explanation-footer">
+                <span class="slide-ref-label">📖 Tham chiếu bài học:</span>
+                <span class="slide-ref-link font-editorial" id="slideRefLink">Day 01 - LLM Foundation</span>
+              </div>
+            </div>
+            
+            <!-- Card Action Footer (Prev, Next, Submit Exam) -->
+            <div class="card-action-footer">
+              <div class="keyboard-hints">
+                <span>Phím tắt: <kbd>1</kbd>-<kbd>4</kbd> chọn • <kbd>←</kbd>/<kbd>→</kbd> hoặc <kbd>Enter</kbd> chuyển câu</span>
+              </div>
+              <div class="action-btn-group">
+                <button class="btn-nav-exam" id="examPrevBtn">
+                  ← Câu trước
+                </button>
+                <button class="btn-nav-exam btn-nav-primary" id="examNextBtn">
+                  Câu tiếp theo →
+                </button>
+                <button class="btn-submit-terracotta hidden" id="examSubmitBtn">
+                  Nộp bài thi ➔
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- VIEW 2: TOPIC QUIZ -->
+        <section id="viewTopicQuiz" class="view-panel">
+          <div class="section-header">
+            <h2 class="font-editorial text-2xl font-bold">Ôn tập theo từng Day & Chuyên đề</h2>
+            <p class="text-muted">Bộ câu hỏi trọng tâm chuyên sâu (45 câu / Day) bao phủ toàn bộ 29 bài học.</p>
+          </div>
+          <div class="topics-grid" id="topicsGrid"></div>
+        </section>
+        
+        
+        
+        
+        
+        
+        
+      </main>
+      
+      <!-- RIGHT PANEL -->
+      <aside class="sidebar-right" id="rightSidebar">
+        <div class="right-panel-header">
+          <span class="font-editorial font-bold text-base">Ghi Chú & Cheatsheet</span>
+          <button id="closeRightPanelBtn" class="btn-icon-sm"><i data-lucide="x"></i></button>
+        </div>
+        
+        <div class="right-panel-tabs">
+          <button class="panel-tab active" data-tab="cheatsheet">💡 Công thức</button>
+          <button class="panel-tab" data-tab="notes">📝 Ghi chú</button>
+        </div>
+        
+        <div class="right-panel-body">
+          <div class="tab-content active" id="tabCheatsheet">
+            <div class="cheatsheet-card">
+              <h4>💰 Token Economics</h4>
+              <code>Cost = (In * P_in + Out * P_out) / 10^6</code>
+              <p class="text-xs text-muted">GPT-4o: $2.5 / $10 | Gemini 2.5 Flash: $0.075 / $0.30</p>
+            </div>
+            
+            <div class="cheatsheet-card">
+              <h4>🎯 RAG Triad</h4>
+              <ul class="text-xs">
+                <li><strong>Context Relevance:</strong> Query → Context</li>
+                <li><strong>Faithfulness:</strong> Context → Answer</li>
+                <li><strong>Answer Relevance:</strong> Query → Answer</li>
+              </ul>
+            </div>
+            
+            <div class="cheatsheet-card">
+              <h4>⚡ PagedAttention & vLLM</h4>
+              <p class="text-xs">Phân trang KV Cache ảo loại bỏ phân mảnh VRAM, giảm lãng phí xuống < 4%.</p>
+            </div>
+            
+            <div class="cheatsheet-card">
+              <h4>🏗️ Medallion Architecture</h4>
+              <p class="text-xs"><strong>Bronze:</strong> Raw → <strong>Silver:</strong> Cleaned/Joined → <strong>Gold:</strong> Aggregated BI</p>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="tabNotes">
+            <textarea id="personalNotesTextarea" class="notes-textarea" placeholder="Viết ghi chú cá nhân ở đây... Tự động lưu trên trình duyệt của bạn."></textarea>
+            <span class="text-xs text-muted mt-1 block">Đã tự động đồng bộ hóa trên máy tính này.</span>
+          </div>
+        </div>
+      </aside>
+      
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
