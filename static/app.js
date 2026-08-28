@@ -473,13 +473,33 @@ function updateStatsDisplay() {
   document.getElementById('headerCompletedCount').textContent = `Tổng kho: ${state.questions.length} câu`;
 }
 
+function openMobileSidebar() {
+  const sidebar = document.getElementById('sidebarLeft');
+  const overlay = document.getElementById('mobileSidebarOverlay');
+  if (sidebar) sidebar.classList.add('mobile-open');
+  if (overlay) overlay.classList.remove('hidden');
+}
+
+function closeMobileSidebar() {
+  const sidebar = document.getElementById('sidebarLeft');
+  const overlay = document.getElementById('mobileSidebarOverlay');
+  if (sidebar) sidebar.classList.remove('mobile-open');
+  if (overlay) overlay.classList.add('hidden');
+}
+
 function switchView(viewId) {
   state.activeView = viewId;
   document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item[data-view]').forEach(b => b.classList.remove('active'));
 
   const activeBtn = document.querySelector(`.nav-item[data-view="${viewId}"]`);
   if (activeBtn) activeBtn.classList.add('active');
+
+  const activeMobileBtn = document.querySelector(`.mobile-nav-item[data-view="${viewId}"]`);
+  if (activeMobileBtn) activeMobileBtn.classList.add('active');
+
+  closeMobileSidebar();
 
   const panelMap = {
     'home': 'viewHome',
@@ -514,6 +534,23 @@ function setupEventListeners() {
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.onclick = () => switchView(btn.getAttribute('data-view'));
   });
+
+  document.querySelectorAll('.mobile-nav-item[data-view]').forEach(btn => {
+    btn.onclick = () => switchView(btn.getAttribute('data-view'));
+  });
+
+  // Mobile drawer buttons
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileSidebar;
+
+  const mobileFilterNavBtn = document.getElementById('mobileFilterNavBtn');
+  if (mobileFilterNavBtn) mobileFilterNavBtn.onclick = openMobileSidebar;
+
+  const closeMobileSidebarBtn = document.getElementById('closeMobileSidebarBtn');
+  if (closeMobileSidebarBtn) closeMobileSidebarBtn.onclick = closeMobileSidebar;
+
+  const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+  if (mobileSidebarOverlay) mobileSidebarOverlay.onclick = closeMobileSidebar;
 
   // Home buttons
   const homeRandomBtn = document.getElementById('homeGoRandomQuiz');
