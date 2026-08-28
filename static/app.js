@@ -268,22 +268,13 @@ function renderCurrentQuestion() {
   // Navigation Buttons
   const prevBtn = document.getElementById('examPrevBtn');
   const nextBtn = document.getElementById('examNextBtn');
-  const submitBtn = document.getElementById('examSubmitBtn');
 
-  prevBtn.disabled = (state.currentIndex === 0);
-  prevBtn.style.opacity = (state.currentIndex === 0) ? '0.4' : '1';
+  if (prevBtn) {
+    prevBtn.disabled = (state.currentIndex === 0);
+    prevBtn.style.opacity = (state.currentIndex === 0) ? '0.4' : '1';
+  }
 
-  if (!state.isSubmitted) {
-    if (state.currentIndex === total - 1) {
-      nextBtn.classList.add('hidden');
-      submitBtn.classList.remove('hidden');
-    } else {
-      nextBtn.classList.remove('hidden');
-      submitBtn.classList.add('hidden');
-    }
-  } else {
-    nextBtn.classList.remove('hidden');
-    submitBtn.classList.add('hidden');
+  if (nextBtn) {
     nextBtn.textContent = (state.currentIndex === total - 1) ? 'Quay lại câu 1' : 'Câu tiếp theo →';
   }
 
@@ -311,11 +302,10 @@ function goToNextQuestion() {
   const total = state.currentQuizList.length;
   if (state.currentIndex < total - 1) {
     state.currentIndex++;
-    renderCurrentQuestion();
-  } else if (state.isSubmitted) {
+  } else {
     state.currentIndex = 0;
-    renderCurrentQuestion();
   }
+  renderCurrentQuestion();
 }
 
 function openSubmitModal() {
@@ -562,7 +552,6 @@ function setupEventListeners() {
   // Exam Navigation Buttons
   document.getElementById('examPrevBtn').onclick = goToPrevQuestion;
   document.getElementById('examNextBtn').onclick = goToNextQuestion;
-  document.getElementById('examSubmitBtn').onclick = openSubmitModal;
   
   const topSubmit = document.getElementById('topSubmitExamBtn');
   if (topSubmit) topSubmit.onclick = openSubmitModal;
