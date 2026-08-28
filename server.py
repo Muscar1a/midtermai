@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 import markdown
 
-app = FastAPI(title="MidtermVibe AI Learning Platform")
+app = FastAPI(title="AI20K Learning Platform")
 
 BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
@@ -136,7 +136,10 @@ def read_root():
     index_file = STATIC_DIR / "index.html"
     if index_file.exists():
         return FileResponse(index_file)
-    return HTMLResponse("<h1>MidtermVibe Study App is running! Please check static/index.html</h1>")
+    return HTMLResponse("<h1>AI20K Study App is running! Please check static/index.html</h1>")
+
+# Fallback mount for root assets (style.css, app.js, data, etc.)
+app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static_root")
 
 if __name__ == "__main__":
     import uvicorn

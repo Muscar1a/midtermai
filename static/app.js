@@ -1,5 +1,5 @@
 /**
- * MidtermVibe — Desktop Learning SPA Logic
+ * AI20K — Desktop Learning SPA Logic
  * Real Exam Mode: Answer all questions -> Navigate freely -> Submit at end -> Review score & explanations
  */
 
@@ -10,7 +10,7 @@ let state = {
   isExamMode: true,        // True for Random Quiz (Exam), False for single Day practice
   isSubmitted: false,       // Submitted state
   examUserAnswers: {},      // { [qId]: chosenIdx }
-  notes: localStorage.getItem('midtermvibe_notes') || '',
+  notes: localStorage.getItem('ai20k_notes') || localStorage.getItem('midtermvibe_notes') || '',
   activeView: 'home'
 };
 
@@ -20,17 +20,49 @@ function refreshIcons() {
   }
 }
 
+// Local in-memory filter fallback
+function getFilteredQuestions(track, diff, day) {
+  let list = [...state.questions];
+  if (track && track !== 'all') {
+    list = list.filter(q => q.track && q.track.toLowerCase().includes(track.toLowerCase()));
+  }
+  if (diff && diff !== 'all') {
+    list = list.filter(q => q.difficulty && q.difficulty.toLowerCase() === diff.toLowerCase());
+  }
+  if (day && day !== 'all') {
+    list = list.filter(q => q.day && q.day.toLowerCase() === day.toLowerCase());
+  }
+  return list;
+}
+
 async function initApp() {
   try {
-    let qRes;
-    try {
-      qRes = await fetch('/api/questions');
-      if (!qRes.ok) throw new Error('API offline');
-    } catch(e) {
-      qRes = await fetch('/static/data/questions.json');
+    setupEventListeners();
+
+    const candidates = [
+      '/api/questions',
+      '/static/data/questions.json',
+      'static/data/questions.json',
+      '/data/questions.json',
+      'data/questions.json',
+      './data/questions.json'
+    ];
+
+    for (const path of candidates) {
+      try {
+        const res = await fetch(path);
+        if (res.ok) {
+          const data = await res.json();
+          const loaded = Array.isArray(data) ? data : (data.questions || []);
+          if (loaded && loaded.length > 0) {
+            state.questions = loaded;
+            break;
+          }
+        }
+      } catch (e) {
+        // try next fallback path
+      }
     }
-    const qData = await qRes.json();
-    state.questions = qData.questions || [];
 
     renderTopicsGrid();
     updateStatsDisplay();
@@ -40,11 +72,10 @@ async function initApp() {
       notesArea.value = state.notes;
       notesArea.addEventListener('input', (e) => {
         state.notes = e.target.value;
-        localStorage.setItem('midtermvibe_notes', state.notes);
+        localStorage.setItem('ai20k_notes', state.notes);
       });
     }
 
-    setupEventListeners();
     refreshIcons();
   } catch (err) {
     console.error('Error initializing app:', err);
@@ -53,59 +84,85 @@ async function initApp() {
 
 // Start a Random Exam (30 questions)
 async function startRandomQuiz(customTrack, customDiff) {
-  const track = customTrack || document.getElementById('filterTrackSelect').value;
-  const diff = customDiff || document.getElementById('filterDiffSelect').value;
+  const trackEl = document.getElementById('filterTrackSelect');
+  const diffEl = document.getElementById('filterDiffSelect');
+  const track = customTrack || (trackEl ? trackEl.value : 'all');
+  const diff = customDiff || (diffEl ? diffEl.value : 'all');
 
-  let url = `/api/questions?track=${encodeURIComponent(track)}&difficulty=${encodeURIComponent(diff)}`;
-
+  let qList = [];
   try {
-    const res = await fetch(url);
-    const data = await res.json();
-    let qList = data.questions || [];
-    
-    // Shuffle and pick 30 questions
-    qList.sort(() => Math.random() - 0.5);
-    state.currentQuizList = qList.slice(0, 30);
-    state.currentIndex = 0;
-    state.isExamMode = true;
-    state.isSubmitted = false;
-    state.examUserAnswers = {};
-
-    document.getElementById('examResultBanner').classList.add('hidden');
-    document.getElementById('quizBackBtnText').textContent = 'Trang chủ';
-    document.getElementById('examModeBadge').textContent = 'ĐỀ THI TỔNG HỢP';
-
-    switchView('random-quiz');
-    renderCurrentQuestion();
-    renderPalette();
+    const res = await fetch(`/api/questions?track=${encodeURIComponent(track)}&difficulty=${encodeURIComponent(diff)}`);
+    if (res.ok) {
+      const data = await res.json();
+      qList = data.questions || [];
+    }
   } catch (e) {
-    console.error('Failed to start exam:', e);
+    // API offline
   }
+
+  // Fallback to local memory filter if API returned nothing
+  if (qList.length === 0 && state.questions.length > 0) {
+    qList = getFilteredQuestions(track, diff);
+  }
+
+  // Fallback to entire question set
+  if (qList.length === 0 && state.questions.length > 0) {
+    qList = [...state.questions];
+  }
+
+  // Shuffle and pick 30 questions
+  qList.sort(() => Math.random() - 0.5);
+  state.currentQuizList = qList.slice(0, 30);
+  state.currentIndex = 0;
+  state.isExamMode = true;
+  state.isSubmitted = false;
+  state.examUserAnswers = {};
+
+  const banner = document.getElementById('examResultBanner');
+  if (banner) banner.classList.add('hidden');
+  const backText = document.getElementById('quizBackBtnText');
+  if (backText) backText.textContent = 'Trang chủ';
+  const modeBadge = document.getElementById('examModeBadge');
+  if (modeBadge) modeBadge.textContent = 'ĐỀ THI TỔNG HỢP';
+
+  switchView('random-quiz');
+  renderCurrentQuestion();
+  renderPalette();
 }
 
 // Start a Day-specific practice
 async function startDayQuiz(dayName) {
+  let qList = [];
   try {
     const res = await fetch(`/api/questions?day=${encodeURIComponent(dayName)}`);
-    const data = await res.json();
-    let qList = data.questions || [];
-    
-    state.currentQuizList = qList;
-    state.currentIndex = 0;
-    state.isExamMode = true; // Also treat as complete test for this Day
-    state.isSubmitted = false;
-    state.examUserAnswers = {};
-
-    document.getElementById('examResultBanner').classList.add('hidden');
-    document.getElementById('quizBackBtnText').textContent = 'Danh sách Day';
-    document.getElementById('examModeBadge').textContent = `ÔN TẬP ${dayName.toUpperCase()}`;
-
-    switchView('random-quiz');
-    renderCurrentQuestion();
-    renderPalette();
+    if (res.ok) {
+      const data = await res.json();
+      qList = data.questions || [];
+    }
   } catch (e) {
-    console.error('Failed to start day quiz:', e);
+    // API offline
   }
+
+  if (qList.length === 0 && state.questions.length > 0) {
+    qList = getFilteredQuestions('all', 'all', dayName);
+  }
+
+  state.currentQuizList = qList;
+  state.currentIndex = 0;
+  state.isExamMode = true;
+  state.isSubmitted = false;
+  state.examUserAnswers = {};
+
+  const banner = document.getElementById('examResultBanner');
+  if (banner) banner.classList.add('hidden');
+  const backText = document.getElementById('quizBackBtnText');
+  if (backText) backText.textContent = 'Danh sách Day';
+  const modeBadge = document.getElementById('examModeBadge');
+  if (modeBadge) modeBadge.textContent = `ÔN TẬP ${dayName.toUpperCase()}`;
+
+  switchView('random-quiz');
+  renderCurrentQuestion();
+  renderPalette();
 }
 
 // Render Palette Grid (1 to N)
@@ -272,17 +329,72 @@ function goToNextQuestion() {
   }
 }
 
-function submitExam() {
-  const total = state.currentQuizList.length;
+function openSubmitModal() {
+  const total = (state.currentQuizList && state.currentQuizList.length) ? state.currentQuizList.length : 30;
   const answeredCount = Object.keys(state.examUserAnswers).length;
+  const unansweredCount = Math.max(0, total - answeredCount);
 
-  if (answeredCount < total) {
-    const confirmSubmit = confirm(`Bạn mới làm ${answeredCount}/${total} câu. Bạn có chắc chắn muốn nộp bài thi ngay bây giờ không?`);
-    if (!confirmSubmit) return;
-  } else {
-    const confirmSubmit = confirm(`Bạn đã hoàn thành ${total}/${total} câu hỏi. Xác nhận nộp bài thi?`);
-    if (!confirmSubmit) return;
+  const modal = document.getElementById('submitConfirmModal');
+  if (!modal) {
+    console.error('Modal element #submitConfirmModal not found');
+    return;
   }
+
+  const iconBadge = document.getElementById('modalIconBadge');
+  const answeredEl = document.getElementById('modalAnsweredCount');
+  const unansweredEl = document.getElementById('modalUnansweredCount');
+  const unansweredBox = document.getElementById('modalUnansweredBox');
+  const messageEl = document.getElementById('modalMessageText');
+
+  if (answeredEl) answeredEl.textContent = `${answeredCount} / ${total}`;
+  if (unansweredEl) unansweredEl.textContent = `${unansweredCount}`;
+
+  if (unansweredCount > 0) {
+    if (iconBadge) {
+      iconBadge.className = 'modal-icon-badge warning';
+      iconBadge.innerHTML = '<i data-lucide="alert-triangle"></i>';
+    }
+    if (unansweredBox) unansweredBox.className = 'modal-stat-box unanswered-warning';
+    if (messageEl) {
+      messageEl.innerHTML = `Bạn mới làm <strong>${answeredCount}/${total} câu</strong> (còn <strong>${unansweredCount} câu</strong> chưa trả lời). Bạn có chắc chắn muốn nộp bài thi ngay bây giờ không?`;
+    }
+  } else {
+    if (iconBadge) {
+      iconBadge.className = 'modal-icon-badge success';
+      iconBadge.innerHTML = '<i data-lucide="check-circle-2"></i>';
+    }
+    if (unansweredBox) unansweredBox.className = 'modal-stat-box unanswered-success';
+    if (messageEl) {
+      messageEl.innerHTML = `Tuyệt vời! Bạn đã hoàn thành toàn bộ <strong>${total}/${total} câu hỏi</strong>. Nhấn <strong>"Nộp bài ngay"</strong> để xem kết quả điểm số và phân tích đáp án chi tiết.`;
+    }
+  }
+
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  refreshIcons();
+}
+
+function closeSubmitModal() {
+  const modal = document.getElementById('submitConfirmModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+}
+
+function confirmSubmitAndClose() {
+  closeSubmitModal();
+  processExamSubmission();
+}
+
+// Attach to window so inline HTML onclick and external callers always work
+window.openSubmitModal = openSubmitModal;
+window.closeSubmitModal = closeSubmitModal;
+window.confirmSubmitAndClose = confirmSubmitAndClose;
+
+function processExamSubmission() {
+  const total = state.currentQuizList.length;
+  if (total === 0) return;
 
   state.isSubmitted = true;
 
@@ -424,10 +536,39 @@ function setupEventListeners() {
   // Exam Navigation Buttons
   document.getElementById('examPrevBtn').onclick = goToPrevQuestion;
   document.getElementById('examNextBtn').onclick = goToNextQuestion;
-  document.getElementById('examSubmitBtn').onclick = submitExam;
+  document.getElementById('examSubmitBtn').onclick = openSubmitModal;
   
   const topSubmit = document.getElementById('topSubmitExamBtn');
-  if (topSubmit) topSubmit.onclick = submitExam;
+  if (topSubmit) topSubmit.onclick = openSubmitModal;
+
+  // Submit Modal Actions
+  const submitModal = document.getElementById('submitConfirmModal');
+  const closeSubmitModalBtn = document.getElementById('closeSubmitModalBtn');
+  const cancelSubmitBtn = document.getElementById('cancelSubmitBtn');
+  const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+
+  if (closeSubmitModalBtn) closeSubmitModalBtn.onclick = closeSubmitModal;
+  if (cancelSubmitBtn) cancelSubmitBtn.onclick = closeSubmitModal;
+  if (confirmSubmitBtn) {
+    confirmSubmitBtn.onclick = () => {
+      closeSubmitModal();
+      processExamSubmission();
+    };
+  }
+
+  if (submitModal) {
+    submitModal.onclick = (e) => {
+      if (e.target === submitModal) {
+        closeSubmitModal();
+      }
+    };
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && submitModal && !submitModal.classList.contains('hidden')) {
+      closeSubmitModal();
+    }
+  });
 
   // Exam Result Action Buttons
   const reviewBtn = document.getElementById('examReviewBtn');
@@ -556,4 +697,8 @@ function setupEventListeners() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', initApp);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}

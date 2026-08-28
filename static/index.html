@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MidtermVibe — Ôn Thi Midterm AI & Infrastructure</title>
+  <title>AI20K — Ôn Thi Midterm AI & Infrastructure</title>
   
   <!-- Claude Signature Editorial Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,10 @@
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Brand Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="alternate icon" type="image/svg+xml" href="favicon.svg">
   
   <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -23,9 +27,14 @@
       <div class="header-left">
         <div class="brand">
           <div class="brand-claude-icon">
-            ✳
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+              <line x1="12" y1="3" x2="12" y2="21" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="5.64" y1="5.64" x2="18.36" y2="18.36" />
+              <line x1="5.64" y1="18.36" x2="18.36" y2="5.64" />
+            </svg>
           </div>
-          <span class="brand-name">MidtermVibe</span>
+          <span class="brand-name">AI20K</span>
           <span class="badge-claude-pill">TÀI LIỆU ÔN THI</span>
         </div>
         <div class="header-divider"></div>
@@ -88,12 +97,12 @@
             <label class="filter-label">Track:</label>
             <div class="custom-dropdown" id="trackDropdown">
               <button type="button" class="custom-dropdown-btn" id="trackDropdownBtn">
-                <span class="dropdown-selected-text">Tất cả Track (Toàn diện)</span>
+                <span class="dropdown-selected-text">Tất cả Track</span>
                 <i data-lucide="chevron-down" class="dropdown-arrow"></i>
               </button>
               <div class="custom-dropdown-menu">
                 <div class="custom-dropdown-item active" data-val="all">
-                  <span>Tất cả Track (Toàn diện)</span>
+                  <span>Tất cả Track</span>
                   <i data-lucide="check" class="item-check"></i>
                 </div>
                 <div class="custom-dropdown-item" data-val="Phase 1">
@@ -241,7 +250,7 @@
               <span class="badge-editorial badge-editorial-track" id="qTrackBadge">Phase 1: COMP2010</span>
               <span class="badge-editorial badge-editorial-day" id="qDayBadge">Day 01</span>
               <span class="badge-editorial badge-editorial-diff" id="qDiffBadge">Medium</span>
-              <button class="btn-submit-exam-top hidden" id="topSubmitExamBtn">
+              <button class="btn-submit-exam-top hidden" id="topSubmitExamBtn" type="button" onclick="openSubmitModal()">
                 <i data-lucide="send"></i> Nộp bài thi
               </button>
             </div>
@@ -324,7 +333,7 @@
                 <button class="btn-nav-exam btn-nav-primary" id="examNextBtn">
                   Câu tiếp theo →
                 </button>
-                <button class="btn-submit-terracotta hidden" id="examSubmitBtn">
+                <button class="btn-submit-terracotta hidden" id="examSubmitBtn" type="button" onclick="openSubmitModal()">
                   Nộp bài thi ➔
                 </button>
               </div>
@@ -397,6 +406,51 @@
         </div>
       </aside>
       
+    </div>
+  </div>
+
+  <!-- SUBMIT CONFIRMATION MODAL -->
+  <div id="submitConfirmModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon-badge warning" id="modalIconBadge">
+          <i data-lucide="alert-circle" id="modalIcon"></i>
+        </div>
+        <div class="modal-header-text">
+          <h3 class="modal-title font-editorial" id="modalTitle">Xác nhận nộp bài</h3>
+          <p class="modal-subtitle" id="modalSubtitle">Kiểm tra lại tiến độ trước khi hoàn thành</p>
+        </div>
+        <button class="modal-close-btn" id="closeSubmitModalBtn" type="button" title="Đóng" onclick="closeSubmitModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Stats summary chips -->
+        <div class="modal-stats-grid">
+          <div class="modal-stat-box answered-box">
+            <span class="modal-stat-label">Đã trả lời</span>
+            <span class="modal-stat-val font-editorial" id="modalAnsweredCount">0 / 30</span>
+          </div>
+          <div class="modal-stat-box" id="modalUnansweredBox">
+            <span class="modal-stat-label">Chưa trả lời</span>
+            <span class="modal-stat-val font-editorial" id="modalUnansweredCount">30</span>
+          </div>
+        </div>
+
+        <div class="modal-message-box" id="modalMessageBox">
+          <p id="modalMessageText">Bạn vẫn còn câu hỏi chưa trả lời. Điểm số sẽ tính trên toàn bộ đề thi.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary modal-btn-cancel" id="cancelSubmitBtn" onclick="closeSubmitModal()">
+          Tiếp tục làm bài
+        </button>
+        <button type="button" class="btn-submit-terracotta modal-btn-confirm" id="confirmSubmitBtn" onclick="confirmSubmitAndClose()">
+          <i data-lucide="send"></i> Nộp bài ngay
+        </button>
+      </div>
     </div>
   </div>
 

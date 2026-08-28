@@ -5,7 +5,7 @@ from typing import Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="MidtermVibe AI Learning Platform")
+app = FastAPI(title="AI20K Learning Platform")
 
 app.add_middleware(
     CORSMiddleware,
