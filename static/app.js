@@ -7,8 +7,8 @@ let state = {
   questions: [],
   currentQuizList: [],
   currentIndex: 0,
-  isExamMode: true,        // True for Random Quiz (Exam), False for single Day practice
-  isSubmitted: false,       // Submitted state
+  quizMode: 'exam',         // 'exam' (Random Exam) or 'practice' (Day Practice)
+  isSubmitted: false,       // Submitted state for exam mode
   examUserAnswers: {},      // { [qId]: chosenIdx }
   activeView: 'home'
 };
@@ -155,7 +155,7 @@ async function startRandomQuiz(customTrack, customDiff) {
   qList.sort(() => Math.random() - 0.5);
   state.currentQuizList = qList.slice(0, 30);
   state.currentIndex = 0;
-  state.isExamMode = true;
+  state.quizMode = 'exam';
   state.isSubmitted = false;
   state.examUserAnswers = {};
 
@@ -164,14 +164,14 @@ async function startRandomQuiz(customTrack, customDiff) {
   const backText = document.getElementById('quizBackBtnText');
   if (backText) backText.textContent = 'Trang chủ';
   const modeBadge = document.getElementById('examModeBadge');
-  if (modeBadge) modeBadge.textContent = 'ĐỀ THI TỔNG HỢP';
+  if (modeBadge) modeBadge.textContent = 'LUYỆN ĐỀ THI (NỘP BÀI ĐỂ XEM ĐÁP ÁN)';
 
   switchView('random-quiz');
   renderCurrentQuestion();
   renderPalette();
 }
 
-// Start a Day-specific practice (45 questions)
+// Start a Day-specific practice (45 questions with INSTANT FEEDBACK)
 async function startDayQuiz(dayName, trackName) {
   let qList = [];
   try {
@@ -194,7 +194,7 @@ async function startDayQuiz(dayName, trackName) {
 
   state.currentQuizList = qList;
   state.currentIndex = 0;
-  state.isExamMode = true;
+  state.quizMode = 'practice';
   state.isSubmitted = false;
   state.examUserAnswers = {};
 
@@ -203,7 +203,7 @@ async function startDayQuiz(dayName, trackName) {
   const backText = document.getElementById('quizBackBtnText');
   if (backText) backText.textContent = 'Danh sách Day';
   const modeBadge = document.getElementById('examModeBadge');
-  if (modeBadge) modeBadge.textContent = `ÔN TẬP ${dayName.toUpperCase()}`;
+  if (modeBadge) modeBadge.textContent = `ÔN TẬP ${dayName.toUpperCase()} (PHẢN HỒI TỨC THÌ)`;
 
   switchView('random-quiz');
   renderCurrentQuestion();
@@ -226,6 +226,10 @@ function renderPalette() {
   if (!container) return;
   container.innerHTML = '';
 
+  const isPractice = (state.quizMode === 'practice');
+  const isExamReview = (state.quizMode === 'exam' && state.isSubmitted);
+  const showFeedback = isPractice || isExamReview;
+
   state.currentQuizList.forEach((q, idx) => {
     const item = document.createElement('div');
     item.className = 'palette-item';
@@ -237,10 +241,14 @@ function renderPalette() {
 
     const chosen = state.examUserAnswers[q.id];
     if (chosen !== undefined) {
-      if (chosen === q.correct_index) {
-        item.classList.add('correct');
+      if (showFeedback) {
+        if (chosen === q.correct_index) {
+          item.classList.add('correct');
+        } else {
+          item.classList.add('incorrect');
+        }
       } else {
-        item.classList.add('incorrect');
+        item.classList.add('answered');
       }
     }
 
@@ -271,24 +279,30 @@ function renderCurrentQuestion() {
   document.getElementById('qQuestionText').innerHTML = formatContent(q.question.replace(/^\[.*?\]\s*/, ''));
   document.getElementById('quizProgressText').textContent = `${currNum}/${total}`;
 
-  // Top Submit Button visibility
+  // Top Submit Button: Only shown in Exam Mode before submitting
   const topSubmitBtn = document.getElementById('topSubmitExamBtn');
   if (topSubmitBtn) {
-    topSubmitBtn.classList.toggle('hidden', state.isSubmitted);
+    const showSubmit = (state.quizMode === 'exam' && !state.isSubmitted);
+    topSubmitBtn.classList.toggle('hidden', !showSubmit);
   }
+
+  // Determine whether to reveal answer correctness and explanation
+  const isPractice = (state.quizMode === 'practice');
+  const isExamReview = (state.quizMode === 'exam' && state.isSubmitted);
+  const chosenIdx = state.examUserAnswers[q.id];
+  const hasAnswered = (chosenIdx !== undefined);
+  const showFeedback = isPractice ? hasAnswered : isExamReview;
+  const isOptionClickable = isPractice ? !hasAnswered : !state.isSubmitted;
 
   // Render Options
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
-  
-  const chosenIdx = state.examUserAnswers[q.id];
-  const hasAnswered = (chosenIdx !== undefined);
 
   q.options.forEach((optText, idx) => {
     const row = document.createElement('div');
     row.className = 'sleek-option-row';
 
-    if (hasAnswered) {
+    if (showFeedback) {
       if (idx === q.correct_index) {
         row.classList.add('correct');
       } else if (chosenIdx === idx) {
@@ -305,16 +319,18 @@ function renderCurrentQuestion() {
       <div class="option-row-text"><strong class="option-letter mr-1">${String.fromCharCode(65 + idx)}.</strong> ${formatContent(optText)}</div>
     `;
 
-    if (!hasAnswered) {
+    if (isOptionClickable) {
       row.onclick = () => selectExamOption(idx);
     }
 
     container.appendChild(row);
   });
 
-  // Explanation Box handling: Revealed immediately once answered
+  // Explanation Box handling:
+  // - Practice Mode: Revealed immediately once answered
+  // - Exam Mode: Revealed ONLY after submitting exam
   const expBox = document.getElementById('explanationBox');
-  if (hasAnswered) {
+  if (showFeedback) {
     expBox.classList.remove('hidden');
     const isCorrect = (chosenIdx === q.correct_index);
     const correctLetter = String.fromCharCode(65 + q.correct_index);
@@ -357,7 +373,9 @@ function renderCurrentQuestion() {
 }
 
 function selectExamOption(idx) {
-  if (state.isSubmitted) return;
+  if (state.quizMode === 'exam' && state.isSubmitted) return;
+  if (state.quizMode === 'practice' && state.examUserAnswers[state.currentQuizList[state.currentIndex]?.id] !== undefined) return;
+  
   const q = state.currentQuizList[state.currentIndex];
   if (!q) return;
 
