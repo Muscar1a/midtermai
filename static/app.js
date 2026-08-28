@@ -530,9 +530,6 @@ function setupEventListeners() {
   });
 
   // Mobile drawer buttons
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileSidebar;
-
   const mobileFilterNavBtn = document.getElementById('mobileFilterNavBtn');
   if (mobileFilterNavBtn) mobileFilterNavBtn.onclick = openMobileSidebar;
 

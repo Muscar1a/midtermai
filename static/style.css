@@ -1559,28 +1559,6 @@ kbd { background-color: var(--bg-hover); border: 1px solid var(--border-medium);
    ========================================================================== */
 
 /* Mobile controls base (Hidden on Desktop) */
-.mobile-menu-btn {
-  display: none;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  padding: 6px;
-  border-radius: var(--radius-sm);
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.15s ease;
-}
-
-.mobile-menu-btn:hover {
-  background-color: var(--bg-hover);
-}
-
-.mobile-menu-btn svg {
-  width: 22px;
-  height: 22px;
-}
-
 .mobile-sidebar-header {
   display: none;
 }
@@ -1645,10 +1623,6 @@ kbd { background-color: var(--bg-hover); border: 1px solid var(--border-medium);
 
   .header-left {
     gap: 8px !important;
-  }
-
-  .mobile-menu-btn {
-    display: flex !important;
   }
 
   .header-divider,
