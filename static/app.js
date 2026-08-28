@@ -19,6 +19,52 @@ function refreshIcons() {
   }
 }
 
+// Convert Markdown and Inline Code safely while preserving LaTeX Math
+function formatContent(text) {
+  if (!text) return '';
+  
+  // Protect math blocks ($...$ and $$...$$) from markdown replacement
+  const mathBlocks = [];
+  let placeholderText = text.replace(/(\$\$[\s\S]*?\$\$|\$[^\$\n]+?\$)/g, (match) => {
+    mathBlocks.push(match);
+    return `___MATH_BLOCK_${mathBlocks.length - 1}___`;
+  });
+
+  // Convert inline code `code`, **bold**, *italic*, newlines
+  placeholderText = placeholderText
+    .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+  // Restore math blocks
+  const restored = placeholderText.replace(/___MATH_BLOCK_(\d+)___/g, (_, idx) => {
+    return mathBlocks[parseInt(idx, 10)];
+  });
+
+  return restored;
+}
+
+// Render KaTeX Math in a given DOM container
+function renderMathInContainer(container) {
+  if (!container) return;
+  if (window.renderMathInElement) {
+    try {
+      window.renderMathInElement(container, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true }
+        ],
+        throwOnError: false,
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      });
+    } catch (e) {
+      console.warn('KaTeX rendering error:', e);
+    }
+  }
+}
+
 // Local in-memory filter fallback
 function getFilteredQuestions(track, diff, day) {
   let list = [...state.questions];
@@ -71,6 +117,7 @@ async function initApp() {
     renderTopicsGrid();
     updateStatsDisplay();
     refreshIcons();
+    renderMathInContainer(document.body);
   } catch (err) {
     console.error('Error initializing app:', err);
   }
@@ -221,7 +268,7 @@ function renderCurrentQuestion() {
   diffBadge.textContent = q.difficulty;
   diffBadge.className = `badge-editorial badge-editorial-diff`;
 
-  document.getElementById('qQuestionText').textContent = q.question.replace(/^\[.*?\]\s*/, '');
+  document.getElementById('qQuestionText').innerHTML = formatContent(q.question.replace(/^\[.*?\]\s*/, ''));
   document.getElementById('quizProgressText').textContent = `${currNum}/${total}`;
 
   // Top Submit Button visibility
@@ -255,7 +302,7 @@ function renderCurrentQuestion() {
       <div class="radio-circle">
         <div class="radio-circle-inner"></div>
       </div>
-      <div class="option-row-text"><strong class="option-letter mr-1">${String.fromCharCode(65 + idx)}.</strong> ${optText}</div>
+      <div class="option-row-text"><strong class="option-letter mr-1">${String.fromCharCode(65 + idx)}.</strong> ${formatContent(optText)}</div>
     `;
 
     if (!hasAnswered) {
@@ -273,10 +320,10 @@ function renderCurrentQuestion() {
     const correctLetter = String.fromCharCode(65 + q.correct_index);
     const statusText = isCorrect 
       ? '✅ Chính xác! Bạn đã chọn đúng đáp án.' 
-      : `❌ Chưa chính xác! Đáp án đúng là ${correctLetter}. ${q.options[q.correct_index]}`;
+      : `❌ Chưa chính xác! Đáp án đúng là <strong>${correctLetter}</strong>.`;
     
-    document.getElementById('explanationStatus').textContent = statusText;
-    document.getElementById('explanationContent').textContent = q.explanation;
+    document.getElementById('explanationStatus').innerHTML = statusText;
+    document.getElementById('explanationContent').innerHTML = formatContent(q.explanation);
     
     const slideRef = document.getElementById('slideRefLink');
     if (slideRef) {
@@ -301,6 +348,12 @@ function renderCurrentQuestion() {
 
   renderPalette();
   refreshIcons();
+
+  // Render LaTeX math formulas across the question card
+  const quizView = document.getElementById('viewRandomQuiz');
+  if (quizView) {
+    renderMathInContainer(quizView);
+  }
 }
 
 function selectExamOption(idx) {
@@ -464,7 +517,7 @@ function renderTopicsGrid() {
             <span class="badge-editorial badge-editorial-day">${dayName}</span>
             <span class="text-xs text-muted font-bold">${dayInfo.count} câu hỏi</span>
           </div>
-          <h4 class="topic-card-name font-editorial">${dayInfo.topic}</h4>
+          <h4 class="topic-card-name font-editorial">${formatContent(dayInfo.topic)}</h4>
           <div class="topic-card-progress mt-2">
             <div class="flex-between mt-2">
               <span class="text-xs text-muted">Trọn bộ 45 câu</span>
@@ -479,6 +532,7 @@ function renderTopicsGrid() {
   }
 
   container.innerHTML = html;
+  renderMathInContainer(container);
 }
 
 function updateStatsDisplay() {

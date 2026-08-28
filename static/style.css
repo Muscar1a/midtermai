@@ -72,6 +72,38 @@ body {
 
 .font-mono { font-family: var(--font-mono); }
 
+/* Math & Inline Code Styling */
+.inline-code, code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(31, 30, 27, 0.05);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--terracotta-primary);
+}
+
+.katex {
+  font-size: 1.06em;
+  color: var(--text-primary);
+}
+
+.katex-display {
+  margin: 0.75em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 6px 0;
+}
+
+.option-row-text .katex {
+  font-size: 1.02em;
+}
+
+.question-editorial-title .katex {
+  font-size: 1.05em;
+  color: var(--terracotta-primary);
+}
+
 /* APP LAYOUT */
 .app-layout {
   display: flex;
