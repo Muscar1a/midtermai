@@ -154,6 +154,16 @@ async function startDayQuiz(dayName) {
   renderPalette();
 }
 
+function togglePaletteCollapse() {
+  const container = document.getElementById('examPaletteContainer');
+  const toggleText = document.getElementById('paletteToggleText');
+  if (!container) return;
+  const isCollapsed = container.classList.toggle('collapsed');
+  if (toggleText) {
+    toggleText.textContent = isCollapsed ? 'Hiện bảng' : 'Ẩn bảng';
+  }
+}
+
 // Render Palette Grid (1 to N)
 function renderPalette() {
   const container = document.getElementById('paletteGrid');
@@ -552,6 +562,18 @@ function setupEventListeners() {
   
   const topSubmit = document.getElementById('topSubmitExamBtn');
   if (topSubmit) topSubmit.onclick = openSubmitModal;
+
+  // Palette collapse toggle
+  const togglePaletteBtn = document.getElementById('togglePaletteBtn');
+  if (togglePaletteBtn) togglePaletteBtn.onclick = togglePaletteCollapse;
+
+  const paletteHeaderToggle = document.getElementById('paletteHeaderToggle');
+  if (paletteHeaderToggle) {
+    paletteHeaderToggle.onclick = (e) => {
+      if (e.target.closest('#togglePaletteBtn')) return;
+      togglePaletteCollapse();
+    };
+  }
 
   // Submit Modal Actions
   const submitModal = document.getElementById('submitConfirmModal');

@@ -1126,12 +1126,75 @@ kbd { background-color: var(--bg-hover); border: 1px solid var(--border-medium);
   justify-content: space-between;
   border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 8px;
+  user-select: none;
+}
+
+.palette-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
 .palette-label {
   font-size: 0.88rem;
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.btn-toggle-palette {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-medium);
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-toggle-palette:hover {
+  background-color: var(--terracotta-light);
+  color: var(--terracotta-primary);
+  border-color: var(--terracotta-primary);
+}
+
+.btn-toggle-palette svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s ease;
+}
+
+.palette-body {
+  overflow: hidden;
+  transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.25s ease;
+  max-height: 260px;
+  opacity: 1;
+}
+
+.exam-palette-container.collapsed {
+  gap: 0;
+}
+
+.exam-palette-container.collapsed .palette-body {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  pointer-events: none;
+}
+
+.exam-palette-container.collapsed .palette-header-row {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.exam-palette-container.collapsed #paletteToggleIcon {
+  transform: rotate(180deg);
 }
 
 .palette-legend {
@@ -1845,22 +1908,37 @@ kbd { background-color: var(--bg-hover); border: 1px solid var(--border-medium);
   }
 
   .exam-palette-container {
-    padding: 12px 12px !important;
-    margin-bottom: 14px !important;
+    padding: 10px 12px !important;
+    margin-bottom: 12px !important;
     border-radius: var(--radius-md) !important;
   }
 
   .palette-header-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    padding-bottom: 6px !important;
+    cursor: pointer !important;
+  }
+
+  .palette-title-group {
+    display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 4px !important;
-    margin-bottom: 8px !important;
+    gap: 2px !important;
   }
 
   .palette-legend {
-    font-size: 0.7rem !important;
+    font-size: 0.68rem !important;
     gap: 8px !important;
     flex-wrap: wrap !important;
+  }
+
+  .btn-toggle-palette {
+    padding: 3px 8px !important;
+    font-size: 0.7rem !important;
   }
 
   .palette-grid {

@@ -270,18 +270,26 @@
             </div>
           </div>
 
-          <!-- Question Palette (Wrap Grid, NO horizontal scrollbar) -->
+          <!-- Question Palette (Wrap Grid, Collapsible) -->
           <div class="exam-palette-container" id="examPaletteContainer">
-            <div class="palette-header-row">
-              <div class="palette-label font-editorial" id="paletteLabel">Bảng câu hỏi:</div>
-              <div class="palette-legend">
-                <span><span class="legend-dot answered"></span> Đã làm</span>
-                <span><span class="legend-dot current"></span> Đang làm</span>
-                <span><span class="legend-dot unanswered"></span> Chưa làm</span>
+            <div class="palette-header-row" id="paletteHeaderToggle">
+              <div class="palette-title-group">
+                <span class="palette-label font-editorial" id="paletteLabel">Bảng câu hỏi:</span>
+                <div class="palette-legend" id="paletteLegend">
+                  <span><span class="legend-dot answered"></span> Đã làm</span>
+                  <span><span class="legend-dot current"></span> Đang làm</span>
+                  <span><span class="legend-dot unanswered"></span> Chưa làm</span>
+                </div>
               </div>
+              <button type="button" class="btn-toggle-palette" id="togglePaletteBtn" aria-label="Ẩn hiện bảng câu hỏi">
+                <span id="paletteToggleText">Ẩn bảng</span>
+                <i data-lucide="chevron-up" id="paletteToggleIcon"></i>
+              </button>
             </div>
-            <div class="palette-grid" id="paletteGrid">
-              <!-- Rendered via JS: 1 2 3 ... 30 in clean wrapping grid -->
+            <div class="palette-body" id="paletteBody">
+              <div class="palette-grid" id="paletteGrid">
+                <!-- Rendered via JS: 1 2 3 ... 30 in clean wrapping grid -->
+              </div>
             </div>
           </div>
           
