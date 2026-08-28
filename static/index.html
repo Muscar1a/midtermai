@@ -62,9 +62,6 @@
           <i data-lucide="check-circle-2" class="stat-icon text-terracotta"></i>
           <span id="headerCompletedCount">0/1305</span>
         </div>
-        <button id="toggleRightPanelBtn" class="btn-icon" title="Mở Ghi chú & Cheatsheet">
-          <i data-lucide="sidebar"></i>
-        </button>
       </div>
     </header>
     
@@ -358,53 +355,6 @@
         
         
       </main>
-      
-      <!-- RIGHT PANEL -->
-      <aside class="sidebar-right" id="rightSidebar">
-        <div class="right-panel-header">
-          <span class="font-editorial font-bold text-base">Ghi Chú & Cheatsheet</span>
-          <button id="closeRightPanelBtn" class="btn-icon-sm"><i data-lucide="x"></i></button>
-        </div>
-        
-        <div class="right-panel-tabs">
-          <button class="panel-tab active" data-tab="cheatsheet">💡 Công thức</button>
-          <button class="panel-tab" data-tab="notes">📝 Ghi chú</button>
-        </div>
-        
-        <div class="right-panel-body">
-          <div class="tab-content active" id="tabCheatsheet">
-            <div class="cheatsheet-card">
-              <h4>💰 Token Economics</h4>
-              <code>Cost = (In * P_in + Out * P_out) / 10^6</code>
-              <p class="text-xs text-muted">GPT-4o: $2.5 / $10 | Gemini 2.5 Flash: $0.075 / $0.30</p>
-            </div>
-            
-            <div class="cheatsheet-card">
-              <h4>🎯 RAG Triad</h4>
-              <ul class="text-xs">
-                <li><strong>Context Relevance:</strong> Query → Context</li>
-                <li><strong>Faithfulness:</strong> Context → Answer</li>
-                <li><strong>Answer Relevance:</strong> Query → Answer</li>
-              </ul>
-            </div>
-            
-            <div class="cheatsheet-card">
-              <h4>⚡ PagedAttention & vLLM</h4>
-              <p class="text-xs">Phân trang KV Cache ảo loại bỏ phân mảnh VRAM, giảm lãng phí xuống < 4%.</p>
-            </div>
-            
-            <div class="cheatsheet-card">
-              <h4>🏗️ Medallion Architecture</h4>
-              <p class="text-xs"><strong>Bronze:</strong> Raw → <strong>Silver:</strong> Cleaned/Joined → <strong>Gold:</strong> Aggregated BI</p>
-            </div>
-          </div>
-          
-          <div class="tab-content" id="tabNotes">
-            <textarea id="personalNotesTextarea" class="notes-textarea" placeholder="Viết ghi chú cá nhân ở đây... Tự động lưu trên trình duyệt của bạn."></textarea>
-            <span class="text-xs text-muted mt-1 block">Đã tự động đồng bộ hóa trên máy tính này.</span>
-          </div>
-        </div>
-      </aside>
       
     </div>
   </div>

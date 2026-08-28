@@ -10,7 +10,6 @@ let state = {
   isExamMode: true,        // True for Random Quiz (Exam), False for single Day practice
   isSubmitted: false,       // Submitted state
   examUserAnswers: {},      // { [qId]: chosenIdx }
-  notes: localStorage.getItem('ai20k_notes') || localStorage.getItem('midtermvibe_notes') || '',
   activeView: 'home'
 };
 
@@ -66,16 +65,6 @@ async function initApp() {
 
     renderTopicsGrid();
     updateStatsDisplay();
-
-    const notesArea = document.getElementById('personalNotesTextarea');
-    if (notesArea) {
-      notesArea.value = state.notes;
-      notesArea.addEventListener('input', (e) => {
-        state.notes = e.target.value;
-        localStorage.setItem('ai20k_notes', state.notes);
-      });
-    }
-
     refreshIcons();
   } catch (err) {
     console.error('Error initializing app:', err);
@@ -655,24 +644,6 @@ function setupEventListeners() {
       }
     });
   }
-
-  const rightSidebar = document.getElementById('rightSidebar');
-  document.getElementById('toggleRightPanelBtn').onclick = () => {
-    rightSidebar.classList.toggle('collapsed');
-  };
-  document.getElementById('closeRightPanelBtn').onclick = () => {
-    rightSidebar.classList.add('collapsed');
-  };
-
-  document.querySelectorAll('.panel-tab').forEach(tab => {
-    tab.onclick = () => {
-      document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      const tabId = tab.getAttribute('data-tab');
-      document.getElementById(tabId === 'cheatsheet' ? 'tabCheatsheet' : 'tabNotes').classList.add('active');
-    };
-  });
 
   // Keyboard Shortcuts in Exam Mode
   window.addEventListener('keydown', (e) => {
