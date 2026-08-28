@@ -29,7 +29,12 @@ function getFilteredQuestions(track, diff, day) {
     list = list.filter(q => q.difficulty && q.difficulty.toLowerCase() === diff.toLowerCase());
   }
   if (day && day !== 'all') {
-    list = list.filter(q => q.day && q.day.toLowerCase() === day.toLowerCase());
+    const exact = list.filter(q => q.day && q.day.toLowerCase() === day.toLowerCase());
+    if (exact.length > 0) {
+      list = exact;
+    } else {
+      list = list.filter(q => q.day && q.day.toLowerCase().includes(day.toLowerCase()));
+    }
   }
   return list;
 }
@@ -119,11 +124,15 @@ async function startRandomQuiz(customTrack, customDiff) {
   renderPalette();
 }
 
-// Start a Day-specific practice
-async function startDayQuiz(dayName) {
+// Start a Day-specific practice (45 questions)
+async function startDayQuiz(dayName, trackName) {
   let qList = [];
   try {
-    const res = await fetch(`/api/questions?day=${encodeURIComponent(dayName)}`);
+    let url = `/api/questions?day=${encodeURIComponent(dayName)}`;
+    if (trackName && trackName !== 'all') {
+      url += `&track=${encodeURIComponent(trackName)}`;
+    }
+    const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
       qList = data.questions || [];
@@ -133,7 +142,7 @@ async function startDayQuiz(dayName) {
   }
 
   if (qList.length === 0 && state.questions.length > 0) {
-    qList = getFilteredQuestions('all', 'all', dayName);
+    qList = getFilteredQuestions(trackName || 'all', 'all', dayName);
   }
 
   state.currentQuizList = qList;
@@ -181,14 +190,10 @@ function renderPalette() {
 
     const chosen = state.examUserAnswers[q.id];
     if (chosen !== undefined) {
-      if (!state.isSubmitted) {
-        item.classList.add('answered');
+      if (chosen === q.correct_index) {
+        item.classList.add('correct');
       } else {
-        if (chosen === q.correct_index) {
-          item.classList.add('correct');
-        } else {
-          item.classList.add('incorrect');
-        }
+        item.classList.add('incorrect');
       }
     }
 
@@ -230,11 +235,19 @@ function renderCurrentQuestion() {
   container.innerHTML = '';
   
   const chosenIdx = state.examUserAnswers[q.id];
+  const hasAnswered = (chosenIdx !== undefined);
 
   q.options.forEach((optText, idx) => {
     const row = document.createElement('div');
     row.className = 'sleek-option-row';
-    if (chosenIdx === idx) {
+
+    if (hasAnswered) {
+      if (idx === q.correct_index) {
+        row.classList.add('correct');
+      } else if (chosenIdx === idx) {
+        row.classList.add('incorrect');
+      }
+    } else if (chosenIdx === idx) {
       row.classList.add('selected');
     }
 
@@ -242,35 +255,33 @@ function renderCurrentQuestion() {
       <div class="radio-circle">
         <div class="radio-circle-inner"></div>
       </div>
-      <div class="option-row-text">${optText}</div>
+      <div class="option-row-text"><strong class="option-letter mr-1">${String.fromCharCode(65 + idx)}.</strong> ${optText}</div>
     `;
 
-    if (!state.isSubmitted) {
-      // In Exam Mode: user selects answer freely
+    if (!hasAnswered) {
       row.onclick = () => selectExamOption(idx);
-    } else {
-      // In Post-Exam Review Mode: show correct & incorrect highlights
-      if (idx === q.correct_index) {
-        row.classList.add('correct');
-      } else if (chosenIdx === idx) {
-        row.classList.add('incorrect');
-      }
     }
 
     container.appendChild(row);
   });
 
-  // Explanation Box handling (ONLY shown in Post-Exam Review)
+  // Explanation Box handling: Revealed immediately once answered
   const expBox = document.getElementById('explanationBox');
-  if (state.isSubmitted) {
+  if (hasAnswered) {
     expBox.classList.remove('hidden');
-    const isCorrect = chosenIdx === q.correct_index;
-    const statusText = isCorrect ? '✅ Bạn đã trả lời đúng!' : '❌ Đáp án của bạn chưa chính xác!';
+    const isCorrect = (chosenIdx === q.correct_index);
+    const correctLetter = String.fromCharCode(65 + q.correct_index);
+    const statusText = isCorrect 
+      ? '✅ Chính xác! Bạn đã chọn đúng đáp án.' 
+      : `❌ Chưa chính xác! Đáp án đúng là ${correctLetter}. ${q.options[q.correct_index]}`;
+    
     document.getElementById('explanationStatus').textContent = statusText;
     document.getElementById('explanationContent').textContent = q.explanation;
     
     const slideRef = document.getElementById('slideRefLink');
-    slideRef.textContent = q.slide_ref || 'Slide bài giảng';
+    if (slideRef) {
+      slideRef.textContent = q.slide_ref || 'Slide bài giảng';
+    }
   } else {
     expBox.classList.add('hidden');
   }
@@ -428,6 +439,7 @@ function renderTopicsGrid() {
     if (!tracks[tKey][q.day]) {
       tracks[tKey][q.day] = {
         topic: q.topic,
+        track: q.track,
         count: 0,
         day: q.day,
         questions: []
@@ -447,7 +459,7 @@ function renderTopicsGrid() {
 
     for (const [dayName, dayInfo] of Object.entries(daysObj)) {
       html += `
-        <div class="topic-card card" onclick="startDayQuiz('${dayName}')">
+        <div class="topic-card card" onclick="startDayQuiz('${dayName}', '${dayInfo.track}')">
           <div class="topic-card-header">
             <span class="badge-editorial badge-editorial-day">${dayName}</span>
             <span class="text-xs text-muted font-bold">${dayInfo.count} câu hỏi</span>
