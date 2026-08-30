@@ -30,10 +30,10 @@ function formatContent(text) {
     return `___MATH_BLOCK_${mathBlocks.length - 1}___`;
   });
 
-  // Convert inline code `code` and **bold**, then escape remaining * as literal
   placeholderText = placeholderText
     .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(?<!\w)\*(?!\s)([^*]+?)(?<!\s)\*(?!\w)/g, '<em>$1</em>')
     .replace(/\*/g, '&#42;');
 
   // Restore math blocks
