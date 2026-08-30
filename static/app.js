@@ -13,7 +13,9 @@ let state = {
   activeView: 'home'
 };
 
-const STORAGE_KEY = 'midtermai_state';
+function _practiceKey(day) {
+  return 'midtermai_practice_' + (day || '').replace(/\s+/g, '_');
+}
 
 function saveState() {
   try {
@@ -26,42 +28,67 @@ function saveState() {
       activeView: state.activeView,
       savedAt: Date.now()
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    if (state.quizMode === 'practice') {
+      const day = state.currentQuizList[0]?.day || '';
+      toSave.day = day;
+      localStorage.setItem(_practiceKey(day), JSON.stringify(toSave));
+      localStorage.setItem('midtermai_last', _practiceKey(day));
+    } else {
+      localStorage.setItem('midtermai_exam', JSON.stringify(toSave));
+      localStorage.setItem('midtermai_last', 'midtermai_exam');
+    }
   } catch (e) {}
+}
+
+function _loadAndApply(key, checkExpiry) {
+  const raw = localStorage.getItem(key);
+  if (!raw) return false;
+  const saved = JSON.parse(raw);
+
+  if (checkExpiry && Date.now() - saved.savedAt > 24 * 60 * 60 * 1000) {
+    localStorage.removeItem(key);
+    return false;
+  }
+
+  if (!saved.currentQuizListIds || saved.currentQuizListIds.length === 0) return false;
+
+  const idMap = new Map(state.questions.map(q => [q.id, q]));
+  const restored = saved.currentQuizListIds.map(id => idMap.get(id)).filter(Boolean);
+  if (restored.length === 0) return false;
+
+  state.currentQuizList = restored;
+  state.currentIndex = saved.currentIndex || 0;
+  state.quizMode = saved.quizMode || 'exam';
+  state.isSubmitted = saved.isSubmitted || false;
+  state.examUserAnswers = saved.examUserAnswers || {};
+  state.activeView = saved.activeView || 'home';
+  return true;
 }
 
 function restoreState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return false;
-    const saved = JSON.parse(raw);
+    const lastKey = localStorage.getItem('midtermai_last');
+    if (!lastKey) return false;
+    const isExam = lastKey === 'midtermai_exam';
+    return _loadAndApply(lastKey, isExam);
+  } catch (e) {
+    return false;
+  }
+}
 
-    // Expire after 24 hours
-    if (Date.now() - saved.savedAt > 24 * 60 * 60 * 1000) {
-      localStorage.removeItem(STORAGE_KEY);
-      return false;
-    }
-
-    if (!saved.currentQuizListIds || saved.currentQuizListIds.length === 0) return false;
-
-    const idMap = new Map(state.questions.map(q => [q.id, q]));
-    const restored = saved.currentQuizListIds.map(id => idMap.get(id)).filter(Boolean);
-    if (restored.length === 0) return false;
-
-    state.currentQuizList = restored;
-    state.currentIndex = saved.currentIndex || 0;
-    state.quizMode = saved.quizMode || 'exam';
-    state.isSubmitted = saved.isSubmitted || false;
-    state.examUserAnswers = saved.examUserAnswers || {};
-    state.activeView = saved.activeView || 'home';
-    return true;
+function restorePracticeForDay(day) {
+  try {
+    return _loadAndApply(_practiceKey(day), false);
   } catch (e) {
     return false;
   }
 }
 
 function clearSavedState() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  try {
+    localStorage.removeItem('midtermai_exam');
+    localStorage.removeItem('midtermai_last');
+  } catch (e) {}
 }
 
 function refreshIcons() {
@@ -256,6 +283,21 @@ async function startRandomQuiz(customTrack, customDiff) {
 
 // Start a Day-specific practice (45 questions with INSTANT FEEDBACK)
 async function startDayQuiz(dayName, trackName) {
+  // Restore saved progress for this day if available
+  if (restorePracticeForDay(dayName)) {
+    const banner = document.getElementById('examResultBanner');
+    if (banner) banner.classList.add('hidden');
+    const backText = document.getElementById('quizBackBtnText');
+    if (backText) backText.textContent = 'Danh sách Day';
+    const modeBadge = document.getElementById('examModeBadge');
+    if (modeBadge) modeBadge.textContent = `ÔN TẬP ${dayName.toUpperCase()} (PHẢN HỒI TỨC THÌ)`;
+
+    switchView('random-quiz');
+    renderCurrentQuestion();
+    renderPalette();
+    return;
+  }
+
   let qList = [];
   try {
     let url = `/api/questions?day=${encodeURIComponent(dayName)}`;
@@ -797,9 +839,9 @@ function setupEventListeners() {
     retakeBtn.onclick = () => startRandomQuiz();
   }
 
-  // Back button
+  // Back button — only clear exam state, practice persists
   document.getElementById('quizBackBtn').onclick = () => {
-    clearSavedState();
+    if (state.quizMode === 'exam') clearSavedState();
     switchView(state.activeView === 'random-quiz' && state.currentQuizList.length > 30 ? 'topic-quiz' : 'home');
   };
 
