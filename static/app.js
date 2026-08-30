@@ -648,16 +648,10 @@ function setupEventListeners() {
   const topSubmit = document.getElementById('topSubmitExamBtn');
   if (topSubmit) topSubmit.onclick = openSubmitModal;
 
-  // Palette collapse toggle
-  const togglePaletteBtn = document.getElementById('togglePaletteBtn');
-  if (togglePaletteBtn) togglePaletteBtn.onclick = togglePaletteCollapse;
-
+  // Palette collapse toggle — single handler on the full header row
   const paletteHeaderToggle = document.getElementById('paletteHeaderToggle');
   if (paletteHeaderToggle) {
-    paletteHeaderToggle.onclick = (e) => {
-      if (e.target.closest('#togglePaletteBtn')) return;
-      togglePaletteCollapse();
-    };
+    paletteHeaderToggle.addEventListener('click', togglePaletteCollapse);
   }
 
   // Submit Modal Actions
