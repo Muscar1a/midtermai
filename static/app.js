@@ -30,11 +30,10 @@ function formatContent(text) {
     return `___MATH_BLOCK_${mathBlocks.length - 1}___`;
   });
 
-  // Convert inline code `code`, **bold**, *italic*, newlines
+  // Convert inline code `code` and **bold** — single * is kept as literal (multiplication operator)
   placeholderText = placeholderText
     .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
   // Restore math blocks
   const restored = placeholderText.replace(/___MATH_BLOCK_(\d+)___/g, (_, idx) => {
