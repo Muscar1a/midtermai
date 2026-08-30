@@ -1418,6 +1418,17 @@ kbd { background-color: var(--bg-hover); border: 1px solid var(--border-medium);
   color: #FFFFFF;
 }
 
+.btn-nav-exam.btn-nav-submit {
+  background-color: var(--terracotta-primary);
+  color: #FFFFFF;
+  border-color: var(--terracotta-primary);
+}
+
+.btn-nav-exam.btn-nav-submit:hover {
+  background-color: var(--terracotta-hover);
+  border-color: var(--terracotta-hover);
+}
+
 /* ==========================================================================
    SUBMIT CONFIRMATION MODAL (CLAUDE EDITORIAL THEME)
    ========================================================================== */

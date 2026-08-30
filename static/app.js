@@ -360,7 +360,15 @@ function renderCurrentQuestion() {
   }
 
   if (nextBtn) {
-    nextBtn.textContent = (state.currentIndex === total - 1) ? 'Quay lại câu 1' : 'Câu tiếp theo →';
+    const isLast = state.currentIndex === total - 1;
+    const isExamSubmittable = isLast && state.quizMode === 'exam' && !state.isSubmitted;
+    if (isExamSubmittable) {
+      nextBtn.textContent = 'Nộp bài ✓';
+      nextBtn.classList.add('btn-nav-submit');
+    } else {
+      nextBtn.textContent = isLast ? 'Quay lại câu 1' : 'Câu tiếp theo →';
+      nextBtn.classList.remove('btn-nav-submit');
+    }
   }
 
   renderPalette();
@@ -393,6 +401,11 @@ function goToPrevQuestion() {
 
 function goToNextQuestion() {
   const total = state.currentQuizList.length;
+  const isLast = state.currentIndex === total - 1;
+  if (isLast && state.quizMode === 'exam' && !state.isSubmitted) {
+    openSubmitModal();
+    return;
+  }
   if (state.currentIndex < total - 1) {
     state.currentIndex++;
   } else {
