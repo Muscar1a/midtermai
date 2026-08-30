@@ -438,12 +438,21 @@ body {
 }
 
 /* CLAUDE EDITORIAL QUESTION TITLE */
+.question-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sleek);
+  border: 1px solid rgba(236, 232, 224, 0.8);
+  padding: 28px 42px 32px;
+  margin-bottom: 16px;
+}
+
 .question-editorial-title {
   font-size: 1.85rem;
   font-weight: 500;
   line-height: 1.38;
   color: var(--text-primary);
-  margin-bottom: 28px;
+  margin-bottom: 0;
   letter-spacing: -0.02em;
 }
 
@@ -1987,10 +1996,16 @@ kbd { background-color: var(--bg-hover); border: 1px solid var(--border-medium);
     border-radius: 6px !important;
   }
 
+  .question-card {
+    padding: 16px 14px 20px 14px !important;
+    border-radius: var(--radius-md) !important;
+    margin-bottom: 10px !important;
+  }
+
   .question-editorial-title {
-    font-size: 1.18rem !important;
-    line-height: 1.4 !important;
-    margin-bottom: 14px !important;
+    font-size: 1.12rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 0 !important;
   }
 
   .sleek-quiz-card {
@@ -2000,7 +2015,7 @@ kbd { background-color: var(--bg-hover); border: 1px solid var(--border-medium);
   }
 
   .card-counter-row {
-    margin-bottom: 14px !important;
+    margin-bottom: 12px !important;
   }
 
   .sleek-options-list {
