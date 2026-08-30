@@ -5,16 +5,16 @@
     "day": "Day 01",
     "topic": "LLM Foundation & APIs (Token Economics)",
     "difficulty": "Easy",
-    "question": "Công thức chuẩn nào sau đây được sử dụng để tính tổng chi phí (Total Cost) khi gọi LLM API với đơn giá niêm yết theo $/1M tokens?",
+    "question": "Công thức chuẩn nào sau đây được sử dụng để tính tổng chi phí (Total Cost) khi gọi LLM API với đơn giá niêm yết theo \\$/1M tokens?",
     "options": [
-      "Cost = (In_Tokens * P_in + Out_Tokens * P_out) / 1,000,000",
-      "Cost = (In_Tokens + Out_Tokens) * (P_in + P_out) / 1,000",
-      "Cost = (In_Tokens * P_in) * (Out_Tokens * P_out) / 1,000,000",
-      "Cost = (In_Tokens * P_out + Out_Tokens * P_in) / 1,000,000"
+      "$Cost = (In_Tokens \\times P_in + Out_Tokens \\times P_out) / 1,000,000$",
+      "$Cost = (In_Tokens + Out_Tokens) \\times (P_in + P_out) / 1,000$",
+      "$Cost = (In_Tokens \\times P_in) \\times (Out_Tokens \\times P_out) / 1,000,000$",
+      "$Cost = (In_Tokens \\times P_out + Out_Tokens \\times P_in) / 1,000,000$"
     ],
     "correct_index": 0,
-    "correct_answer": "Cost = (In_Tokens * P_in + Out_Tokens * P_out) / 1,000,000",
-    "explanation": "Chi phí API được tính bằng: Cost = (Tokens_in * Price_in + Tokens_out * Price_out) / 10^6. Đơn giá output thường cao hơn input do tính chất sinh tuần tự từng token.",
+    "correct_answer": "$Cost = (In_Tokens \\times P_in + Out_Tokens \\times P_out) / 1,000,000$",
+    "explanation": "Chi phí API được tính bằng: $Cost = (Tokens_in \\times Price_in + Tokens_out \\times Price_out) / 10^6$. Đơn giá output thường cao hơn input do tính chất sinh tuần tự từng token.",
     "slide_ref": "Day 01 - Slide: Token Economics"
   },
   {
@@ -45,7 +45,7 @@
     "options": [
       "Exponential Backoff kết hợp Jitter (độ trễ ngẫu nhiên)",
       "Chỉ giữ lại K lượt trao đổi gần nhất và luôn giữ lại System Prompt gốc",
-      "Cost = (In_Tokens * P_in + Out_Tokens * P_out) / 1,000,000",
+      "$Cost = (In_Tokens \\times P_in + Out_Tokens \\times P_out) / 1,000,000$",
       "Greedy Sampling (chọn token có xác suất cao nhất tại mỗi bước)"
     ],
     "correct_index": 3,
@@ -259,14 +259,14 @@
     "difficulty": "Easy",
     "question": "Nếu giá Input là $2.50/1M tokens và Output là $10.00/1M tokens, chi phí của 1 request có 2,000 input tokens và 500 output tokens là bao nhiêu?",
     "options": [
-      "$0.0050",
-      "$0.0250",
-      "$0.0100",
-      "$0.0500"
+      "\\$0.0050",
+      "\\$0.0250",
+      "\\$0.0100",
+      "\\$0.0500"
     ],
     "correct_index": 2,
-    "correct_answer": "$0.0100",
-    "explanation": "Cost = (2,000 * 2.50 + 500 * 10.00) / 1,000,000 = (5,000 + 5,000) / 1,000,000 = $0.0100.",
+    "correct_answer": "\\$0.0100",
+    "explanation": "$Cost = (2,000 \\times 2.50 + 500 \\times 10.00) / 1,000,000 = (5,000 + 5,000) / 1,000,000 = \\$0.0100$.",
     "slide_ref": "Day 01 - Slide: Cost Practice"
   },
   {
@@ -367,13 +367,13 @@
     "difficulty": "Medium",
     "question": "Tổng thời gian phản hồi (Total Latency) của một phiên sinh LLM không streaming được tính bằng công thức nào?",
     "options": [
-      "Total Latency = TTFT * Output_Tokens",
-      "Total Latency = TTFT + (Generation_Time_Per_Token * Output_Tokens)",
-      "Total Latency = Input_Tokens * 0.001",
-      "Total Latency = TTFT / Output_Tokens"
+      "$Total Latency = TTFT \\times Output_Tokens$",
+      "$Total Latency = TTFT + (Generation_Time_Per_Token \\times Output_Tokens)$",
+      "$Total Latency = Input_Tokens \\times 0.001$",
+      "$Total Latency = TTFT / Output_Tokens$"
     ],
     "correct_index": 1,
-    "correct_answer": "Total Latency = TTFT + (Generation_Time_Per_Token * Output_Tokens)",
+    "correct_answer": "$Total Latency = TTFT + (Generation_Time_Per_Token \\times Output_Tokens)$",
     "explanation": "Total Latency bao gồm thời gian Prefill input (TTFT) cộng với thời gian Decode tuần tự từng output token.",
     "slide_ref": "Day 01 - Slide: Latency Equations"
   },
@@ -458,7 +458,7 @@
     "question": "Khi đếm số lượng token của một prompt tiếng Việt so với cùng một nội dung bằng tiếng Anh trên tokenizer GPT-4, điều gì thường xảy ra?",
     "options": [
       "Vì các cuộc gọi I/O-bound tới API từ xa có thể được gửi song song đồng thời qua event loop mà không bị block luồng chính",
-      "Total Latency = TTFT + (Generation_Time_Per_Token * Output_Tokens)",
+      "$Total Latency = TTFT + (Generation_Time_Per_Token \\times Output_Tokens)$",
       "Tiếng Việt tốn nhiều token hơn (thường gấp 1.5 - 2.5 lần) do từ có dấu bị phân tách thành nhiều byte/subwords nhỏ",
       "Kết hợp với temperature=0.0 để hỗ trợ tái lập kết quả sinh nhất quán cho unit test và regression benchmark"
     ],
@@ -547,14 +547,14 @@
     "difficulty": "Medium",
     "question": "Một ứng dụng xử lý 100,000 yêu cầu/ngày (1,500 in, 300 out tokens/req). Giá là $1.00/1M in và $3.00/1M out. Chi phí 1 tháng (30 ngày) là bao nhiêu?",
     "options": [
-      "$150",
-      "$4,500",
-      "$720",
-      "$2,160"
+      "\\$150",
+      "\\$4,500",
+      "\\$720",
+      "\\$2,160"
     ],
     "correct_index": 3,
-    "correct_answer": "$2,160",
-    "explanation": "Chi phí 1 ngày = 100,000 * (1500*1 + 300*3)/10^6 = 100,000 * 0.0024 = $240. 30 ngày = 240 * 30 = $2,160.",
+    "correct_answer": "\\$2,160",
+    "explanation": "Chi phí 1 ngày = 100,000 * (1500*1 + 300*3)/$10^{6}$ = 100,000 * 0.0024 = $240. 30 ngày = 240 * 30 = $2,160.",
     "slide_ref": "Day 01 - Slide: Budget Modeling"
   },
   {
@@ -584,7 +584,7 @@
     "question": "Tham số `seed` trong OpenAI Chat API có tác dụng gì trong kiểm thử phần mềm?",
     "options": [
       "Kết hợp với temperature=0.0 để hỗ trợ tái lập kết quả sinh nhất quán cho unit test và regression benchmark",
-      "Cost = (In_Tokens * P_in + Out_Tokens * P_out) / 1,000,000",
+      "$Cost = (In_Tokens \\times P_in + Out_Tokens \\times P_out) / 1,000,000$",
       "Vì các cuộc gọi I/O-bound tới API từ xa có thể được gửi song song đồng thời qua event loop mà không bị block luồng chính",
       "Logarit xác suất của từng token được sinh ra, dùng để đo lường độ tự tin và phát hiện hallucination"
     ],
@@ -637,14 +637,14 @@
     "difficulty": "Hard",
     "question": "70% câu hỏi của người dùng có độ tương đồng ngữ nghĩa rất cao (> 0.95) với các câu hỏi trong 24h qua. Giải pháp kiến trúc nào cắt giảm chi phí nhiều nhất?",
     "options": [
-      "Total Latency = TTFT + (Generation_Time_Per_Token * Output_Tokens)",
+      "$Total Latency = TTFT + (Generation_Time_Per_Token \\times Output_Tokens)$",
       "Vì các cuộc gọi I/O-bound tới API từ xa có thể được gửi song song đồng thời qua event loop mà không bị block luồng chính",
       "Vì làm mất khả năng tái sử dụng HTTP Connection Pool, gây tăng độ trễ do phải thực hiện lại TLS handshake liên tục",
       "Triển khai Semantic Caching (sử dụng Vector DB như Redis/Qdrant với ngưỡng Cosine Similarity) trước khi gọi LLM API"
     ],
     "correct_index": 3,
     "correct_answer": "Triển khai Semantic Caching (sử dụng Vector DB như Redis/Qdrant với ngưỡng Cosine Similarity) trước khi gọi LLM API",
-    "explanation": "Semantic Caching lưu cặp (Embedding(Question), Response). Khi câu hỏi mới vượt ngưỡng tương đồng, trả về kết quả ngay với độ trễ < 20ms và chi phí $0.",
+    "explanation": "Semantic Caching lưu cặp (Embedding(Question), Response). Khi câu hỏi mới vượt ngưỡng tương đồng, trả về kết quả ngay với độ trễ < 20ms và chi phí \\$0.",
     "slide_ref": "Day 01 - Slide: Semantic Caching"
   },
   {
@@ -797,7 +797,7 @@
     "day": "Day 01",
     "topic": "LLM Foundation & APIs (Production Trade-offs)",
     "difficulty": "Hard",
-    "question": "Hệ thống SLA yêu cầu độ trễ < 1.0s và chi phí < $0.001 mỗi truy vấn người dùng. Phương án kiến trúc nào đáp ứng tốt nhất?",
+    "question": "Hệ thống SLA yêu cầu độ trễ < 1.0s và chi phí < \\$0.001 mỗi truy vấn người dùng. Phương án kiến trúc nào đáp ứng tốt nhất?",
     "options": [
       "Triển khai Semantic Caching (sử dụng Vector DB như Redis/Qdrant với ngưỡng Cosine Similarity) trước khi gọi LLM API",
       "Kết hợp với temperature=0.0 để hỗ trợ tái lập kết quả sinh nhất quán cho unit test và regression benchmark",
@@ -2638,7 +2638,7 @@
       "Parse chuỗi bằng `json.loads()` rồi nạp vào một Pydantic Model (`ArgsModel.model_validate_json(...)`) để tự động kiểm tra kiểu và ràng buộc giá trị",
       "Khóa định danh duy nhất dùng để ánh xạ kết quả trả về (Tool Message) với đúng yêu cầu gọi công cụ mà LLM đã phát ra trước đó",
       "Gửi tin nhắn `role='tool'` với nội dung mô tả lỗi (Error message) để LLM biết lý do thất bại và giải thích cho người dùng hoặc thử lại",
-      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu $)'`"
+      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu \\$)'`"
     ],
     "correct_index": 2,
     "correct_answer": "Gửi tin nhắn `role='tool'` với nội dung mô tả lỗi (Error message) để LLM biết lý do thất bại và giải thích cho người dùng hoặc thử lại",
@@ -2798,7 +2798,7 @@
     "question": "Nếu một Tool gọi tới API bên ngoài bị giới hạn 5 requests/giây (Rate Limited), giải pháp nào giúp ứng dụng Agent không bị lỗi 429 từ API bên thứ ba?",
     "options": [
       "Bọc hàm thực thi tool bằng một Async Rate Limiter / Semaphore (như `aiolimiter` hoặc Token Bucket) để điều tiết lưu lượng gọi ra",
-      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu $)'`",
+      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu \\$)'`",
       "Sử dụng Mock/Fixture để giả lập phản hồi của LLM API (trả về `tool_calls` định sẵn) và mock kết quả thực thi của các hàm Tool",
       "Parse chuỗi bằng `json.loads()` rồi nạp vào một Pydantic Model (`ArgsModel.model_validate_json(...)`) để tự động kiểm tra kiểu và ràng buộc giá trị"
     ],
@@ -2887,7 +2887,7 @@
     "difficulty": "Medium",
     "question": "Đối với các công cụ tra cứu thông tin tĩnh hoặc ít biến động (như `get_user_profile(user_id)`), chiến lược tối ưu hóa nào giúp giảm số lần thực thi thực tế?",
     "options": [
-      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu $)'`",
+      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu \\$)'`",
       "Khởi tạo một session context duy nhất gắn liền với `session_id` của Agent, truyền qua các tool calls và giải phóng tài nguyên (Close/Cleanup) khi Agent hoàn thành tác vụ",
       "Sử dụng một Registry Dictionary ánh xạ từ tên hàm (string) sang callable function (`tool_map[name](**args)`), cho phép mở rộng công cụ linh hoạt (Open-Closed Principle)",
       "Triển khai Bộ nhớ đệm (In-memory Cache / Redis với TTL) ở tầng Tool Execution: nếu cùng tham số đã được gọi gần đây, trả về ngay kết quả từ cache mà không cần truy vấn database"
@@ -2975,15 +2975,15 @@
     "day": "Day 04",
     "topic": "Prompt Engineering & Tool Calling (Tool Documentation Refinement)",
     "difficulty": "Medium",
-    "question": "Nếu LLM thường xuyên truyền sai định dạng tiền tệ (truyền chuỗi `$100` thay vì số thực `100.0`), cách khắc phục hiệu quả nhất ở tầng Schema là gì?",
+    "question": "Nếu LLM thường xuyên truyền sai định dạng tiền tệ (truyền chuỗi `\\$100` thay vì số thực `100.0`), cách khắc phục hiệu quả nhất ở tầng Schema là gì?",
     "options": [
       "Triển khai Bộ nhớ đệm (In-memory Cache / Redis với TTL) ở tầng Tool Execution: nếu cùng tham số đã được gọi gần đây, trả về ngay kết quả từ cache mà không cần truy vấn database",
-      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu $)'`",
+      "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu \\$)'`",
       "Sử dụng Mock/Fixture để giả lập phản hồi của LLM API (trả về `tool_calls` định sẵn) và mock kết quả thực thi của các hàm Tool",
       "Thực thi hàm cục bộ với các tham số do LLM cung cấp, sau đó gửi kết quả trả về lại cho LLM dưới dạng tin nhắn có `role='tool'`"
     ],
     "correct_index": 1,
-    "correct_answer": "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu $)'`",
+    "correct_answer": "Khai báo kiểu dữ liệu rõ ràng `type: 'number'` trong schema, kèm `description: 'Số tiền bằng USD dưới dạng số thực, ví dụ: 100.0 (KHÔNG kèm ký hiệu \\$)'`",
     "explanation": "Chỉ định kiểu dữ liệu số học nghiêm ngặt kết hợp mô tả loại trừ các lỗi thường gặp trong `description` giúp định hướng chính xác hành vi sinh tham số của LLM.",
     "slide_ref": "Day 04 - Slide: Schema Prompting & Parameter Constraints"
   },
@@ -3857,7 +3857,7 @@
     "day": "Day 05",
     "topic": "AI Product Thinking & Requirements (Real-time Cost Anomaly Protection)",
     "difficulty": "Hard",
-    "question": "Một công ty SaaS AI bị kẻ xấu dùng bot tấn công khai thác lỗ hổng prompt injection tạo ra hàng triệu câu hỏi dài vô tận khiến hóa đơn API tăng thêm $20,000 chỉ sau 2 giờ. Kiến trúc bảo vệ sản phẩm nào sau đây ngăn chặn triệt để thảm họa tài chính này?",
+    "question": "Một công ty SaaS AI bị kẻ xấu dùng bot tấn công khai thác lỗ hổng prompt injection tạo ra hàng triệu câu hỏi dài vô tận khiến hóa đơn API tăng thêm \\$20,000 chỉ sau 2 giờ. Kiến trúc bảo vệ sản phẩm nào sau đây ngăn chặn triệt để thảm họa tài chính này?",
     "options": [
       "Người dùng sẵn sàng chờ đợi lâu hơn (10-20 giây) nếu giao diện có Animation tiến trình thể hiện AI đang nghiên cứu sâu (Deep Thinking/Researching) và kết quả trả về có chất lượng vượt trội",
       "Triển khai Hệ thống Giám sát Chi phí Thời gian thực (Real-time Token Budgeting Engine) với Ngắt mạch Tự động (Automated Circuit Breaker): Giới hạn chi phí tối đa trên mỗi IP/User/Tenant theo giờ, kết hợp phát hiện bất thường lưu lượng (Anomaly Detection) tự động ngắt API key bị lạm dụng trong 5 giây",
@@ -5234,7 +5234,7 @@
     ],
     "correct_index": 0,
     "correct_answer": "Bi-Encoder mã hóa Query và Document độc lập thành 2 vector riêng biệt (cho phép tính sẵn vector index); Cross-Encoder đưa cả cặp (Query, Document) cùng lúc vào mô hình Transformer để các token tự tương tác Attention với nhau",
-    "explanation": "Bi-Encoder cho phép tạo vector index trước để tìm kiếm siêu nhanh ($O(1)$ lookup); Cross-Encoder cho độ chính xác vượt trội nhưng chi phí tính toán cao vì phải chạy attention chéo.",
+    "explanation": "Bi-Encoder cho phép tạo vector index trước để tìm kiếm siêu nhanh (\\$O(1)\\$ lookup); Cross-Encoder cho độ chính xác vượt trội nhưng chi phí tính toán cao vì phải chạy attention chéo.",
     "slide_ref": "Day 07 - Slide: Bi-Encoder vs Cross-Encoder Architecture"
   },
   {
@@ -7369,13 +7369,13 @@
     "difficulty": "Easy",
     "question": "Sự khác biệt căn bản giữa 'Data Drift' và 'Concept Drift' trong vận hành hệ thống AI là gì?",
     "options": [
-      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào $P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)$",
+      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào \\$P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)\\$",
       "Vì việc nạp các vector có vị trí ngữ nghĩa gần nhau vào cùng một thời điểm tối ưu hóa bộ nhớ đệm CPU/RAM (Locality of Reference), giảm thiểu việc hoán đổi trang nhớ (Cache Misses) khi xây dựng đồ thị láng giềng",
       "Job (Tiến trình/Tác vụ thực thi), Dataset (Tập dữ liệu đầu vào Inputs và đầu ra Outputs), và Run (Phiên thực thi cụ thể với trạng thái START/COMPLETE/FAIL)",
-      "Độ phức tạp tuyến tính xấp xỉ $O(N)$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh"
+      "Độ phức tạp tuyến tính xấp xỉ \\$O(N)\\$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh"
     ],
     "correct_index": 0,
-    "correct_answer": "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào $P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)$",
+    "correct_answer": "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào \\$P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)\\$",
     "explanation": "Data Drift phản ánh sự biến đổi về đặc tính dữ liệu người dùng nạp vào, trong khi Concept Drift phản ánh sự thay đổi về bản chất quy luật nghiệp vụ thực tế.",
     "slide_ref": "Day 10 - Slide: Data Drift vs Concept Drift"
   },
@@ -7390,7 +7390,7 @@
       "Dữ liệu này bắt nguồn từ đâu, đã trải qua những bước biến đổi nào, và đang được sử dụng bởi những mô hình/ứng dụng AI nào downstream?",
       "Chuẩn hóa việc thu thập và trao đổi siêu dữ liệu về dòng chảy dữ liệu (Data Lineage Metadata) giữa các công cụ trong pipeline như Spark, Airflow, dbt",
       "Job (Tiến trình/Tác vụ thực thi), Dataset (Tập dữ liệu đầu vào Inputs và đầu ra Outputs), và Run (Phiên thực thi cụ thể với trạng thái START/COMPLETE/FAIL)",
-      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào $P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)$"
+      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào \\$P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)\\$"
     ],
     "correct_index": 0,
     "correct_answer": "Dữ liệu này bắt nguồn từ đâu, đã trải qua những bước biến đổi nào, và đang được sử dụng bởi những mô hình/ứng dụng AI nào downstream?",
@@ -7460,7 +7460,7 @@
     "question": "Sự khác biệt về thứ tự các bước giữa ETL (Extract-Transform-Load) và ELT (Extract-Load-Transform) là gì?",
     "options": [
       "ETL biến đổi dữ liệu trên máy chủ trung gian trước khi nạp vào kho; ELT nạp dữ liệu thô gián tiếp qua bộ đệm trung gian vào Data Lakehouse/Warehouse rồi mới dùng sức mạnh tính toán của kho để biến đổi",
-      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào $P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)$",
+      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào \\$P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)\\$",
       "Đo lường mức độ trôi lệch phân phối thống kê (Statistical Distribution Shift) của các đặc trưng dữ liệu đầu vào giữa tập huấn luyện ban đầu và dữ liệu thực tế đang chạy trên Production",
       "ETL biến đổi dữ liệu trên máy chủ trung gian trước khi nạp vào kho; ELT nạp dữ liệu thô trực tiếp vào Data Lakehouse/Warehouse rồi mới dùng sức mạnh tính toán của kho để biến đổi"
     ],
@@ -7568,12 +7568,12 @@
     "question": "Thuật toán MinHash kết hợp Locality-Sensitive Hashing (LSH) giải quyết bài toán khử trùng lặp xấp xỉ (Near-deduplication) cho hàng triệu văn bản với độ phức tạp tính toán như thế nào?",
     "options": [
       "Đọc trực tiếp Nhật ký Giao dịch (Transaction Log / Binlog / WAL) của cơ sở dữ liệu quan hệ và phát các sự kiện Insert/Update/Delete theo thời gian thực để cập nhật ngay vào Vector Index",
-      "Độ phức tạp tuyến tính xấp xỉ $O(N)$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh",
+      "Độ phức tạp tuyến tính xấp xỉ \\$O(N)\\$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh",
       "Phát hiện và loại bỏ các tài liệu hoặc đoạn văn bản trùng lặp hoàn toàn hoặc gần trùng lặp (Near-duplicates) để tiết kiệm không gian lưu trữ và tránh thiên lệch dữ liệu",
       "Dữ liệu bị lỗi định dạng hoặc thiếu trường bắt buộc sẽ đi sâu vào hệ thống, làm sập các tiến trình tạo embedding hoặc gây lỗi ảo giác nghiêm trọng cho mô hình downstream"
     ],
     "correct_index": 1,
-    "correct_answer": "Độ phức tạp tuyến tính xấp xỉ $O(N)$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh",
+    "correct_answer": "Độ phức tạp tuyến tính xấp xỉ \\$O(N)\\$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh",
     "explanation": "MinHash LSH giảm số lượng phép so sánh từ hàng nghìn tỷ cặp xuống các bucket lân cận, cho phép khử trùng lặp quy mô hàng chục triệu văn bản một cách hiệu quả.",
     "slide_ref": "Day 10 - Slide: MinHash LSH for Near-Deduplication"
   },
@@ -7587,7 +7587,7 @@
     "options": [
       "1. Freshness (Độ tươi), 2. Volume (Khối lượng/Số lượng bản ghi), 3. Distribution (Phân phối dữ liệu/Giá trị null/Khoảng giá trị), 4. Schema (Tính toàn vẹn cấu trúc), 5. Lineage (Dòng chảy nguồn gốc)",
       "Job (Tiến trình/Tác vụ thực thi), Dataset (Tập dữ liệu đầu vào Inputs và đầu ra Outputs), và Run (Phiên thực thi cụ thể với trạng thái START/COMPLETE/FAIL)",
-      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào $P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)$",
+      "Data Drift là sự thay đổi trong phân phối của dữ liệu đầu vào \\$P(X)$; Concept Drift là sự thay đổi trong mối quan hệ giữa đầu vào và đầu ra mục tiêu $P(Y|X)\\$",
       "Cho phép mở rộng hoặc biến đổi schema của bảng dữ liệu một cách an toàn mà không làm hỏng các bản ghi lịch sử cũ, hỗ trợ đọc tương thích ngược và tương thích xuôi (Backward/Forward Compatibility)"
     ],
     "correct_index": 0,
@@ -7678,7 +7678,7 @@
       "Xảy ra khi tốc độ nguồn phát sinh dữ liệu (Producer) nhanh hơn nhiều so với tốc độ xử lý của tầng Embedding/LLM (Consumer); giải pháp là sử dụng Message Queue có đệm (Kafka Buffering) kết hợp cơ chế Flow Control và Auto-scaling Consumer instances",
       "Thiết lập Hợp đồng Dữ liệu (Data Contracts) dưới dạng Schema Specification được kiểm soát phiên bản bằng Git; tích hợp Contract Verification vào quy trình CI/CD của database nguồn: Bất kỳ thay đổi schema nào phá vỡ hợp đồng với AI downstream sẽ bị chặn merge tự động tại Pull Request",
       "ETL biến đổi dữ liệu trên máy chủ trung gian trước khi nạp vào kho; ELT nạp dữ liệu thô trực tiếp vào Data Lakehouse/Warehouse rồi mới dùng sức mạnh tính toán của kho để biến đổi",
-      "Độ phức tạp tuyến tính xấp xỉ $O(N)$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh"
+      "Độ phức tạp tuyến tính xấp xỉ \\$O(N)\\$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh"
     ],
     "correct_index": 0,
     "correct_answer": "Xảy ra khi tốc độ nguồn phát sinh dữ liệu (Producer) nhanh hơn nhiều so với tốc độ xử lý của tầng Embedding/LLM (Consumer); giải pháp là sử dụng Message Queue có đệm (Kafka Buffering) kết hợp cơ chế Flow Control và Auto-scaling Consumer instances",
@@ -7766,7 +7766,7 @@
     "question": "Khi một trường dữ liệu trong bảng nguồn thay đổi kiểu dữ liệu (ví dụ: từ `int` sang `string`), kỹ thuật 'Schema Evolution' trong Delta Lake / Apache Iceberg xử lý như thế nào?",
     "options": [
       "Khi việc thực thi bước đó nhiều lần trên cùng một tập dữ liệu đầu vào luôn tạo ra trạng thái kết quả đầu ra giống hệt như thực thi đúng 1 lần (ví dụ: dùng câu lệnh UPSERT thay vì INSERT thuần)",
-      "Độ phức tạp tuyến tính xấp xỉ $O(N)$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh",
+      "Độ phức tạp tuyến tính xấp xỉ \\$O(N)\\$ bằng cách băm tập n-grams (Shingles) thành các MinHash signatures và nhóm các văn bản có chữ ký tương đồng vào cùng bucket để so khớp nhanh",
       "Cho phép mở rộng hoặc biến đổi schema của bảng dữ liệu một cách an toàn mà không làm hỏng các bản ghi lịch sử cũ, hỗ trợ đọc tương thích ngược và tương thích xuôi (Backward/Forward Compatibility)",
       "Vì việc nạp các vector có vị trí ngữ nghĩa gần nhau vào cùng một thời điểm tối ưu hóa bộ nhớ đệm CPU/RAM (Locality of Reference), giảm thiểu việc hoán đổi trang nhớ (Cache Misses) khi xây dựng đồ thị láng giềng"
     ],
@@ -10249,7 +10249,7 @@
     "difficulty": "Medium",
     "question": "Trong kiến trúc giám sát hiện đại, OpenTelemetry Collector đóng vai trò trung gian như thế nào giữa Ứng dụng AI và Prometheus/Datadog?",
     "options": [
-      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê ($p < 0.01$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
+      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê (\\$p < 0.01\\$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
       "Lưu 100% gây tốn kém chi phí hạ tầng khổng lồ; Tail-based Sampling phân tích toàn bộ Trace ở cuối luồng: Luôn giữ lại 100% các Trace bị lỗi (Error) hoặc có độ trễ cao (High Latency), và chỉ lấy mẫu 1% các Trace thành công bình thường",
       "Đóng vai trò là trạm trung chuyển (Proxy): Tiếp nhận dữ liệu Telemetry từ ứng dụng, thực hiện xử lý/lọc/bỏ PII (Processors), và phân phối (Export) đồng thời tới nhiều đích giám sát khác nhau (Prometheus cho metrics, Jaeger cho traces, Loki cho logs)",
       "Xây dựng Biểu đồ Phân tán 3 Chiều (3D Scatter / Joint Efficiency Surface): Trục X là Độ trễ (p95 Latency), Trục Y là Chi phí trung bình (Cost per Query), Trục Z là Điểm chất lượng (RAGAS/Eval Score); tự động phát hiện các phiên bản Prompt/Model nằm ngoài đường biên tối ưu Pareto để cảnh báo lãng phí tài nguyên"
@@ -10342,10 +10342,10 @@
       "Triển khai Kiến trúc OpenTelemetry Tiêu chuẩn: 1. Auto + Manual Instrumentation trên các dịch vụ AI phát OTLP data qua gRPC; 2. Cụm OpenTelemetry Collector phân tán thực hiện Tail-based Sampling (lưu 100% lỗi, 2% thành công) và PII Redaction Pipeline tại chỗ; 3. Phân luồng dữ liệu: Metrics nạp vào Prometheus/M3DB, Traces nạp vào Jaeger/Tempo, Logs nạp vào Grafana Loki; 4. Nền tảng Đánh giá Tự động (Phoenix/LangSmith) phân tích chất lượng ngầm; 5. PagerDuty Alerting tích hợp Slack",
       "Cân bằng giữa Yêu cầu Pháp lý/Tuân thủ (ví dụ: Lưu trữ 90 ngày cho mục đích thanh tra an ninh) và Quyền riêng tư của người dùng (Tự động xóa sau thời hạn quy định để giảm rủi ro pháp lý)",
       "Auto-instrumentation tự động chèn trace vào tất cả các lệnh gọi OpenAI/LangChain chỉ với 1 dòng code; Manual Instrumentation cho phép lập trình viên chủ động gắn thêm các Custom Spans và Business Metrics đặc thù của nghiệp vụ",
-      "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê $p < 0.01$, kích hoạt cảnh báo Semantic Drift"
+      "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê \\$p < 0.01\\$, kích hoạt cảnh báo Semantic Drift"
     ],
     "correct_index": 3,
-    "correct_answer": "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê $p < 0.01$, kích hoạt cảnh báo Semantic Drift",
+    "correct_answer": "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê \\$p < 0.01\\$, kích hoạt cảnh báo Semantic Drift",
     "explanation": "Sử dụng khoảng cách Wasserstein hoặc MMD trên không gian embedding cho phép phát hiện sự dịch chuyển phân phối dữ liệu đầu vào một cách tự động và chuẩn xác về mặt toán học.",
     "slide_ref": "Day 13 - Slide: Statistical Embedding Drift Detection Engines"
   },
@@ -10411,9 +10411,9 @@
     "difficulty": "Hard",
     "question": "Khi ghi lại các cuộc hội thoại trong lĩnh vực tài chính, làm thế nào để đảm bảo hệ thống Tracing lưu trữ được đầy đủ cấu trúc câu phục vụ debug nhưng triệt tiêu 100% nguy cơ lộ số thẻ tín dụng và tên khách hàng?",
     "options": [
-      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê ($p < 0.01$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
+      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê (\\$p < 0.01\\$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
       "Phân tích Tương quan Cụm Ngữ nghĩa Đa Nguồn (Cross-IP Semantic Clustering): Sử dụng mô hình Clustering trên các câu hỏi từ các IP khác nhau trong vòng 1 giờ; nếu phát hiện một cụm dày đặc các câu hỏi có cùng cấu trúc khai thác (Embedding Similarity > 0.92) dù từ nhiều IP khác nhau, gắn cờ Distributed Attack và kích hoạt WAF khóa dải IP",
-      "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê $p < 0.01$, kích hoạt cảnh báo Semantic Drift",
+      "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê \\$p < 0.01\\$, kích hoạt cảnh báo Semantic Drift",
       "Triển khai Tầng Xử lý Trung gian trong OTel Collector (In-flight Privacy Scrubbing Processor): Tự động phát hiện các mẫu nhạy cảm bằng mô hình NER chạy tại Collector, mã hóa một chiều các giá trị PII thành Deterministic Hashes (cho phép so khớp tần suất nhưng không thể đọc được nội dung gốc) trước khi đẩy vào kho lưu trữ"
     ],
     "correct_index": 3,
@@ -10447,13 +10447,13 @@
     "difficulty": "Hard",
     "question": "Khi phát hành một phiên bản Prompt mới qua hình thức Canary Deploy (10% traffic), hệ thống giám sát tự động hủy bỏ phát hành (Automated Rollback) dựa trên kiểm định thống kê nào?",
     "options": [
-      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê ($p < 0.01$) hoặc p95 TTFT tăng > 20%, hệ thống thực hiện thủ công theo lịch trình ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
+      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê (\\$p < 0.01\\$) hoặc p95 TTFT tăng > 20%, hệ thống thực hiện thủ công theo lịch trình ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
       "1. `PROVIDER_RATE_LIMIT` (429), 2. `PROVIDER_DOWNTIME` (5xx/Timeout), 3. `INPUT_GUARDRAIL_BLOCKED` (Vi phạm an toàn), 4. `OUTPUT_PARSE_ERROR` (Lỗi JSON Schema), 5. `TOOL_EXECUTION_FAILED` (Lỗi API bên thứ ba)",
-      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê ($p < 0.01$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
+      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê (\\$p < 0.01\\$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
       "Cảnh báo tức thời thường gây ra báo động giả khi có đột biến ngắn hạn; Burn-Rate tính toán tốc độ tiêu hao ngân sách lỗi trên nhiều cửa sổ thời gian (1 giờ và 6 giờ): Kích hoạt cảnh báo khẩn cấp khi hệ thống đang trên đà làm cạn kiệt toàn bộ ngân sách lỗi của cả tháng trong vài giờ tới"
     ],
     "correct_index": 2,
-    "correct_answer": "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê ($p < 0.01$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
+    "correct_answer": "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê (\\$p < 0.01\\$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
     "explanation": "Kiểm định thống kê tự động thời gian thực ngăn chặn việc phổ biến các phiên bản có lỗi ngầm ra toàn bộ người dùng, tự động rollback trong vài phút mà không cần can thiệp thủ công.",
     "slide_ref": "Day 13 - Slide: Statistical Canary Release Gates"
   },
@@ -10501,7 +10501,7 @@
     "difficulty": "Hard",
     "question": "Làm thế nào để xây dựng một Pipeline Tự động hóa biến các Trace chất lượng cao từ Production thành Dữ liệu Huấn luyện DPO (Direct Preference Optimization)?",
     "options": [
-      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê ($p < 0.01$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
+      "Chạy Kiểm định T-test / Mann-Whitney U Test liên tục trên luồng Metrics của nhóm Canary vs nhóm Control: Nếu sau 1,000 requests mà Tỉ lệ người dùng phản hồi tiêu cực tăng có ý nghĩa thống kê (\\$p < 0.01\\$) hoặc p95 TTFT tăng > 20%, hệ thống tự động ngắt Canary và chuyển 100% traffic về phiên bản an toàn",
       "Áp dụng Mô hình Gắn kết Ngữ cảnh Bất đồng bộ (Asynchronous Context Propagation via Metadata Envelopes): Mọi message trong Kafka đính kèm `trace_id`, `parent_span_id`, `causality_link_id` trong Header; Hệ thống Tracing sử dụng 'Span Links' (Liên kết Span lỏng) thay vì quan hệ Cha-Con đồng bộ truyền thống, cho phép nối kết các phiên làm việc cách nhau nhiều ngày vào cùng một đồ thị sự kiện",
       "Lọc các Trace có Tương tác Sửa đổi thành công (User accepted AI correction hoặc Thumbs Up sau khi tinh chỉnh) -> Trích xuất cặp (Prompt, Chosen Response, Rejected Response) -> Chạy qua Tầng Khử PII & Kiểm tra Độc hại -> Tự động nạp vào Data Lakehouse dưới dạng tập dữ liệu DPO chuẩn sẵn sàng cho Fine-tuning",
       "Cảnh báo tức thời thường gây ra báo động giả khi có đột biến ngắn hạn; Burn-Rate tính toán tốc độ tiêu hao ngân sách lỗi trên nhiều cửa sổ thời gian (1 giờ và 6 giờ): Kích hoạt cảnh báo khẩn cấp khi hệ thống đang trên đà làm cạn kiệt toàn bộ ngân sách lỗi của cả tháng trong vài giờ tới"
@@ -10520,7 +10520,7 @@
     "question": "Làm thế nào để hệ thống Security Observability tự động phát hiện một chiến dịch tấn công 'Trích xuất System Prompt' phân tán từ hàng trăm địa chỉ IP khác nhau?",
     "options": [
       "Lưu 100% gây tốn kém chi phí hạ tầng khổng lồ; Tail-based Sampling phân tích toàn bộ Trace ở cuối luồng: Luôn giữ lại 100% các Trace bị lỗi (Error) hoặc có độ trễ cao (High Latency), và chỉ lấy mẫu 1% các Trace thành công bình thường",
-      "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê $p < 0.01$, kích hoạt cảnh báo Semantic Drift",
+      "Trích xuất Embedding Vectors của tất cả User Queries trên Production theo từng cửa sổ thời gian (e.g. Cửa sổ trượt 24h) -> Sử dụng thuật toán Maximum Mean Discrepancy (MMD) hoặc Wasserstein Distance đối sánh phân phối vector hiện tại với Phân phối Baseline chuẩn; nếu khoảng cách vượt ngưỡng thống kê \\$p < 0.01\\$, kích hoạt cảnh báo Semantic Drift",
       "Áp dụng Mô hình Gắn kết Ngữ cảnh Bất đồng bộ (Asynchronous Context Propagation via Metadata Envelopes): Mọi message trong Kafka đính kèm `trace_id`, `parent_span_id`, `causality_link_id` trong Header; Hệ thống Tracing sử dụng 'Span Links' (Liên kết Span lỏng) thay vì quan hệ Cha-Con đồng bộ truyền thống, cho phép nối kết các phiên làm việc cách nhau nhiều ngày vào cùng một đồ thị sự kiện",
       "Phân tích Tương quan Cụm Ngữ nghĩa Đa Nguồn (Cross-IP Semantic Clustering): Sử dụng mô hình Clustering trên các câu hỏi từ các IP khác nhau trong vòng 1 giờ; nếu phát hiện một cụm dày đặc các câu hỏi có cùng cấu trúc khai thác (Embedding Similarity > 0.92) dù từ nhiều IP khác nhau, gắn cờ Distributed Attack và kích hoạt WAF khóa dải IP"
     ],
@@ -10895,7 +10895,7 @@
     "day": "Day 14",
     "topic": "AI Evaluation, Benchmarking & Metrics (Pass@k Metric in Code Generation)",
     "difficulty": "Medium",
-    "question": "Công thức tính chỉ số $pass@k$ (ví dụ: $pass@1$, $pass@10$) trong đánh giá sinh mã nguồn có ý nghĩa gì?",
+    "question": "Công thức tính chỉ số \\$pass@k\\$ (ví dụ: \\$pass@1\\$, \\$pass@10\\$) trong đánh giá sinh mã nguồn có ý nghĩa gì?",
     "options": [
       "Đo lường mức độ trùng lặp chính xác của các cụm từ (N-gram Overlap) giữa câu trả lời sinh ra và câu trả lời mẫu chuẩn (Reference Text)",
       "Tỉ lệ phần trăm các dữ kiện cần thiết để trả lời câu hỏi được trích xuất thành công từ cơ sở dữ liệu so với câu trả lời chuẩn (Ground Truth)",
@@ -10904,7 +10904,7 @@
     ],
     "correct_index": 3,
     "correct_answer": "Xác suất để có ít nhất một trong số $k$ mẫu code được sinh ra vượt qua toàn bộ các bài Unit Tests kiểm thử chức năng",
-    "explanation": "Chỉ số $pass@k$ đo lường khả năng sinh ra giải pháp đúng khi cho phép mô hình thử nghiệm $k$ lần độc lập.",
+    "explanation": "Chỉ số \\$pass@k$ đo lường khả năng sinh ra giải pháp đúng khi cho phép mô hình thử nghiệm $k\\$ lần độc lập.",
     "slide_ref": "Day 14 - Slide: Pass@k Metric Mathematics"
   },
   {
@@ -11059,7 +11059,7 @@
     "difficulty": "Medium",
     "question": "Quy trình 'Judge Calibration with Human Experts' (Hiệu chuẩn Giám khảo LLM với Chuyên gia Con người) được thực hiện như thế nào?",
     "options": [
-      "Áp dụng Kiểm định McNemar Test (cho dữ liệu phân loại nhị phân Pass/Fail) hoặc Wilcoxon Signed-Rank Test (cho dữ liệu điểm số liên tục): Chỉ chấp nhận kết luận cải tiến khi Giá trị $p < 0.01$ (Bác bỏ giả thuyết vô hiệu $H_0$ với độ tin cậy 99%)",
+      "Áp dụng Kiểm định McNemar Test (cho dữ liệu phân loại nhị phân Pass/Fail) hoặc Wilcoxon Signed-Rank Test (cho dữ liệu điểm số liên tục): Chỉ chấp nhận kết luận cải tiến khi Giá trị \\$p < 0.01$ (Bác bỏ giả thuyết vô hiệu $H_0\\$ với độ tin cậy 99%)",
       "Sử dụng đồng thời 3 mô hình từ các nhà cung cấp khác nhau (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro) cùng chấm điểm độc lập trên cùng 1 Rubric, sau đó tính trung bình hoặc lấy biểu quyết đa số (Majority Consensus)",
       "Lấy mẫu 200 cases được chuyên gia con người chấm điểm chuẩn mực; cho LLM Judge chấm điểm trên cùng tập này; đo lường Hệ số Tương quan (Cohen's Kappa / Spearman Correlation); liên tục tinh chỉnh Rubric cho đến khi độ tương quan đạt > 0.85",
       "1. Định nghĩa rõ ràng mục tiêu đánh giá; 2. Thang điểm cụ thể từ 1 đến 5 kèm theo mô tả hành vi chi tiết cho TỪNG mức điểm; 3. Các ví dụ minh họa mẫu (Few-shot Rubric Examples) cho điểm 1, điểm 3 và điểm 5"
@@ -11170,10 +11170,10 @@
       "Mô hình hóa toàn bộ chuỗi hành động thực tế thành một Đồ thị Nhân quả (Actual Trajectory DAG) và so khớp hình học với Đồ thị Tối ưu Chuẩn (Optimal Reference Graph): Tính toán Graph Edit Distance (GED), Tỉ lệ hành động thừa thãi (Redundant Step Ratio), và Điểm hiệu quả phục hồi lỗi (Fault Recovery Efficiency Score)",
       "Đưa ra các câu hỏi bẫy, thông tin sai sự thật, hoặc yêu cầu độc hại/ngoài phạm vi để kiểm tra xem hệ thống có biết từ chối một cách an toàn và chính xác (Correct Refusal) hay không",
       "Xây dựng Hệ thống Kiểm thử Hồi quy Tự động Hàng đêm (Nightly Matrix Regression Runner): Tự động phát song song 5,000 Golden Test Cases qua phiên bản mô hình mới -> So khớp Assertion Logic & Semantic Similarity với Baseline -> Tạo Báo cáo Sai lệch Nhiệt (Heatmap Regression Report) kích hoạt cảnh báo đỏ nếu phát hiện gãy vỡ cục bộ",
-      "Quy trình Chưng cất Giám khảo (Judge Distillation): Thu thập 50,000 mẫu đánh giá chất lượng cao từ Hội đồng Frontier LLMs + Chuyên gia con người -> Huấn luyện mô hình mã nguồn mở nhỏ (như Llama-3-8B hoặc Qwen-2.5-7B) bằng Direct Preference Optimization (DPO) với hàm mất mát chuyên biệt cho tác vụ phê bình (Critic Loss) -> Triển khai trên cụm vLLM nội bộ với độ trễ < 50ms và chi phí $0"
+      "Quy trình Chưng cất Giám khảo (Judge Distillation): Thu thập 50,000 mẫu đánh giá chất lượng cao từ Hội đồng Frontier LLMs + Chuyên gia con người -> Huấn luyện mô hình mã nguồn mở nhỏ (như Llama-3-8B hoặc Qwen-2.5-7B) bằng Direct Preference Optimization (DPO) với hàm mất mát chuyên biệt cho tác vụ phê bình (Critic Loss) -> Triển khai trên cụm vLLM nội bộ với độ trễ < 50ms và chi phí \\$0"
     ],
     "correct_index": 3,
-    "correct_answer": "Quy trình Chưng cất Giám khảo (Judge Distillation): Thu thập 50,000 mẫu đánh giá chất lượng cao từ Hội đồng Frontier LLMs + Chuyên gia con người -> Huấn luyện mô hình mã nguồn mở nhỏ (như Llama-3-8B hoặc Qwen-2.5-7B) bằng Direct Preference Optimization (DPO) với hàm mất mát chuyên biệt cho tác vụ phê bình (Critic Loss) -> Triển khai trên cụm vLLM nội bộ với độ trễ < 50ms và chi phí $0",
+    "correct_answer": "Quy trình Chưng cất Giám khảo (Judge Distillation): Thu thập 50,000 mẫu đánh giá chất lượng cao từ Hội đồng Frontier LLMs + Chuyên gia con người -> Huấn luyện mô hình mã nguồn mở nhỏ (như Llama-3-8B hoặc Qwen-2.5-7B) bằng Direct Preference Optimization (DPO) với hàm mất mát chuyên biệt cho tác vụ phê bình (Critic Loss) -> Triển khai trên cụm vLLM nội bộ với độ trễ < 50ms và chi phí \\$0",
     "explanation": "Chưng cất năng lực đánh giá sang các mô hình nhỏ chuyên dụng (Judge SLMs) giúp doanh nghiệp tự chủ hoàn toàn hạ tầng đánh giá quy mô lớn với chi phí vận hành cực thấp.",
     "slide_ref": "Day 14 - Slide: Distilling and Fine-Tuning Open-Source Judge Models"
   },
@@ -11257,13 +11257,13 @@
     "difficulty": "Hard",
     "question": "Khi so sánh Prompt Mới và Prompt Cũ trên 2,000 mẫu kiểm thử, điểm trung bình của Prompt Mới tăng từ 82.1% lên 83.4%. Phép kiểm định thống kê nào xác nhận cải tiến này là thực chất chứ không phải ngẫu nhiên?",
     "options": [
-      "Áp dụng Kiểm định McNemar Test (cho dữ liệu phân loại nhị phân Pass/Fail) hoặc Wilcoxon Signed-Rank Test (cho dữ liệu điểm số liên tục): Chỉ chấp nhận kết luận cải tiến khi Giá trị $p < 0.01$ (Bác bỏ giả thuyết vô hiệu $H_0$ với độ tin cậy 99%)",
+      "Áp dụng Kiểm định McNemar Test (cho dữ liệu phân loại nhị phân Pass/Fail) hoặc Wilcoxon Signed-Rank Test (cho dữ liệu điểm số liên tục): Chỉ chấp nhận kết luận cải tiến khi Giá trị \\$p < 0.01$ (Bác bỏ giả thuyết vô hiệu $H_0\\$ với độ tin cậy 99%)",
       "1. Định nghĩa rõ ràng mục tiêu đánh giá; 2. Thang điểm cụ thể từ 1 đến 5 kèm theo mô tả hành vi chi tiết cho TỪNG mức điểm; 3. Các ví dụ minh họa mẫu (Few-shot Rubric Examples) cho điểm 1, điểm 3 và điểm 5",
       "Đưa ra các câu hỏi bẫy, thông tin sai sự thật, hoặc yêu cầu độc hại/ngoài phạm vi để kiểm tra xem hệ thống có biết từ chối một cách an toàn và chính xác (Correct Refusal) hay không",
       "Áp dụng 'Tiered Eval Strategy': Chạy 50 Smoke Test cases nhanh trong PR; Sử dụng Mô hình Đánh giá Nhỏ (Fine-tuned Small Judge / SLM như Prometheus hoặc Llama-3-8B Judge) chạy song song trên GPU nội bộ thay vì gọi API thương mại đắt tiền"
     ],
     "correct_index": 0,
-    "correct_answer": "Áp dụng Kiểm định McNemar Test (cho dữ liệu phân loại nhị phân Pass/Fail) hoặc Wilcoxon Signed-Rank Test (cho dữ liệu điểm số liên tục): Chỉ chấp nhận kết luận cải tiến khi Giá trị $p < 0.01$ (Bác bỏ giả thuyết vô hiệu $H_0$ với độ tin cậy 99%)",
+    "correct_answer": "Áp dụng Kiểm định McNemar Test (cho dữ liệu phân loại nhị phân Pass/Fail) hoặc Wilcoxon Signed-Rank Test (cho dữ liệu điểm số liên tục): Chỉ chấp nhận kết luận cải tiến khi Giá trị \\$p < 0.01$ (Bác bỏ giả thuyết vô hiệu $H_0\\$ với độ tin cậy 99%)",
     "explanation": "Kiểm định thống kê suy luận (Inferential Statistics) là yêu cầu bắt buộc để chứng minh các cải tiến kỹ thuật trong AI mang tính thực chất và bền vững.",
     "slide_ref": "Day 14 - Slide: Rigorous Statistical Significance Testing for LLMs"
   },
@@ -11975,7 +11975,7 @@
     "day": "Day 15",
     "topic": "Production Deployment & Wrap-up (Global Latency Optimization with Distributed Semantic Caching Topologies)",
     "difficulty": "Hard",
-    "question": "Thiết kế một Mạng lưới Bộ nhớ đệm Ngữ nghĩa Phân tán (Distributed Multi-Region Semantic Cache) phục vụ người dùng tại 15 quốc gia với mục tiêu phục vụ 60% truy vấn tại Edge với độ trễ < 15ms và chi phí $0?",
+    "question": "Thiết kế một Mạng lưới Bộ nhớ đệm Ngữ nghĩa Phân tán (Distributed Multi-Region Semantic Cache) phục vụ người dùng tại 15 quốc gia với mục tiêu phục vụ 60% truy vấn tại Edge với độ trễ < 15ms và chi phí \\$0?",
     "options": [
       "Triển khai Kiến trúc Edge-First Semantic Cache (Cloudflare Workers / Fastly Compute@Edge kết hợp Upstash Vector / Redis Global Replication): Khi người dùng gửi câu hỏi, Worker tại PoP gần nhất tạo Embedding siêu nhẹ -> Truy vấn Vector Cache cục bộ -> Nếu Cosine Similarity > 0.96, trả về ngay kết quả từ Edge Cache trong 12ms; chỉ các truy vấn Cache Miss mới được chuyển tiếp về Cụm LLM trung tâm",
       "Khi lưu lượng vượt qua ngưỡng quy mô lớn (ví dụ: > 100 triệu tokens/ngày) với mẫu prompt cố định và ổn định trong thời gian dài, chi phí thuê cụm GPU chuyên dụng (Fixed GPU Cost) sẽ trở nên rẻ hơn chi phí biến đổi tính theo token của API thương mại",
@@ -13634,7 +13634,7 @@
     "question": "Trên cụm mạng 100,000 cáp quang InfiniBand NDR, sự cố đứt cáp hoặc suy hao module quang (Transceiver Laser Degradation) xảy ra liên tục làm gián đoạn huấn luyện. Hệ thống Dự báo Sự cố Cáp quang Tự động (Proactive Laser Health Monitor) hoạt động như thế nào?",
     "options": [
       "Liên tục thu thập số liệu Quang phổ Số hóa Nội dải (In-band Digital Optical Monitoring - DOM Metrics: Laser Bias Current, Optical Output Power, Temperature, Bit Error Rate Pre-FEC); sử dụng mô hình Random Forest/LSTM phát hiện xu hướng suy giảm công suất phát quang $P_{\\text{opt}} < -3\\text{dBm}$ trước 6 giờ để tự động chuyển luồng định tuyến (Graceful Traffic Drain) và thông báo kỹ sư thay module",
-      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với $O(1)$ inference complexity",
+      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với \\$O(1)\\$ inference complexity",
       "Đóng vai trò là bộ chuyển mạch chuyển tiếp (Crossbar Switch) kết nối tất cả 8 GPU thành một cụm chia sẻ bộ nhớ đồng nhất không nghẽn (Non-blocking Any-to-Any NVLink Fabric) với băng thông liên kết 900 GB/s trên mỗi GPU",
       "Liên tục thu thập số liệu Quang phổ Số hóa Nội dải (In-band Digital Optical Monitoring - DOM Metrics: Laser Bias Current, Optical Output Power, Temperature, Bit Error Rate Pre-FEC); sử dụng mô hình Random Forest/LSTM phát hiện xu hướng suy giảm công suất phát quang $P_{\\text{opt}} < -3\\text{dBm}$ trước 6 giờ để thực hiện thủ công theo lịch trình chuyển luồng định tuyến (Graceful Traffic Drain) và thông báo kỹ sư thay module"
     ],
@@ -13654,7 +13654,7 @@
       "Tỉ số giữa Tổng Điện năng Tiêu thụ của Toàn bộ Trung tâm Dữ liệu chia cho Điện năng Thực tế Cung cấp cho Thiết bị IT (GPU/Servers); mức lý tưởng tiệm cận 1.0 (các DC hiện đại đạt ~1.1 - 1.2)",
       "Thiết lập Kênh Kết nối Trực tiếp Đa Đám mây Chuyên dụng (Dedicated Direct Cloud Interconnect / AWS Direct Connect to GCP Dedicated Interconnect 400Gbps) kết hợp Giao thức Truyền dữ liệu Nhị phân Không copy (Zero-Copy gRPC/RDMA Streaming with In-flight Protobuf Compression) và Bộ nhớ đệm Phân tán Alluxio/Ray Plasma",
       "Triển khai Tầng Điều tiết Năng lượng Thích ứng (Dynamic Power Smoothing & Staggered Execution Warps): Sử dụng Hệ thống Tụ điện Siêu nhanh (Supercapacitors on Rack Busbar) bù áp tức thời trong micro-giây, kết hợp kỹ thuật 'Software Micro-staggering' làm trễ vài nano-giây thời điểm bắt đầu tính toán giữa các GPU để làm phẳng đường cong đột biến dòng điện (Smoothing di/dt Spike)",
-      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với $O(1)$ inference complexity"
+      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với \\$O(1)\\$ inference complexity"
     ],
     "correct_index": 1,
     "correct_answer": "Thiết lập Kênh Kết nối Trực tiếp Đa Đám mây Chuyên dụng (Dedicated Direct Cloud Interconnect / AWS Direct Connect to GCP Dedicated Interconnect 400Gbps) kết hợp Giao thức Truyền dữ liệu Nhị phân Không copy (Zero-Copy gRPC/RDMA Streaming with In-flight Protobuf Compression) và Bộ nhớ đệm Phân tán Alluxio/Ray Plasma",
@@ -13670,7 +13670,7 @@
     "question": "Nghiên cứu phần cứng AI Siêu dẫn Nhiệt độ Cực thấp (Cryogenic Superconducting Accelerators) hứa hẹn mang lại bước nhảy vọt gì về hiệu suất năng lượng trong tương lai?",
     "options": [
       "1. Model Weights (2N bytes), 2. Gradients (2N bytes), 3. AdamW Optimizer States (12N bytes: FP32 Master weights + First & Second Momentum), 4. Activation Memory (tỷ lệ thuận với batch size và sequence length)",
-      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với $O(1)$ inference complexity",
+      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với \\$O(1)\\$ inference complexity",
       "Triệt tiêu hoàn toàn điện trở thuần ($R = 0$) của vật liệu siêu dẫn ở nhiệt độ cực thấp, cho phép các cổng logic Josephson Junction chuyển mạch ở tần số hàng trăm Gigahertz (GHz) với mức tiêu thụ năng lượng chỉ bằng 1/1,000 so với bóng bán dẫn silicon truyền thống",
       "Tối ưu hóa Chi phí trên mỗi Token (Cost per Token), Băng thông bộ nhớ (Memory Bandwidth), Mức tiêu thụ điện năng (Perf/Watt) và Tỉ lệ giá thành GPU (như dòng L4/L40S) thay vì sức mạnh tính toán FP64/FP32 thô"
     ],
@@ -13705,13 +13705,13 @@
     "difficulty": "Hard",
     "question": "Khi thiết kế một chip ASIC chuyên dụng tăng tốc kiến trúc Mamba / SSMs (thay thế Transformer), khối phần cứng nào cần được tối ưu hóa đặc biệt thay vì ma trận Attention thông thường?",
     "options": [
-      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với $O(1)$ inference complexity",
+      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với \\$O(1)\\$ inference complexity",
       "Thực hiện phép nhân ma trận - vector ($V = I \\times R$) trực tiếp ngay bên trong các ô nhớ điện trở (Memristive Crossbar Arrays) bằng cách áp dụng Định luật Ohm và Định luật Kirchhoff, loại bỏ 100% chi phí truyền dữ liệu giữa bộ nhớ và bộ xử lý",
       "Tích hợp Khép kín 5 Tầng: 1. Silicon Architecture (Tensor Cores tùy biến, SRAM dung lượng lớn); 2. Interconnect Topology (NVLink/NVSwitch Any-to-Any); 3. Domain-Specific Compiler (Triton / TVM tự động sinh mã máy tối ưu hóa bộ đệm); 4. Distributed Runtime (Megatron-Core + DeepSpeed ZeRO-3); 5. Algorithm Innovation (FlashAttention + Quantization-Aware Architecture)",
       "Liên tục thu thập số liệu Quang phổ Số hóa Nội dải (In-band Digital Optical Monitoring - DOM Metrics: Laser Bias Current, Optical Output Power, Temperature, Bit Error Rate Pre-FEC); sử dụng mô hình Random Forest/LSTM phát hiện xu hướng suy giảm công suất phát quang $P_{\\text{opt}} < -3\\text{dBm}$ trước 6 giờ để tự động chuyển luồng định tuyến (Graceful Traffic Drain) và thông báo kỹ sư thay module"
     ],
     "correct_index": 0,
-    "correct_answer": "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với $O(1)$ inference complexity",
+    "correct_answer": "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với \\$O(1)\\$ inference complexity",
     "explanation": "Mô hình SSMs đòi hỏi vi kiến trúc phần cứng tối ưu hóa cho phép toán quét tiền tố song song (Parallel Scan) và bộ nhớ đệm trạng thái hồi quy siêu tốc thay vì phép nhân ma trận Attention khổng lồ.",
     "slide_ref": "Day 16 - Slide: Specialized ASIC Microarchitecture for Mamba & SSMs"
   },
@@ -13760,7 +13760,7 @@
     "question": "Khi xây dựng một hệ thống Siêu máy tính AI Hoàn chỉnh từ mức Phần cứng (Silicon) đến Phần mềm (Compiler/Framework), mô hình Đồng thiết kế (Hardware-Software Co-Design) đạt được hiệu năng tối đa khi tích hợp đồng bộ những tầng nào?",
     "options": [
       "Đóng vai trò là bộ chuyển mạch chuyển tiếp (Crossbar Switch) kết nối tất cả 8 GPU thành một cụm chia sẻ bộ nhớ đồng nhất không nghẽn (Non-blocking Any-to-Any NVLink Fabric) với băng thông liên kết 900 GB/s trên mỗi GPU",
-      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với $O(1)$ inference complexity",
+      "Khối Tính toán Quét Song song Tuyến tính Tốc độ cao (High-Throughput Associative Parallel Prefix Scan Engine) kết hợp Bộ đệm SRAM Trạng thái Kích thước Lớn (Large Fast In-SRAM Recurrent State Buffer) để thực hiện cập nhật trạng thái hồi quy $h_t = A h_{t-1} + B x_t$ với \\$O(1)\\$ inference complexity",
       "Tích hợp Khép kín 5 Tầng: 1. Silicon Architecture (Tensor Cores tùy biến, SRAM dung lượng lớn); 2. Interconnect Topology (NVLink/NVSwitch Any-to-Any); 3. Domain-Specific Compiler (Triton / TVM tự động sinh mã máy tối ưu hóa bộ đệm); 4. Distributed Runtime (Megatron-Core + DeepSpeed ZeRO-3); 5. Algorithm Innovation (FlashAttention + Quantization-Aware Architecture)",
       "Tích hợp Khép kín 5 Tầng: 1. Silicon Architecture (Tensor Cores tùy biến, SRAM dung lượng lớn); 2. Interconnect Topology (NVLink/NVSwitch Any-to-Any); 3. Domain-Specific Compiler (Triton / TVM thực hiện thủ công theo lịch trình sinh mã máy tối ưu hóa bộ đệm); 4. Distributed Runtime (Megatron-Core + DeepSpeed ZeRO-3); 5. Algorithm Innovation (FlashAttention + Quantization-Aware Architecture)"
     ],
@@ -14063,7 +14063,7 @@
     "day": "Day 17",
     "topic": "Distributed Training Foundations (Megatron-LM Self-Attention Parallelism)",
     "difficulty": "Medium",
-    "question": "Trong tầng Multi-Head Attention, Tensor Parallelism phân chia ma trận $Q, K, V$ và ma trận Output Projection $O$ như thế nào?",
+    "question": "Trong tầng Multi-Head Attention, Tensor Parallelism phân chia ma trận \\$Q, K, V$ và ma trận Output Projection $O\\$ như thế nào?",
     "options": [
       "Tỉ lệ bong bóng $F_{\\text{bubble}} = \\frac{p - 1}{m + p - 1}$ (với $p$ là số chặng pipeline stages, $m$ là số lượng micro-batches); giảm thiểu bằng cách tăng số lượng micro-batches $m \\gg p$ hoặc dùng Interleaved Pipeline Schedule",
       "Ma trận trọng số $W_Q, W_K, W_V$ được phân rã theo Cột tương ứng với các Attention Heads (Column Parallel); ma trận chiếu $W_O$ được phân rã theo Hàng (Row Parallel) kết hợp 1 lần AllReduce",
@@ -15404,7 +15404,7 @@
     ],
     "correct_index": 3,
     "correct_answer": "Lưu trữ lại các vector Key và Value của các token đã xử lý trước đó trong bộ nhớ VRAM, giúp mô hình không phải tính toán lại Attention cho toàn bộ chuỗi token cũ khi sinh mỗi token mới",
-    "explanation": "KV Cache là kỹ thuật tối ưu hóa sống còn của giải mã tự hồi quy (Autoregressive Generation), giảm độ phức tạp tính toán từ $O(N^2)$ xuống $O(N)$ cho mỗi token mới.",
+    "explanation": "KV Cache là kỹ thuật tối ưu hóa sống còn của giải mã tự hồi quy (Autoregressive Generation), giảm độ phức tạp tính toán từ $O(N^2)$ xuống \\$O(N)\\$ cho mỗi token mới.",
     "slide_ref": "Day 19 - Slide: KV Cache Foundations"
   },
   {
@@ -15632,7 +15632,7 @@
     "question": "Hai siêu tham số `temperature` và `top_p` trong quá trình suy luận (Decoding) điều khiển khía cạnh nào của câu trả lời?",
     "options": [
       "$\\text{KV\\_Size\\_per\\_token} = 2 \\times 2 \\times n_{\\text{layers}} \\times n_{\\text{heads\\_kv}} \\times d_{\\text{head}}$ bytes",
-      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai ($t+1, t+2, t+3$) song song trong cùng 1 bước Forward Pass",
+      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai (\\$t+1, t+2, t+3\\$) song song trong cùng 1 bước Forward Pass",
       "Phân tích đồ thị tính toán (FX Graph) và tự động sinh mã máy C++/Triton Kernels tối ưu: Tự động gom cụm các phép toán liên tiếp (Kernel Fusion), loại bỏ hoàn toàn việc phân bổ bộ nhớ trung gian thừa thãi",
       "Điều khiển Độ ngẫu nhiên và Tính sáng tạo: `temperature` làm phẳng hoặc làm nhọn phân phối xác suất; `top_p` (Nucleus Sampling) giới hạn việc lấy mẫu trong tập hợp các token có tổng xác suất tích lũy $\\le p$"
     ],
@@ -15649,7 +15649,7 @@
     "difficulty": "Easy",
     "question": "Sự khác biệt giữa 'Greedy Decoding' và 'Beam Search' trong giải mã ngôn ngữ là gì?",
     "options": [
-      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai ($t+1, t+2, t+3$) song song trong cùng 1 bước Forward Pass",
+      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai (\\$t+1, t+2, t+3\\$) song song trong cùng 1 bước Forward Pass",
       "Quy định thời gian tối đa mà server được phép gom thêm các request mới vào batch: Nếu batch đạt kích thước tối đa HOẶC hết thời gian chờ 5ms, server lập tức đẩy batch vào GPU để xử lý, đảm bảo SLA độ trễ phản hồi",
       "Greedy Decoding luôn chọn token có xác suất cao nhất tại mỗi bước (nhanh, đơn giản); Beam Search duy trì đồng thời $K$ chuỗi giả thuyết tiềm năng nhất (chất lượng cao hơn nhưng tốn nhiều bộ nhớ và thời gian tính toán)",
       "Phân tích đồ thị tính toán (FX Graph) và tự động sinh mã máy C++/Triton Kernels tối ưu: Tự động gom cụm các phép toán liên tiếp (Kernel Fusion), loại bỏ hoàn toàn việc phân bổ bộ nhớ trung gian thừa thãi"
@@ -15706,7 +15706,7 @@
       "Time to First Token (TTFT - Thời gian từ khi gửi prompt đến khi nhận được token đầu tiên) và Inter-Token Latency (ITL / Time per Output Token - Thời gian sinh ra mỗi token tiếp theo)",
       "Chia nhỏ các prompt đầu vào dài thành các khối Chunk (ví dụ: 512 tokens/chunk) và đồng lên lịch thực thi song song các Chunks này cùng với các token Generation trong cùng một bước lặp, triệt tiêu hiện tượng tăng vọt độ trễ Inter-Token Latency (ITL Spikes)",
       "Mô hình hóa bài toán nén trọng số dưới dạng Bài toán Cực tiểu hóa Sai số Toàn phương bậc hai (Second-Order Error Minimization): Sử dụng nghịch đảo của ma trận Hessian $H^{-1}$ để xác định thứ tự lượng tử hóa tối ưu cho từng cột trọng số và tự động cập nhật bù trừ sai số tức thời cho tất cả các trọng số chưa lượng tử hóa còn lại trong ma trận",
-      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai ($t+1, t+2, t+3$) song song trong cùng 1 bước Forward Pass"
+      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai (\\$t+1, t+2, t+3\\$) song song trong cùng 1 bước Forward Pass"
     ],
     "correct_index": 1,
     "correct_answer": "Chia nhỏ các prompt đầu vào dài thành các khối Chunk (ví dụ: 512 tokens/chunk) và đồng lên lịch thực thi song song các Chunks này cùng với các token Generation trong cùng một bước lặp, triệt tiêu hiện tượng tăng vọt độ trễ Inter-Token Latency (ITL Spikes)",
@@ -15811,13 +15811,13 @@
     "difficulty": "Medium",
     "question": "Kiến trúc 'Medusa' (Multiple Decoding Heads) cải tiến Speculative Decoding mà không cần mô hình Draft riêng biệt bằng cách nào?",
     "options": [
-      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai ($t+1, t+2, t+3$) song song trong cùng 1 bước Forward Pass",
+      "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai (\\$t+1, t+2, t+3\\$) song song trong cùng 1 bước Forward Pass",
       "Tỉ lệ chấp nhận của Mô hình Đích (Acceptance Rate $\\beta \\in [0, 1]$), Số lượng token phỏng đoán $K$, và Tỉ số chi phí tính toán giữa Mô hình Nhỏ và Mô hình Lớn (Cost Ratio $\\frac{C_{\\text{draft}}}{C_{\\text{target}}}$)",
-      "Gắn thêm nhiều 'Decoding Heads' nhỏ gián tiếp qua bộ đệm trung gian lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai ($t+1, t+2, t+3$) song song trong cùng 1 bước Forward Pass",
+      "Gắn thêm nhiều 'Decoding Heads' nhỏ gián tiếp qua bộ đệm trung gian lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai (\\$t+1, t+2, t+3\\$) song song trong cùng 1 bước Forward Pass",
       "Chia nhỏ các prompt đầu vào dài thành các khối Chunk (ví dụ: 512 tokens/chunk) và đồng lên lịch thực thi song song các Chunks này cùng với các token Generation trong cùng một bước lặp, triệt tiêu hiện tượng tăng vọt độ trễ Inter-Token Latency (ITL Spikes)"
     ],
     "correct_index": 0,
-    "correct_answer": "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai ($t+1, t+2, t+3$) song song trong cùng 1 bước Forward Pass",
+    "correct_answer": "Gắn thêm nhiều 'Decoding Heads' nhỏ trực tiếp lên tầng cuối cùng của chính mô hình gốc, cho phép mô hình tự sinh đồng thời nhiều token tương lai (\\$t+1, t+2, t+3\\$) song song trong cùng 1 bước Forward Pass",
     "explanation": "Medusa loại bỏ sự phức tạp của việc duy trì và nạp 2 mô hình độc lập, tích hợp các đầu dự báo tương lai trực tiếp vào thân mô hình mẹ.",
     "slide_ref": "Day 19 - Slide: Medusa: Multi-Head Speculative Decoding"
   },
@@ -16316,7 +16316,7 @@
     "question": "Khi nào nên lựa chọn Slurm và khi nào nên lựa chọn Kubernetes cho hệ thống AI?",
     "options": [
       "Gửi tín hiệu cảnh báo (SIGUSR1 / SIGTERM) cho Job đang chạy để nó lưu Checkpoint trạng thái dở dang vào đĩa trong 60 giây -> Tạm dừng hoặc hủy Job đó để nhường GPU cho Job khẩn cấp -> Tự động đưa Job cũ trở lại hàng đợi để chạy tiếp sau đó",
-      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
+      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
       "Lựa chọn Slurm cho các Tác vụ Huấn luyện Phân tán Lô lớn (Batch Large-Scale Training Jobs) đòi hỏi truy cập phần cứng bare-metal và mạng Infiniband tối đa; Lựa chọn Kubernetes cho các Dịch vụ Phục vụ Trực tuyến (Inference Serving, Web APIs, Microservices, CI/CD)",
       "Prolog: Kiểm tra sức khỏe GPU, dọn dẹp bộ nhớ tạm và nạp driver; Epilog: Thu dọn các tiến trình rác còn sót lại, xóa dữ liệu nhạy cảm trong `/tmp` và thiết lập lại trạng thái GPU về mặc định"
     ],
@@ -16457,7 +16457,7 @@
     "day": "Day 20",
     "topic": "Orchestration with Kubernetes & Slurm (Slurm Environment Variables)",
     "difficulty": "Easy",
-    "question": "Trong một Job chạy bằng Slurm, biến môi trường `$SLURM_PROCID` biểu thị thông tin gì?",
+    "question": "Trong một Job chạy bằng Slurm, biến môi trường `\\$SLURM_PROCID` biểu thị thông tin gì?",
     "options": [
       "Khả năng Tự động Co giãn (Auto-scaling), Tự phục hồi (Self-healing), Quản lý Microservices phân tán, Hệ sinh thái Cloud-Native khổng lồ và hỗ trợ Rolling Updates không downtime",
       "Chỉ số Rank định danh duy nhất (Global Process Rank từ 0 đến N-1) của tiến trình hiện tại trong toàn bộ cụm tác vụ phân tán",
@@ -16466,7 +16466,7 @@
     ],
     "correct_index": 1,
     "correct_answer": "Chỉ số Rank định danh duy nhất (Global Process Rank từ 0 đến N-1) của tiến trình hiện tại trong toàn bộ cụm tác vụ phân tán",
-    "explanation": "`$SLURM_PROCID` được sử dụng trực tiếp để thiết lập biến `RANK` cho PyTorch Distributed trong các kịch bản huấn luyện tự động.",
+    "explanation": "`\\$SLURM_PROCID` được sử dụng trực tiếp để thiết lập biến `RANK` cho PyTorch Distributed trong các kịch bản huấn luyện tự động.",
     "slide_ref": "Day 20 - Slide: Slurm Runtime Environment Variables"
   },
   {
@@ -16495,13 +16495,13 @@
     "difficulty": "Medium",
     "question": "Trong một kịch bản Slurm `#SBATCH --nodes=4 --gpus-per-node=8`, lệnh nào sau đây khởi chạy huấn luyện PyTorch DDP chuẩn mực nhất trên toàn bộ 32 GPUs?",
     "options": [
-      "`srun torchrun --nnodes=4 --nproc_per_node=8 --rdzv_backend=c10d --rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT train.py`",
+      "`srun torchrun --nnodes=4 --nproc_per_node=8 --rdzv_backend=c10d --rdzv_endpoint=\u00000\u0000MASTER_PORT train.py`",
       "Phát đi thông báo qua Webhook bảo mật chứa file train.py cho từng máy chủ",
       "Chạy lệnh `python train.py` một lần duy nhất trên máy chủ đăng nhập",
       "Chạy 32 lần lệnh `python train.py` trong 32 cửa sổ terminal riêng lẻ"
     ],
     "correct_index": 0,
-    "correct_answer": "`srun torchrun --nnodes=4 --nproc_per_node=8 --rdzv_backend=c10d --rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT train.py`",
+    "correct_answer": "`srun torchrun --nnodes=4 --nproc_per_node=8 --rdzv_backend=c10d --rdzv_endpoint=\u00000\u0000MASTER_PORT train.py`",
     "explanation": "`srun` kết hợp `torchrun` tự động phân phối tiến trình tới tất cả các nút máy chủ và thiết lập kết nối Rendezvous đồng bộ cho toàn bộ 32 GPU.",
     "slide_ref": "Day 20 - Slide: Multi-Node Distributed Training with Slurm & Torchrun"
   },
@@ -16676,12 +16676,12 @@
     "question": "Tính năng 'Array Jobs' (`#SBATCH --array=1-100`) trong Slurm mang lại sự tiện lợi gì khi thực hiện Tinh chỉnh Siêu tham số (Hyperparameter Sweeps)?",
     "options": [
       "Gửi tín hiệu cảnh báo (SIGUSR1 / SIGTERM) cho Job đang chạy để nó lưu Checkpoint trạng thái dở dang vào đĩa trong 60 giây -> Tạm dừng hoặc hủy Job đó để nhường GPU cho Job khẩn cấp -> Tự động đưa Job cũ trở lại hàng đợi để chạy tiếp sau đó",
-      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để thực hiện thủ công theo lịch trình đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
-      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
+      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để thực hiện thủ công theo lịch trình đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
+      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
       "Dựa trên Hạn ngạch được cấp (Allocated Target Share) so sánh với Mức tài nguyên thực tế đã tiêu thụ trong quá khứ (Historical Usage Decay): Người dùng tiêu thụ ít hơn hạn ngạch sẽ được ưu tiên chạy trước"
     ],
     "correct_index": 2,
-    "correct_answer": "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
+    "correct_answer": "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
     "explanation": "Array Jobs là công cụ đắc lực tự động hóa việc chạy song song hàng trăm thử nghiệm siêu tham số trên cụm siêu máy tính một cách tinh gọn.",
     "slide_ref": "Day 20 - Slide: Slurm Array Jobs for Hyperparameter Sweeps"
   },
@@ -16696,7 +16696,7 @@
       "Quy định số lượng Pods tối thiểu BẮT BUỘC PHẢI LUÔN HOẠT ĐỘNG (ví dụ: `minAvailable: 80%`): Hệ thống chỉ được phép bảo trì/khởi động lại từng node một khi đã đảm bảo đủ số lượng Pods phục vụ khách hàng",
       "Báo cáo chi tiết về Thời gian chạy thực tế (Elapsed Time), Trạng thái kết thúc (COMPLETED / FAILED / OUT_OF_MEMORY), Mức tiêu thụ RAM đỉnh (MaxRSS) và Hiệu suất sử dụng CPU/GPU của Job",
       "Hệ thống Quản lý Hàng đợi Tác vụ Đa Người dùng (Multi-tenant Job Queueing System): Quản lý hạn ngạch tài nguyên (Resource Quotas), Hàng đợi ưu tiên (Fair Sharing) và Điều phối thời điểm chạy cho các Batch Jobs",
-      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình"
+      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình"
     ],
     "correct_index": 0,
     "correct_answer": "Quy định số lượng Pods tối thiểu BẮT BUỘC PHẢI LUÔN HOẠT ĐỘNG (ví dụ: `minAvailable: 80%`): Hệ thống chỉ được phép bảo trì/khởi động lại từng node một khi đã đảm bảo đủ số lượng Pods phục vụ khách hàng",
@@ -16748,7 +16748,7 @@
     "question": "Công cụ dòng lệnh `sacct` trong Slurm cung cấp những thông tin lịch sử quan trọng nào sau khi một Job kết thúc?",
     "options": [
       "Báo cáo chi tiết về Thời gian chạy thực tế (Elapsed Time), Trạng thái kết thúc (COMPLETED / FAILED / OUT_OF_MEMORY), Mức tiêu thụ RAM đỉnh (MaxRSS) và Hiệu suất sử dụng CPU/GPU của Job",
-      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
+      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
       "Ưu tiên gom nhóm các Pods thuộc cùng một Job huấn luyện vào các GPU nằm trên CÙNG MỘT MÁY CHỦ (Intra-node qua NVLink) hoặc CÙNG MỘT RACK SWITCH (Intra-rack), giảm thiểu độ trễ mạng liên rack",
       "Khả năng Tự động Co giãn (Auto-scaling), Tự phục hồi (Self-healing), Quản lý Microservices phân tán, Hệ sinh thái Cloud-Native khổng lồ và hỗ trợ Rolling Updates không downtime"
     ],
@@ -16803,7 +16803,7 @@
     "options": [
       "Triển khai Kiến trúc Điều phối Hai Tầng Động (Two-Tier Dynamic Hardware Partitioning & Elastic Provisioning): 1. Tầng Hạ tầng Trần (Bare-Metal Base with Slurm Workload Manager) quản lý toàn bộ 10,000 GPUs với băng thông InfiniBand NDR tối đa cho các Job Pre-training lớn; 2. Tầng Co giãn Đám mây K8s (Virtual Kubernetes Cluster on Demand via Kube-on-Slurm / Slurm-K8s Bridge): Khi có nhu cầu mở rộng dịch vụ suy luận trực tuyến trong giờ cao điểm, hệ thống tự động gửi các Slurm Jobs khởi chạy các K8s Worker Nodes ảo hóa siêu nhẹ (MicroVMs với GPU Passthrough); 3. Khi tải suy luận giảm vào ban đêm, K8s tự động thu hồi Pods và trả lại tài nguyên GPU cho hàng đợi huấn luyện Slurm; 4. Hệ thống Lưu trữ Song song WEKA/Lustre chia sẻ chung cho cả 2 môi trường",
       "Triển khai Kiến trúc Điều phối Hai Tầng Động (Two-Tier Dynamic Hardware Partitioning & Elastic Provisioning): 1. Tầng Hạ tầng Trần (Bare-Metal Base with Slurm Workload Manager) quản lý toàn bộ 10,000 GPUs với băng thông InfiniBand NDR tối đa cho các Job Pre-training lớn; 2. Tầng Co giãn Đám mây K8s (Virtual Kubernetes Cluster on Demand via Kube-on-Slurm / Slurm-K8s Bridge): Khi có nhu cầu mở rộng dịch vụ suy luận trực tuyến trong giờ cao điểm, hệ thống thực hiện thủ công theo lịch trình gửi các Slurm Jobs khởi chạy các K8s Worker Nodes ảo hóa siêu nhẹ (MicroVMs với GPU Passthrough); 3. Khi tải suy luận giảm vào ban đêm, K8s thực hiện thủ công theo lịch trình thu hồi Pods và trả lại tài nguyên GPU cho hàng đợi huấn luyện Slurm; 4. Hệ thống Lưu trữ Song song WEKA/Lustre chia sẻ chung cho cả 2 môi trường",
-      "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng $U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
+      "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng \\$U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau\\$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
       "Triển khai Ma trận Phân mảnh GPU 3 Phân vùng: 1. Dedicated GPU Node Pool (Chạy Full Bare-Metal H100 GPU không phân mảnh cho Training); 2. MIG-Enabled Node Pool (Cấu hình GPU Operator tự động chia H100 thành các lát cắt phần cứng `nvidia.com/mig-3g.40gb` với VRAM và SMs cô lập cho Production Inference); 3. Time-Slicing Node Pool (Cấu hình `nvidia-container-toolkit` chia sẻ thời gian ảo hóa cho các môi trường Dev/Jupyter Notebooks), tối đa hóa 100% hiệu quả kinh tế"
     ],
     "correct_index": 0,
@@ -16821,11 +16821,11 @@
     "options": [
       "Quy định số lượng Pods tối thiểu BẮT BUỘC PHẢI LUÔN HOẠT ĐỘNG (ví dụ: `minAvailable: 80%`): Hệ thống chỉ được phép bảo trì/khởi động lại từng node một khi đã đảm bảo đủ số lượng Pods phục vụ khách hàng",
       "Quy trình Tự Phục hồi Tự động 5 Bước: 1. NVIDIA GPU Operator/DCGM phát hiện lỗi Fatal ECC và phát sự kiện `NodeUnhealthy`; 2. K8s Controller lập tức gửi tín hiệu SIGTERM cho Job, kích hoạt tiến trình lưu Checkpoint khẩn cấp vào NVMe Burst Buffer trong 10 giây; 3. Volcano Scheduler tự động rút Node 45 khỏi cụm (Cordon & Drain), cấp phát Node dự phòng khỏe mạnh (Hot-Spare Node); 4. Tự động khởi chạy lại Gang Pods mới; 5. TorchElastic tải Checkpoint gần nhất và tiếp tục huấn luyện trong < 45 giây",
-      "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng $U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
+      "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng \\$U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau\\$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
       "Tích hợp Slurm với Dữ liệu Lưới Điện Thời gian thực (Green-Grid API): Hệ thống tự động theo dõi Tỉ lệ Năng lượng Tái tạo (Điện gió, Điện mặt trời) trên lưới điện quốc gia; Tự động đẩy nhanh các Job huấn luyện lớn vào các khung giờ năng lượng xanh dồi dào và hạ xung nhịp GPU (DVFS) vào các khung giờ điện than/nhiệt điện"
     ],
     "correct_index": 2,
-    "correct_answer": "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng $U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
+    "correct_answer": "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng \\$U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau\\$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
     "explanation": "Phương trình suy giảm lũy thừa thời gian cân bằng hoàn hảo giữa việc bù đắp cho các nhóm bị thiếu tài nguyên trong thời gian dài và việc không phạt vĩnh viễn các nhóm vừa chạy tác vụ lớn trong quá khứ.",
     "slide_ref": "Day 20 - Slide: Mathematical Formulation of Slurm Fair-Share Priority"
   },
@@ -16945,7 +16945,7 @@
     "difficulty": "Hard",
     "question": "Khi một trường Đại học sở hữu 3 cụm Siêu máy tính Slurm đặt tại 3 cơ sở địa lý khác nhau, kiến trúc 'Slurm Multi-Cluster Federation' điều phối công việc xuyên cụm như thế nào?",
     "options": [
-      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
+      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
       "Gửi tín hiệu cảnh báo (SIGUSR1 / SIGTERM) cho Job đang chạy để nó lưu Checkpoint trạng thái dở dang vào đĩa trong 60 giây -> Tạm dừng hoặc hủy Job đó để nhường GPU cho Job khẩn cấp -> Tự động đưa Job cũ trở lại hàng đợi để chạy tiếp sau đó",
       "Thiết lập Liên minh Cụm Slurm Tập trung (Slurm Federated Cluster Architecture): Sử dụng chung một Cơ sở dữ liệu SlurmDBD duy nhất đồng bộ hóa trạng thái; Khi người dùng nộp Job tại Cụm A nhưng Cụm A đang đầy tải, Federation Controller thực hiện thủ công theo lịch trình phân tích hàng đợi và chuyển tiếp (Burst/Route) Job sang Cụm B hoặc C đang nhàn rỗi một cách trong suốt",
       "Thiết lập Liên minh Cụm Slurm Tập trung (Slurm Federated Cluster Architecture): Sử dụng chung một Cơ sở dữ liệu SlurmDBD duy nhất đồng bộ hóa trạng thái; Khi người dùng nộp Job tại Cụm A nhưng Cụm A đang đầy tải, Federation Controller tự động phân tích hàng đợi và chuyển tiếp (Burst/Route) Job sang Cụm B hoặc C đang nhàn rỗi một cách trong suốt"
@@ -16964,7 +16964,7 @@
     "question": "Tại sao việc cấu hình `hugepages-2Mi` / `hugepages-1Gi` và Quản lý Bộ nhớ Tạm thời (Ephemeral Storage Limits) trong Pod Spec lại là yêu cầu sống còn cho các tác vụ Huấn luyện AI?",
     "options": [
       "Tối ưu hóa Cấu hình Slurmctld: 1. Kích hoạt `SchedulerParameters=sched_min_interval=1000,default_queue_depth=5000,bf_max_job_user=1000`; 2. Chuyển đổi Cơ chế Lập lịch sang Đa luồng Bất đồng bộ (Pthreads Scheduling & Backfill Scheduler Tuning); 3. Cấu hình Cụm Cơ sở dữ liệu SlurmDBD trên SSD NVMe với Connection Pooling; 4. Gom nhóm các Jobs nhỏ thành Slurm Job Arrays để giảm tải cho bộ nhớ tiến trình điều khiển",
-      "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng $U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
+      "Độ ưu tiên Fair-Share $P_{\\text{fairshare}} = 2^{-\\frac{U}{S}}$ (trong đó $S$ là Tỉ lệ Hạn ngạch Chuẩn của nhóm người dùng, $U$ là Mức sử dụng chuẩn hóa thực tế). Mức sử dụng \\$U(t)$ được cập nhật liên tục theo phương trình vi phân suy giảm thời gian: $U(t) = U_0 e^{-\\frac{\\Delta t}{\\tau}} + \\text{NewUsage}$, với chu kỳ bán rã $\\tau\\$ (Half-life, ví dụ: 7 ngày) giúp giảm dần trọng số sử dụng của các tác vụ cũ trong quá khứ",
       "1. HugePages khóa các trang bộ nhớ kích thước lớn (2MB/1GB) trong RAM vật lý, loại bỏ chi phí TLB Cache Misses và tăng 15-20% thông lượng I/O của mô hình PyTorch; 2. Ephemeral Storage Limits ngăn chặn việc một Pod ghi tràn ổ đĩa chứa `/tmp` làm sập toàn bộ hệ điều hành của Worker Node mẹ",
       "Prolog: Kiểm tra sức khỏe GPU, dọn dẹp bộ nhớ tạm và nạp driver; Epilog: Thu dọn các tiến trình rác còn sót lại, xóa dữ liệu nhạy cảm trong `/tmp` và thiết lập lại trạng thái GPU về mặc định"
     ],
@@ -16982,7 +16982,7 @@
     "question": "Làm thế nào để hệ thống Slurm tự động điều phối các tác vụ tính toán khổng lồ theo 'Chỉ số Phát thải Carbon' (Carbon-Aware AI Scheduling) để giảm thiểu tác động môi trường?",
     "options": [
       "Đảm bảo rằng TOÀN BỘ $N$ pods của một Job huấn luyện phân tán (ví dụ: 32 GPUs) BẮT BUỘC phải được cấp phát tài nguyên và khởi chạy CÙNG MỘT LÚC; nếu thiếu dù chỉ 1 pod thì KHÔNG khởi chạy bất kỳ pod nào",
-      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
+      "Cho phép gửi đồng thời 100 tác vụ độc lập chỉ bằng một file kịch bản duy nhất; mỗi tác vụ con nhận một chỉ số `\\$SLURM_ARRAY_TASK_ID` tương ứng để tự động đọc một bộ siêu tham số khác nhau từ danh sách cấu hình",
       "Tích hợp Slurm với Dữ liệu Lưới Điện Thời gian thực (Green-Grid API): Hệ thống thực hiện thủ công theo lịch trình theo dõi Tỉ lệ Năng lượng Tái tạo (Điện gió, Điện mặt trời) trên lưới điện quốc gia; Tự động đẩy nhanh các Job huấn luyện lớn vào các khung giờ năng lượng xanh dồi dào và hạ xung nhịp GPU (DVFS) vào các khung giờ điện than/nhiệt điện",
       "Tích hợp Slurm với Dữ liệu Lưới Điện Thời gian thực (Green-Grid API): Hệ thống tự động theo dõi Tỉ lệ Năng lượng Tái tạo (Điện gió, Điện mặt trời) trên lưới điện quốc gia; Tự động đẩy nhanh các Job huấn luyện lớn vào các khung giờ năng lượng xanh dồi dào và hạ xung nhịp GPU (DVFS) vào các khung giờ điện than/nhiệt điện"
     ],
@@ -17361,11 +17361,11 @@
     "options": [
       "Cho phép một ứng dụng Ray viết bằng Python có thể gọi trực tiếp các Tasks/Actors được viết bằng Java hoặc C++ (và ngược lại) trên cùng một cụm tính toán phân tán với khả năng chia sẻ dữ liệu chung qua Plasma",
       "Thuật toán ASHA (Asynchronous Successive Halving Algorithm): Tự động đánh giá hiệu năng sớm của các thử nghiệm; lập tức tiêu hủy (Prune) các cấu hình hoạt động kém ở những epoch đầu và chỉ cấp thêm tài nguyên tính toán cho các cấu hình hứa hẹn",
-      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block $N+1$ và $N+2$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
-      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data thực hiện thủ công theo lịch trình sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block $N+1$ và $N+2$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc"
+      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block \\$N+1\\$ và \\$N+2\\$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
+      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data thực hiện thủ công theo lịch trình sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block \\$N+1\\$ và \\$N+2\\$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc"
     ],
     "correct_index": 2,
-    "correct_answer": "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block $N+1$ và $N+2$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
+    "correct_answer": "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block \\$N+1\\$ và \\$N+2\\$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
     "explanation": "Windowed Prefetching che giấu 100% thời gian tiền xử lý dữ liệu CPU bên dưới thời gian tính toán GPU, duy trì mức khai thác GPU đạt đỉnh 100%.",
     "slide_ref": "Day 21 - Slide: Ray Data Prefetching & Pipelining"
   },
@@ -17540,7 +17540,7 @@
     "question": "Khi truyền một mảng dữ liệu từ CPU Worker sang GPU Worker trong Ray, kỹ thuật 'Pinned Host Memory' (CUDA Pinned Memory) tăng tốc độ như thế nào?",
     "options": [
       "Lưu trữ các đối tượng dữ liệu bất biến (Immutable Data Objects) trong Bộ nhớ Chia sẻ Bộ nhớ Chung (Shared Memory) trên từng node, cho phép các Worker đọc dữ liệu với chi phí Zero-Copy",
-      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block $N+1$ và $N+2$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
+      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block \\$N+1\\$ và \\$N+2\\$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
       "Cấp phát bộ nhớ đệm CPU ở chế độ Khóa Trang (Page-Locked / Pinned Memory), cho phép GPU thực hiện sao chép dữ liệu gián tiếp qua bộ đệm trung gian qua DMA ở tốc độ tối đa của bus PCIe mà không cần sự can thiệp của CPU",
       "Cấp phát bộ nhớ đệm CPU ở chế độ Khóa Trang (Page-Locked / Pinned Memory), cho phép GPU thực hiện sao chép dữ liệu trực tiếp qua DMA ở tốc độ tối đa của bus PCIe mà không cần sự can thiệp của CPU"
     ],
@@ -17720,7 +17720,7 @@
     "question": "Khi cần kết nối 2 cụm Ray Cluster đặt tại 2 trung tâm dữ liệu khác nhau xuyên lục địa qua mạng WAN công cộng, kiến trúc Bảo mật Enclave và Nén Luồng Dữ liệu nào đảm bảo an toàn tuyệt đối và thông lượng tối đa?",
     "options": [
       "Trực quan hóa thời gian thực về Bản đồ Cụm (Cluster Map), Mức sử dụng CPU/GPU/VRAM, Danh sách Actors đang chạy, Lịch sử Tasks, và Chi tiết dung lượng Object Store",
-      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block $N+1$ và $N+2$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
+      "Trong khi GPU đang bận tính toán trên Block dữ liệu $N$, Ray Data tự động sử dụng các CPU Workers chạy ngầm để nạp, giải nén và tiền xử lý trước các Block \\$N+1\\$ và \\$N+2\\$ vào bộ đệm Plasma, đảm bảo GPU luôn có sẵn dữ liệu ngay khi xong việc",
       "Ghi nhật ký Đồ thị Thực thi và Hạt giống Ngẫu nhiên (Lineage & Deterministic Seed Logging Engine): Tự động ghi lại toàn bộ cây phụ thuộc Directed Acyclic Graph (DAG) của các ObjectRefs, Khóa cố định các luồng phân phối ngẫu nhiên cho từng Task ID và ghi lại toàn bộ các giá trị I/O biên; Engine tái lập có thể tái hiện chính xác từng bước tính toán trên bất kỳ cụm máy chủ nào",
       "Triển khai Tầng Cổng Kết nối Liên Cụm Bảo mật (Secure Ray Federation Gateway with WireGuard / mTLS 1.3): Toàn bộ các cuộc gọi RPC và truyền tải ObjectRef qua mạng WAN được mã hóa phần cứng (AES-GCM-256) và nén luồng dữ liệu thời gian thực bằng thuật toán Zstandard (Zstd level 3); Sử dụng cơ chế Proxy Object Pointer để chỉ truyền tải dữ liệu thực tế khi nút đích thực sự gọi `ray.get()`"
     ],
@@ -17753,7 +17753,7 @@
     "day": "Day 21",
     "topic": "Ray for Distributed AI (Ray Tune Multi-Objective Bayesian Optimization with Pareto Frontiers)",
     "difficulty": "Hard",
-    "question": "Khi tối ưu hóa đồng thời 3 mục tiêu mâu thuẫn nhau: Cực đại hóa Độ chính xác ($Accuracy$), Cực tiểu hóa Độ trễ ($Latency$) và Cực tiểu hóa Dung lượng Mô hình ($Size$), Ray Tune điều phối không gian tìm kiếm như thế nào?",
+    "question": "Khi tối ưu hóa đồng thời 3 mục tiêu mâu thuẫn nhau: Cực đại hóa Độ chính xác (\\$Accuracy$), Cực tiểu hóa Độ trễ ($Latency$) và Cực tiểu hóa Dung lượng Mô hình ($Size\\$), Ray Tune điều phối không gian tìm kiếm như thế nào?",
     "options": [
       "Là tiến trình Python gốc khởi chạy chương trình chính (chứa lệnh `ray.init()`); Driver giao tiếp với Head Node để gửi các lệnh gọi Task/Actor phân tán tới các Worker Processes trên toàn cụm",
       "Cho phép một ứng dụng Ray viết bằng Python có thể gọi trực tiếp các Tasks/Actors được viết bằng Java hoặc C++ (và ngược lại) trên cùng một cụm tính toán phân tán với khả năng chia sẻ dữ liệu chung qua Plasma",
@@ -18441,11 +18441,11 @@
     "options": [
       "Xây dựng Đường ống Streaming Feature Ingestion: Các sự kiện giao dịch từ Apache Kafka được xử lý liên tục qua Flink / Spark Streaming, tính toán các đặc trưng cửa sổ trượt (Sliding Windows) và ghi trực tiếp vào Redis Online Store qua Feast Push API",
       "Triển khai Mạng lưới Phân phối Tạo tác Toàn cầu (Global Artifact Distribution Network with Hash-Chained Object Replication): Sử dụng MLflow Model Registry tập trung kết hợp Cơ chế Nhân bản Hướng sự kiện (Event-Driven S3-to-GCS Cross-Cloud Bucket Mirroring qua Dedicated Interconnect); Mỗi Artifact được ký số bằng mật mã học (SHA-256 Signature); Cụm GCP tự động xác thực chữ ký và nạp nóng mô hình vào bộ nhớ đệm phục vụ trong < 45 giây",
-      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: $PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, thực hiện thủ công theo lịch trình kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
-      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: $PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy"
+      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: \\$PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, thực hiện thủ công theo lịch trình kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx\\$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
+      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: \\$PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx\\$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy"
     ],
     "correct_index": 3,
-    "correct_answer": "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: $PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
+    "correct_answer": "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: \\$PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx\\$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
     "explanation": "Công thức toán học PSI và khoảng cách Wasserstein cung cấp nền tảng định lượng chuẩn xác để hệ thống tự động phát hiện sự suy thoái dữ liệu và kích hoạt phản ứng hạ tầng kịp thời.",
     "slide_ref": "Day 22 - Slide: Mathematical Formulation of PSI & Wasserstein Drift Metrics"
   },
@@ -18459,7 +18459,7 @@
     "options": [
       "So sánh phân phối xác suất của từng đặc trưng giữa Baseline Dataset và Current Production Stream bằng các kiểm định thống kê: Kolmogorov-Smirnov (cho biến liên tục), Chi-Square (cho biến rời rạc) và Khoảng cách Wasserstein",
       "Triển khai Mạng lưới Phân phối Tạo tác Toàn cầu (Global Artifact Distribution Network with Hash-Chained Object Replication): Sử dụng MLflow Model Registry tập trung kết hợp Cơ chế Nhân bản Hướng sự kiện (Event-Driven S3-to-GCS Cross-Cloud Bucket Mirroring qua Dedicated Interconnect); Mỗi Artifact được ký số bằng mật mã học (SHA-256 Signature); Cụm GCP tự động xác thực chữ ký và nạp nóng mô hình vào bộ nhớ đệm phục vụ trong < 45 giây",
-      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường ($Importance > 0.98$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
+      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường (\\$Importance > 0.98\\$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
       "Quy trình Tiến hóa Schema 4 Pha (Expand-and-Contract Feature Migration): 1. Khai báo FeatureView phiên bản mới (`v2`) song song với `v1` trong Feast Registry; 2. Cập nhật Flink Streaming Engine ghi đồng thời (Dual-Write) dữ liệu vào cả key không gian `v1` và `v2` trong Redis Online Store; 3. Chạy Backfill Job nạp dữ liệu lịch sử cho các đặc trưng mới trên Offline Store; 4. Chuyển đổi các mô hình sang đọc từ `v2` và tiến hành thu hồi an toàn phiên bản `v1`"
     ],
     "correct_index": 3,
@@ -18476,7 +18476,7 @@
     "question": "Thiết kế một Vòng lặp Huấn luyện Lại Tự động (Autonomous Continuous Learning Loop) có khả năng tự phát hiện dữ liệu mới, tự huấn luyện, tự đánh giá và tự quyết định triển khai lên Production. Cơ chế Ngắt mạch An toàn (Safety Circuit Breakers) nào ngăn chặn việc triển khai tự động một mô hình bị thoái hóa?",
     "options": [
       "Triển khai Bộ Ngắt mạch Đa Tầng (Multi-Tier Automated Safety Circuit Breaker Suite): 1. Regression Barrier: Mô hình mới bắt buộc phải vượt qua 100% Golden Test Suite và đạt $F_1 \\ge F_{1,\\text{current}}$; 2. Data Integrity Barrier: Chặn huấn luyện nếu dữ liệu mới có nhãn bị ô nhiễm hoặc mất cân bằng đột biến; 3. Shadow Traffic Gate: Mô hình mới chạy ngầm 48h trên 100% lưu lượng thực tế, nếu p99 Latency tăng > 10% hoặc Error Rate > 0.05%, tự động hủy phát hành và gửi cảnh báo khẩn cấp cho kỹ sư",
-      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường ($Importance > 0.98$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
+      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường (\\$Importance > 0.98\\$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
       "Entity là Khóa Chính đại diện cho đối tượng nghiệp vụ (ví dụ: `user_id` hoặc `driver_id`); FeatureView là tập hợp các đặc trưng thuộc về Entity đó kèm theo nguồn dữ liệu (Source) và chính sách làm mới dữ liệu (TTL / Refresh Rate)",
       "Triển khai Bộ Ngắt mạch Đa Tầng (Multi-Tier Automated Safety Circuit Breaker Suite): 1. Regression Barrier: Mô hình mới bắt buộc phải vượt qua 100% Golden Test Suite và đạt $F_1 \\ge F_{1,\\text{current}}$; 2. Data Integrity Barrier: Chặn huấn luyện nếu dữ liệu mới có nhãn bị ô nhiễm hoặc mất cân bằng đột biến; 3. Shadow Traffic Gate: Mô hình mới chạy ngầm 48h trên 100% lưu lượng thực tế, nếu p99 Latency tăng > 10% hoặc Error Rate > 0.05%, thực hiện thủ công theo lịch trình hủy phát hành và gửi cảnh báo khẩn cấp cho kỹ sư"
     ],
@@ -18548,12 +18548,12 @@
     "question": "Làm thế nào để hệ thống MLOps tự động phát hiện một đặc trưng trong Feature Store bị rò rỉ dữ liệu tương lai (Data Leakage) trước khi mô hình được triển khai ra Production?",
     "options": [
       "Sử dụng Thuật toán Học tăng cường Nhận thức Chi phí (Cost-Aware Contextual Bandit Resource Sizer): Thu thập đặc trưng của dữ liệu đầu vào (Kích thước file, Số lượng dòng, Định dạng) -> Dự báo chính xác dung lượng RAM/VRAM và số lượng CPU Cores tối thiểu cần thiết để hoàn thành tác vụ -> Tự động ghi đè Pod Resource Limits trong KFP Spec ngay trước khi khởi chạy; Liên tục học hỏi từ các lần chạy thành công và lỗi OOM",
-      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: $PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
-      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường ($Importance > 0.98$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống thực hiện thủ công theo lịch trình gắn cờ Data Leakage và chặn phát hành",
-      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường ($Importance > 0.98$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành"
+      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: \\$PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx\\$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
+      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường (\\$Importance > 0.98\\$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống thực hiện thủ công theo lịch trình gắn cờ Data Leakage và chặn phát hành",
+      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường (\\$Importance > 0.98\\$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành"
     ],
     "correct_index": 3,
-    "correct_answer": "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường ($Importance > 0.98$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
+    "correct_answer": "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường (\\$Importance > 0.98\\$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
     "explanation": "Kiểm định hoán vị đối kháng phát hiện chính xác các đặc trưng 'quá hoàn hảo' do rò rỉ thông tin tương lai, bảo vệ mô hình khỏi các ảo tưởng về độ chính xác trong phòng thí nghiệm.",
     "slide_ref": "Day 22 - Slide: Automated Data Leakage Detection in Feature Stores"
   },
@@ -18567,7 +18567,7 @@
     "options": [
       "1. Chạy Unit Tests kiểm tra Code & Schema; 2. Huấn luyện thử nghiệm trên Shadow Data; 3. Chạy Evaluation Gate đối chiếu với Golden Dataset; 4. Đăng ký vào Model Registry; 5. Canary Deploy (10% traffic) kết hợp giám sát độ trễ và tỉ lệ lỗi tự động",
       "Triển khai Khung Điều phối Liên hiệp Đa Tầng (Hierarchical Federated MLOps Orchestrator): Máy chủ trung tâm gửi phiên bản mô hình xuống các Edge Clients -> Các thiết bị tự huấn luyện cục bộ trên dữ liệu riêng tư -> Gửi cập nhật Gradient đã được che giấu quyền riêng tư (Differential Privacy) về các Cụm Gom cụm Vùng (Regional Aggregators) -> Tổng hợp bằng thuật toán FedAvg và thực hiện thủ công theo lịch trình cập nhật Model Registry",
-      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường ($Importance > 0.98$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
+      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường (\\$Importance > 0.98\\$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
       "Triển khai Khung Điều phối Liên hiệp Đa Tầng (Hierarchical Federated MLOps Orchestrator): Máy chủ trung tâm gửi phiên bản mô hình xuống các Edge Clients -> Các thiết bị tự huấn luyện cục bộ trên dữ liệu riêng tư -> Gửi cập nhật Gradient đã được che giấu quyền riêng tư (Differential Privacy) về các Cụm Gom cụm Vùng (Regional Aggregators) -> Tổng hợp bằng thuật toán FedAvg và tự động cập nhật Model Registry"
     ],
     "correct_index": 3,
@@ -18584,7 +18584,7 @@
     "question": "Thiết kế một Công cụ Thăng cấp Tự động (Automated GitOps Model Promotion Engine) quản lý quá trình chuyển giao mô hình xuyên qua 3 môi trường mạng cô lập tuyệt đối (Air-Gapped Enclaves: Dev, Staging, Prod)?",
     "options": [
       "Triển khai Cơ chế Chuyển giao Khai báo dựa trên GitOps & Ký số (Signed GitOps Promotion Pipeline with ArgoCD): 1. Mô hình vượt qua Eval tại Dev được đóng gói và ký số bằng Private Key của CI/CD; 2. Promotion Engine tạo một Pull Request tự động sang Repo GitOps của Staging; 3. Sau khi vượt qua bài kiểm tra Staging 48h, PR sang Prod được tạo kèm theo đầy đủ Chữ ký Điện tử và Biên bản Thẩm định để Ban Giám đốc phê duyệt qua 1 cú click",
-      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường ($Importance > 0.98$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
+      "Quy trình Kiểm định Tầm quan trọng Hoán vị Đối kháng (Adversarial Permutation Importance & Temporal Correlation Testing): Tự động đo lường mức độ tương quan giữa đặc trưng với biến mục tiêu trên dữ liệu tương lai; Nếu một đặc trưng đạt Điểm Tầm quan trọng bất thường (\\$Importance > 0.98\\$) nhưng độ chính xác sụt giảm nghiêm trọng khi xáo trộn thời gian (Time-shuffled Test), hệ thống tự động gắn cờ Data Leakage và chặn phát hành",
       "Triển khai Cơ chế Chuyển giao Khai báo dựa trên GitOps & Ký số (Signed GitOps Promotion Pipeline with ArgoCD): 1. Mô hình vượt qua Eval tại Dev được đóng gói và ký số bằng Private Key của CI/CD; 2. Promotion Engine tạo một Pull Request thực hiện thủ công theo lịch trình sang Repo GitOps của Staging; 3. Sau khi vượt qua bài kiểm tra Staging 48h, PR sang Prod được tạo kèm theo đầy đủ Chữ ký Điện tử và Biên bản Thẩm định để Ban Giám đốc phê duyệt qua 1 cú click",
       "Xây dựng Đường ống Streaming Feature Ingestion: Các sự kiện giao dịch từ Apache Kafka được xử lý liên tục qua Flink / Spark Streaming, tính toán các đặc trưng cửa sổ trượt (Sliding Windows) và ghi trực tiếp vào Redis Online Store qua Feast Push API"
     ],
@@ -18619,7 +18619,7 @@
     "difficulty": "Hard",
     "question": "Thiết kế một Bảng Điểm Sức Khỏe Toàn Diện (MLOps Platform Reliability Scorecard) cho Ban Giám đốc Kỹ thuật theo dõi 4 chiều không gian vận hành của toàn bộ hệ thống AI doanh nghiệp?",
     "options": [
-      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: $PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
+      "Chỉ số PSI được tính bằng công thức: $PSI = \\sum_{i=1}^B \\left( P_i - Q_i \\right) \\times \\ln\\left(\\frac{P_i}{Q_i}\\right)$ (trong đó $P_i$ là tỉ lệ mẫu trong bin $i$ của tập thực tế, $Q_i$ là tập chuẩn baseline); Ngưỡng cảnh báo: \\$PSI < 0.1$ (Phân phối ổn định), $0.1 \\le PSI < 0.25$ (Trôi dạt nhẹ cần theo dõi), $PSI \\ge 0.25$ (Trôi dạt nghiêm trọng, tự động kích hoạt Retraining Pipeline); Khoảng cách Wasserstein $W_1(P, Q) = \\int_{-\\infty}^\\infty |F_P(x) - F_Q(x)| dx\\$ đo lường công dịch chuyển tối thiểu giữa 2 hàm phân phối tích lũy",
       "1. Dimension 1: Pipeline Reliability (Tỉ lệ thành công của các luồng huấn luyện > 99.5%, Mean Time to Detect/Resolve Pipeline Failures); 2. Dimension 2: Model Freshness & Drift Velocity (Thời gian trung bình từ khi có dữ liệu mới đến khi deploy model); 3. Dimension 3: Serving SLA Compliance (p99 Latency, Availability 99.99%); 4. Dimension 4: Infrastructure Cost Efficiency (Chi phí trên mỗi lượt suy luận thành công và Mức khai thác GPU MFU)",
       "Triển khai Khung Điều phối Liên hiệp Đa Tầng (Hierarchical Federated MLOps Orchestrator): Máy chủ trung tâm gửi phiên bản mô hình xuống các Edge Clients -> Các thiết bị tự huấn luyện cục bộ trên dữ liệu riêng tư -> Gửi cập nhật Gradient đã được che giấu quyền riêng tư (Differential Privacy) về các Cụm Gom cụm Vùng (Regional Aggregators) -> Tổng hợp bằng thuật toán FedAvg và tự động cập nhật Model Registry",
       "Sử dụng Locust/k6 phân tán tự động bơm tải tăng dần từ 100 đến 50,000 Concurrent Users: Xác định Điểm Gãy Hạ tầng (System Breaking Point), Điểm Suy thoái SLA (Điểm mà p99 TTFT vượt 1.0s), Đo lường Tỉ lệ Phân mảnh VRAM và Khả năng Tự phục hồi sau khi cắt tải đột ngột (Burst Recovery Time)"
@@ -18673,7 +18673,7 @@
     "difficulty": "Easy",
     "question": "Định dạng 'WebDataset' đóng gói hàng triệu file ảnh/âm thanh nhỏ thành cấu trúc như thế nào?",
     "options": [
-      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ",
+      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ",
       "Ngôn ngữ Rust mang lại hiệu năng xử lý chuỗi ở cấp độ mã máy siêu tốc, hỗ trợ xử lý đa luồng song song thực sự (không bị vướng GIL của Python), cho phép tokenize hàng Gigabytes văn bản trong vài giây",
       "Tệp Tar bên ngoài chứa hàng nghìn đoạn video; Mỗi đoạn video bên trong là một Tệp Tar con chứa toàn bộ các Khung hình trích xuất (Keyframes JPG), File âm thanh (Audio WAV) và File phụ đề (JSON Metadata), cho phép đọc trọn vẹn một mẫu đa phương thức trong 1 thao tác I/O duy nhất",
       "Đóng gói các mẫu dữ liệu liên tiếp thành các tệp tin lưu trữ dạng Tar chuẩn (Tar Shards dung lượng 100MB - 1GB), cho phép đọc dữ liệu theo luồng tuần tự liên tục (Sequential Streaming) qua giao thức HTTP/S3"
@@ -18748,7 +18748,7 @@
       "Bắt đầu từ cấp độ ký tự đơn lẻ hoặc từng byte, liên tục thống kê và gộp cặp ký tự/byte xuất hiện nhiều nhất thành các Sub-words mới trong từ điển, cân bằng hoàn hảo giữa kích thước từ điển và khả năng biểu diễn từ hiếm",
       "Cho phép bắt đầu huấn luyện ngay lập tức trên tập dữ liệu hàng chục Terabytes từ đám mây bằng cách tải và giải mã dữ liệu theo dòng (On-the-fly Streaming) mà KHÔNG CẦN phải tải toàn bộ tập dữ liệu về ổ đĩa cục bộ trước",
       "Tệp Tar bên ngoài chứa hàng nghìn đoạn video; Mỗi đoạn video bên trong là một Tệp Tar con chứa toàn bộ các Khung hình trích xuất (Keyframes JPG), File âm thanh (Audio WAV) và File phụ đề (JSON Metadata), cho phép đọc trọn vẹn một mẫu đa phương thức trong 1 thao tác I/O duy nhất",
-      "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống $O(N)$"
+      "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống \\$O(N)\\$"
     ],
     "correct_index": 0,
     "correct_answer": "Bắt đầu từ cấp độ ký tự đơn lẻ hoặc từng byte, liên tục thống kê và gộp cặp ký tự/byte xuất hiện nhiều nhất thành các Sub-words mới trong từ điển, cân bằng hoàn hảo giữa kích thước từ điển và khả năng biểu diễn từ hiếm",
@@ -18800,12 +18800,12 @@
     "question": "Bộ đôi thuật toán MinHash và Locality-Sensitive Hashing (LSH) giải quyết bài toán khử trùng lặp dữ liệu lớn như thế nào?",
     "options": [
       "PyTorch DataLoader chỉ mở rộng đa luồng cục bộ trên từng máy chủ riêng lẻ (dễ gây nghẽn CPU cục bộ); Ray Data là Động cơ Xử lý Dữ liệu Phân tán Toàn cụm: Tận dụng hàng trăm CPU Workers trên các máy chủ chuyên dụng để tiền xử lý và truyền dữ liệu qua mạng RDMA/Plasma vào GPU",
-      "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống $O(N)$",
+      "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống \\$O(N)\\$",
       "Tệp Tar bên ngoài chứa hàng nghìn đoạn video; Mỗi đoạn video bên trong là một Tệp Tar con chứa toàn bộ các Khung hình trích xuất (Keyframes JPG), File âm thanh (Audio WAV) và File phụ đề (JSON Metadata), cho phép đọc trọn vẹn một mẫu đa phương thức trong 1 thao tác I/O duy nhất",
       "Giảm đáng kể hiện tượng học vẹt và rò rỉ dữ liệu nhạy cảm (Memorization & Privacy Leakage), Tăng tốc độ huấn luyện mô hình (giảm số step cần thiết để đạt cùng mức loss), và Giảm 90% nguy cơ tấn công trích xuất dữ liệu đào tạo"
     ],
     "correct_index": 1,
-    "correct_answer": "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống $O(N)$",
+    "correct_answer": "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống \\$O(N)\\$",
     "explanation": "MinHash LSH là giải pháp kinh điển cho phép khử trùng lặp xấp xỉ trên hàng trăm tỷ tokens dữ liệu văn bản tiền huấn luyện trong thời gian khả thi.",
     "slide_ref": "Day 23 - Slide: MinHash LSH Near-Deduplication at Scale"
   },
@@ -18926,7 +18926,7 @@
     "question": "Quy trình Khử trùng lặp Văn bản Quy mô lớn (Large-Scale Text Deduplication Pipeline) trên tập dữ liệu 100TB diễn ra qua các bước chuẩn nào?",
     "options": [
       "Sử dụng Apache Spark / Ray Data phân tán trên 100 CPU Nodes kết hợp HuggingFace Fast Tokenizers (Rust Engine): Phân mảnh dữ liệu thành các tệp Parquet 1GB -> Mỗi Worker chạy đa luồng CPU (Ray Tasks) mã hóa song song thành các mảng số nguyên `uint16` -> Đóng gói trực tiếp thành các tệp nhị phân Indexed Binary Format (Megatron `.bin` / `.idx`)",
-      "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống $O(N)$",
+      "Băm văn bản thành các chữ ký số (MinHash Signatures) và nhóm các văn bản có chữ ký tương đồng vào cùng một 'Bucket' (LSH); chỉ so sánh chi tiết các văn bản trong cùng một bucket, giảm độ phức tạp từ $O(N^2)$ xuống \\$O(N)\\$",
       "1. Phân đoạn văn bản thành tập hợp các $k$-shingles (n-grams); 2. Áp dụng $M$ hàm băm ngẫu nhiên sinh vector chữ ký MinHash (Signature Vector); 3. LSH Banding phân chia vector thành $b$ dải (Bands) để nhóm các văn bản tương đồng vào Buckets; 4. Tính toán khoảng cách Jaccard chính xác trên các cặp ứng viên để loại bỏ trùng lặp",
       "Tệp Tar bên ngoài chứa hàng nghìn đoạn video; Mỗi đoạn video bên trong là một Tệp Tar con chứa toàn bộ các Khung hình trích xuất (Keyframes JPG), File âm thanh (Audio WAV) và File phụ đề (JSON Metadata), cho phép đọc trọn vẹn một mẫu đa phương thức trong 1 thao tác I/O duy nhất"
     ],
@@ -18964,11 +18964,11 @@
       "1. Phân đoạn văn bản thành tập hợp các $k$-shingles (n-grams); 2. Áp dụng $M$ hàm băm ngẫu nhiên sinh vector chữ ký MinHash (Signature Vector); 3. LSH Banding phân chia vector thành $b$ dải (Bands) để nhóm các văn bản tương đồng vào Buckets; 4. Tính toán khoảng cách Jaccard chính xác trên các cặp ứng viên để loại bỏ trùng lặp",
       "Đóng gói các mẫu dữ liệu liên tiếp thành các tệp tin lưu trữ dạng Tar chuẩn (Tar Shards dung lượng 100MB - 1GB), cho phép đọc dữ liệu theo luồng tuần tự liên tục (Sequential Streaming) qua giao thức HTTP/S3",
       "Bắt đầu từ cấp độ ký tự đơn lẻ hoặc từng byte, liên tục thống kê và gộp cặp ký tự/byte xuất hiện nhiều nhất thành các Sub-words mới trong từ điển, cân bằng hoàn hảo giữa kích thước từ điển và khả năng biểu diễn từ hiếm",
-      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM"
+      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM"
     ],
     "correct_index": 3,
-    "correct_answer": "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM",
-    "explanation": "Megatron Indexed Dataset cung cấp khả năng truy xuất ngẫu nhiên tức thời $O(1)$ tới bất kỳ tài liệu nào trên kho dữ liệu hàng trăm tỷ tokens thông qua cơ chế Memory Mapping (`mmap`).",
+    "correct_answer": "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM",
+    "explanation": "Megatron Indexed Dataset cung cấp khả năng truy xuất ngẫu nhiên tức thời \\$O(1)\\$ tới bất kỳ tài liệu nào trên kho dữ liệu hàng trăm tỷ tokens thông qua cơ chế Memory Mapping (`mmap`).",
     "slide_ref": "Day 23 - Slide: Megatron-LM Binary Indexing Architecture"
   },
   {
@@ -19017,8 +19017,8 @@
     "options": [
       "BPE lựa chọn cặp ký tự xuất hiện với Tần suất Tuyệt đối Cao nhất (Frequency-based); WordPiece lựa chọn cặp ký tự giúp Cực đại hóa Hàm Khả năng Hợp lý (Likelihood-based / Tối đa hóa Mutual Information giữa 2 phân đoạn) khi đưa vào từ điển",
       "Tự động cấp phát bộ nhớ đệm CPU ở chế độ Khóa Trang (Page-Locked / Pinned Host Memory), cho phép chuyển dữ liệu từ RAM sang VRAM của GPU nhanh hơn nhiều thông qua Direct Memory Access (DMA)",
-      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM",
-      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ"
+      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM",
+      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ"
     ],
     "correct_index": 0,
     "correct_answer": "BPE lựa chọn cặp ký tự xuất hiện với Tần suất Tuyệt đối Cao nhất (Frequency-based); WordPiece lựa chọn cặp ký tự giúp Cực đại hóa Hàm Khả năng Hợp lý (Likelihood-based / Tối đa hóa Mutual Information giữa 2 phân đoạn) khi đưa vào từ điển",
@@ -19033,7 +19033,7 @@
     "difficulty": "Medium",
     "question": "Quy trình Lọc Chất lượng Dữ liệu Văn bản Thô (Data Quality Filtering Pipeline như trong Llama/RefinedWeb) sử dụng những bộ lọc nào để loại bỏ văn bản rác?",
     "options": [
-      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM",
+      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM",
       "1. Bộ lọc Quy tắc Heuristics (Tỉ lệ ký tự đặc biệt, Độ dài từ bất thường, Tỉ lệ từ lặp lại quá cao); 2. Bộ lọc Ngôn ngữ (FastText Language Identification loại bỏ ngôn ngữ không mong muốn); 3. Bộ phân loại Chất lượng Học máy (FastText / Small Classifier chấm điểm độ tương đồng văn phong với Wikipedia/Sách báo chuẩn)",
       "Hiện tượng Treo rào chắn Đồng bộ (Distributed Barrier Hang): GPU xử lý Shard B hoàn thành sớm và bị đóng băng chờ đợi GPU xử lý Shard A; Xử lý bằng cách cấu hình `DistributedSampler(drop_last=True)` hoặc Tự động Đệm dữ liệu (Padding Sampler) để tất cả các Shards có kích thước bằng nhau",
       "PyTorch DataLoader chỉ mở rộng đa luồng cục bộ trên từng máy chủ riêng lẻ (dễ gây nghẽn CPU cục bộ); Ray Data là Động cơ Xử lý Dữ liệu Phân tán Toàn cụm: Tận dụng hàng trăm CPU Workers trên các máy chủ chuyên dụng để tiền xử lý và truyền dữ liệu qua mạng RDMA/Plasma vào GPU"
@@ -19069,8 +19069,8 @@
     "difficulty": "Medium",
     "question": "Khi các Shards dữ liệu phân tán có kích thước không đồng đều (Shard A có 10,000 mẫu, Shard B có 8,000 mẫu), hiện tượng gì xảy ra ở cuối Epoch và cách xử lý trong DDP?",
     "options": [
-      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM",
-      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ",
+      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM",
+      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ",
       "Hiện tượng Treo rào chắn Đồng bộ (Distributed Barrier Hang): GPU xử lý Shard B hoàn thành sớm và bị đóng băng chờ đợi GPU xử lý Shard A; Xử lý bằng cách cấu hình `DistributedSampler(drop_last=True)` hoặc Tự động Đệm dữ liệu (Padding Sampler) để tất cả các Shards có kích thước bằng nhau",
       "Đóng gói các mẫu dữ liệu liên tiếp thành các tệp tin lưu trữ dạng Tar chuẩn (Tar Shards dung lượng 100MB - 1GB), cho phép đọc dữ liệu theo luồng tuần tự liên tục (Sequential Streaming) qua giao thức HTTP/S3"
     ],
@@ -19107,11 +19107,11 @@
     "options": [
       "Cho phép nén dữ liệu cực kỳ hiệu quả, Hỗ trợ đọc chọn lọc chỉ các cột cần thiết (Column Projection) mà không cần quét toàn bộ file, và Tối ưu hóa I/O cho các tác vụ phân tích/huấn luyện hàng loạt",
       "PyTorch DataLoader chỉ mở rộng đa luồng cục bộ trên từng máy chủ riêng lẻ (dễ gây nghẽn CPU cục bộ); Ray Data là Động cơ Xử lý Dữ liệu Phân tán Toàn cụm: Tận dụng hàng trăm CPU Workers trên các máy chủ chuyên dụng để tiền xử lý và truyền dữ liệu qua mạng RDMA/Plasma vào GPU",
-      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ",
+      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ",
       "BPE lựa chọn cặp ký tự xuất hiện với Tần suất Tuyệt đối Cao nhất (Frequency-based); WordPiece lựa chọn cặp ký tự giúp Cực đại hóa Hàm Khả năng Hợp lý (Likelihood-based / Tối đa hóa Mutual Information giữa 2 phân đoạn) khi đưa vào từ điển"
     ],
     "correct_index": 2,
-    "correct_answer": "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ",
+    "correct_answer": "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ",
     "explanation": "Suffix Arrays định vị chính xác và loại bỏ các chuỗi văn bản trùng lặp dài xuất hiện rải rác trên toàn bộ tập dữ liệu, ngăn ngừa hiện tượng mô hình học vẹt nguyên văn.",
     "slide_ref": "Day 23 - Slide: Substring Deduplication with Suffix Arrays"
   },
@@ -19144,7 +19144,7 @@
       "Sử dụng Thuật toán Xáo trộn Khối Dựa trên Hạt giống Tất định (Seed-based Deterministic Block Shuffling): Cho phép tái tạo chính xác 100% thứ tự các mẫu dữ liệu qua từng epoch trên toàn cụm phân tán, đồng thời hỗ trợ khôi phục tức thời phiên làm việc từ bất kỳ Sample ID nào sau khi xảy ra sự cố sập nút",
       "Tự động tính toán mã băm (Cryptographic Fingerprint Hash) của đoạn mã hàm `tokenize_fn` và dữ liệu đầu vào; Nếu phát hiện mã băm không đổi, hệ thống lập tức nạp ngay kết quả từ file Arrow Cache trên đĩa trong 0.1 giây mà không chạy lại code",
       "Chuỗi Pipeline Tăng tốc Phần cứng 3 Giai đoạn: 1. Đọc file nén trực tiếp vào Pinned Memory; 2. Giải mã JPEG bằng phần cứng phần cứng NVJPEG trên GPU; 3. Thực hiện Resize, Crop, Normalize và Data Augmentation hoàn toàn bên trong VRAM của GPU",
-      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ"
+      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ"
     ],
     "correct_index": 1,
     "correct_answer": "Tự động tính toán mã băm (Cryptographic Fingerprint Hash) của đoạn mã hàm `tokenize_fn` và dữ liệu đầu vào; Nếu phát hiện mã băm không đổi, hệ thống lập tức nạp ngay kết quả từ file Arrow Cache trên đĩa trong 0.1 giây mà không chạy lại code",
@@ -19159,10 +19159,10 @@
     "difficulty": "Medium",
     "question": "Khi nạp dữ liệu cho cụm huấn luyện phân tán 512 GPUs, tại sao Ray Data lại có khả năng mở rộng quy mô (Scalability) vượt trội hơn PyTorch DataLoader truyền thống?",
     "options": [
-      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ",
+      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ",
       "PyTorch DataLoader chỉ mở rộng đa luồng cục bộ trên từng máy chủ riêng lẻ (dễ gây nghẽn CPU cục bộ); Ray Data là Động cơ Xử lý Dữ liệu Phân tán Toàn cụm: Tận dụng hàng trăm CPU Workers trên các máy chủ chuyên dụng để tiền xử lý và truyền dữ liệu qua mạng RDMA/Plasma vào GPU",
       "Đóng gói các mẫu dữ liệu liên tiếp thành các tệp tin lưu trữ dạng Tar chuẩn (Tar Shards dung lượng 100MB - 1GB), cho phép đọc dữ liệu theo luồng tuần tự liên tục (Sequential Streaming) qua giao thức HTTP/S3",
-      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM"
+      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM"
     ],
     "correct_index": 1,
     "correct_answer": "PyTorch DataLoader chỉ mở rộng đa luồng cục bộ trên từng máy chủ riêng lẻ (dễ gây nghẽn CPU cục bộ); Ray Data là Động cơ Xử lý Dữ liệu Phân tán Toàn cụm: Tận dụng hàng trăm CPU Workers trên các máy chủ chuyên dụng để tiền xử lý và truyền dữ liệu qua mạng RDMA/Plasma vào GPU",
@@ -19234,7 +19234,7 @@
       "1. Phân đoạn văn bản thành tập hợp các $k$-shingles (n-grams); 2. Áp dụng $M$ hàm băm ngẫu nhiên sinh vector chữ ký MinHash (Signature Vector); 3. LSH Banding phân chia vector thành $b$ dải (Bands) để nhóm các văn bản tương đồng vào Buckets; 4. Tính toán khoảng cách Jaccard chính xác trên các cặp ứng viên để loại bỏ trùng lặp",
       "Triển khai Kiến trúc Xử lý Dữ liệu Phân tán 5 Tầng: 1. Ingestion & Normalization: Apache Spark Cluster (5,000 CPU Cores) đọc 50PB từ Ceph, chuẩn hóa Unicode NFKC và lọc mã độc; 2. Distributed Deduplication: MinHash LSH (128 permutation hashes, Jaccard > 0.85) kết hợp Suffix Array Substring Removal loại bỏ 65% dữ liệu trùng lặp; 3. Multi-Stage Quality & Safety Filtering: FastText Language ID + KenLM Perplexity Filter + Toxic Content Classifier; 4. Massive Parallel Tokenization: Ray Data phân tán gọi HuggingFace Rust BPE Tokenizer đóng gói gián tiếp qua bộ đệm trung gian thành Megatron `.bin`/`.idx` Shards 2GB; 5. High-Throughput Ingestion Tier: MosaicML StreamingDataset kết hợp GPUDirect Storage đọc Zero-Copy thẳng vào VRAM cụm 10,000 GPUs H100 với thông lượng 1.5 TB/giây",
       "Triển khai Kiến trúc Xử lý Dữ liệu Phân tán 5 Tầng: 1. Ingestion & Normalization: Apache Spark Cluster (5,000 CPU Cores) đọc 50PB từ Ceph, chuẩn hóa Unicode NFKC và lọc mã độc; 2. Distributed Deduplication: MinHash LSH (128 permutation hashes, Jaccard > 0.85) kết hợp Suffix Array Substring Removal loại bỏ 65% dữ liệu trùng lặp; 3. Multi-Stage Quality & Safety Filtering: FastText Language ID + KenLM Perplexity Filter + Toxic Content Classifier; 4. Massive Parallel Tokenization: Ray Data phân tán gọi HuggingFace Rust BPE Tokenizer đóng gói trực tiếp thành Megatron `.bin`/`.idx` Shards 2GB; 5. High-Throughput Ingestion Tier: MosaicML StreamingDataset kết hợp GPUDirect Storage đọc Zero-Copy thẳng vào VRAM cụm 10,000 GPUs H100 với thông lượng 1.5 TB/giây",
-      "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác $8,192$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung"
+      "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác \\$8,192\\$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung"
     ],
     "correct_index": 2,
     "correct_answer": "Triển khai Kiến trúc Xử lý Dữ liệu Phân tán 5 Tầng: 1. Ingestion & Normalization: Apache Spark Cluster (5,000 CPU Cores) đọc 50PB từ Ceph, chuẩn hóa Unicode NFKC và lọc mã độc; 2. Distributed Deduplication: MinHash LSH (128 permutation hashes, Jaccard > 0.85) kết hợp Suffix Array Substring Removal loại bỏ 65% dữ liệu trùng lặp; 3. Multi-Stage Quality & Safety Filtering: FastText Language ID + KenLM Perplexity Filter + Toxic Content Classifier; 4. Massive Parallel Tokenization: Ray Data phân tán gọi HuggingFace Rust BPE Tokenizer đóng gói trực tiếp thành Megatron `.bin`/`.idx` Shards 2GB; 5. High-Throughput Ingestion Tier: MosaicML StreamingDataset kết hợp GPUDirect Storage đọc Zero-Copy thẳng vào VRAM cụm 10,000 GPUs H100 với thông lượng 1.5 TB/giây",
@@ -19304,9 +19304,9 @@
     "question": "Khi huấn luyện GNNs trên đồ thị mạng xã hội khổng lồ gồm 1 Tỷ đỉnh và 100 Tỷ cạnh, kiến trúc Nạp Đồ thị Phân tán (Distributed Neighborhood Sampling & Ingestion Engine) nào ngăn chặn hiện tượng bùng nổ bộ nhớ?",
     "options": [
       "Triển khai Kiến trúc Lấy mẫu Vùng lân cận Phân tán theo Tầng (Distributed Layer-Wise Neighborhood Sampling with PyTorch Geometric / DGL on Ray): Phân mảnh đồ thị (Graph Partitioning via METIS) trên 100 máy chủ lưu trữ; Mỗi GPU Worker phát các yêu cầu lấy mẫu song song (Asynchronous RPC Sampling) chỉ trích xuất các đồ thị con cục bộ (Subgraphs/Ego-networks kích thước $K$ láng giềng) và nạp vào VRAM theo từng Micro-batch",
-      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM",
+      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM",
       "Hiện tượng Treo rào chắn Đồng bộ (Distributed Barrier Hang): GPU xử lý Shard B hoàn thành sớm và bị đóng băng chờ đợi GPU xử lý Shard A; Xử lý bằng cách cấu hình `DistributedSampler(drop_last=True)` hoặc Tự động Đệm dữ liệu (Padding Sampler) để tất cả các Shards có kích thước bằng nhau",
-      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính $O(N)$ trên toàn bộ tập dữ liệu khổng lồ"
+      "Cho phép phát hiện và loại bỏ các đoạn văn bản dài trùng lặp chính xác nguyên văn (ví dụ: các điều khoản bản quyền, footer trang web dài > 50 tokens lặp lại hàng triệu lần) với thời gian tuyến tính \\$O(N)\\$ trên toàn bộ tập dữ liệu khổng lồ"
     ],
     "correct_index": 0,
     "correct_answer": "Triển khai Kiến trúc Lấy mẫu Vùng lân cận Phân tán theo Tầng (Distributed Layer-Wise Neighborhood Sampling with PyTorch Geometric / DGL on Ray): Phân mảnh đồ thị (Graph Partitioning via METIS) trên 100 máy chủ lưu trữ; Mỗi GPU Worker phát các yêu cầu lấy mẫu song song (Asynchronous RPC Sampling) chỉ trích xuất các đồ thị con cục bộ (Subgraphs/Ego-networks kích thước $K$ láng giềng) và nạp vào VRAM theo từng Micro-batch",
@@ -19321,14 +19321,14 @@
     "difficulty": "Hard",
     "question": "Làm thế nào để đảm bảo rằng khi huấn luyện qua 5 Epochs trên 50TB dữ liệu dạng Streaming, mỗi Epoch đều có thứ tự xáo trộn hoàn toàn khác nhau (Không lặp lại mẫu hình) nhưng vẫn đảm bảo tính tất định và khả năng phục hồi Checkpoint chính xác từng bước?",
     "options": [
-      "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác $8,192$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung",
+      "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác \\$8,192\\$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung",
       "Xây dựng Cấu trúc Ring Buffer 3 Ngăn (Triple-Buffer Lock-Free Queue): Ngăn 0 (GPU đang đọc và tính toán qua CUDA Stream 0); Ngăn 1 (Dữ liệu đã sẵn sàng trong Pinned Host Memory, đang được DMA chuyển vào VRAM qua Stream 1); Ngăn 2 (CPU Workers đang điền dữ liệu từ đĩa vào RAM); Khi Step kết thúc, các con trỏ xoay vòng trong 10 micro-giây thông qua Atomic Pointer Swap, đảm bảo GPU luôn có dữ liệu tức thì mà không bao giờ bị khóa luồng (Zero Lock Contention)",
       "Hiện tượng Treo rào chắn Đồng bộ (Distributed Barrier Hang): GPU xử lý Shard B hoàn thành sớm và bị đóng băng chờ đợi GPU xử lý Shard A; Xử lý bằng cách cấu hình `DistributedSampler(drop_last=True)` hoặc Tự động Đệm dữ liệu (Padding Sampler) để tất cả các Shards có kích thước bằng nhau",
-      "Thuật toán Sinh Hoán vị Giả Ngẫu nhiên Dựa trên Khối (Pseudo-Random Permutation Generator with Feistel Network Block Ciphers): Sử dụng một Mạng Feistel 4-Round siêu nhẹ ánh xạ chỉ số mẫu tuần tự $i \\in [0, N-1]$ thành chỉ số xáo trộn $j = \\text{Feistel}(i, \\text{Seed}_{\\text{epoch}})$ với không gian nhớ $O(1)$; Cho phép tính toán tức thời vị trí của bất kỳ mẫu dữ liệu nào tại bất kỳ thời điểm nào mà không cần tạo mảng chỉ mục khổng lồ trong RAM"
+      "Thuật toán Sinh Hoán vị Giả Ngẫu nhiên Dựa trên Khối (Pseudo-Random Permutation Generator with Feistel Network Block Ciphers): Sử dụng một Mạng Feistel 4-Round siêu nhẹ ánh xạ chỉ số mẫu tuần tự $i \\in [0, N-1]$ thành chỉ số xáo trộn $j = \\text{Feistel}(i, \\text{Seed}_{\\text{epoch}})$ với không gian nhớ \\$O(1)\\$; Cho phép tính toán tức thời vị trí của bất kỳ mẫu dữ liệu nào tại bất kỳ thời điểm nào mà không cần tạo mảng chỉ mục khổng lồ trong RAM"
     ],
     "correct_index": 3,
-    "correct_answer": "Thuật toán Sinh Hoán vị Giả Ngẫu nhiên Dựa trên Khối (Pseudo-Random Permutation Generator with Feistel Network Block Ciphers): Sử dụng một Mạng Feistel 4-Round siêu nhẹ ánh xạ chỉ số mẫu tuần tự $i \\in [0, N-1]$ thành chỉ số xáo trộn $j = \\text{Feistel}(i, \\text{Seed}_{\\text{epoch}})$ với không gian nhớ $O(1)$; Cho phép tính toán tức thời vị trí của bất kỳ mẫu dữ liệu nào tại bất kỳ thời điểm nào mà không cần tạo mảng chỉ mục khổng lồ trong RAM",
-    "explanation": "Mạng Feistel cung cấp giải pháp sinh hoán vị giả ngẫu nhiên hoàn hảo với không gian bộ nhớ $O(1)$, mở khóa khả năng xáo trộn dữ liệu tất định quy mô vô hạn cho các cụm siêu máy tính.",
+    "correct_answer": "Thuật toán Sinh Hoán vị Giả Ngẫu nhiên Dựa trên Khối (Pseudo-Random Permutation Generator with Feistel Network Block Ciphers): Sử dụng một Mạng Feistel 4-Round siêu nhẹ ánh xạ chỉ số mẫu tuần tự $i \\in [0, N-1]$ thành chỉ số xáo trộn $j = \\text{Feistel}(i, \\text{Seed}_{\\text{epoch}})$ với không gian nhớ \\$O(1)\\$; Cho phép tính toán tức thời vị trí của bất kỳ mẫu dữ liệu nào tại bất kỳ thời điểm nào mà không cần tạo mảng chỉ mục khổng lồ trong RAM",
+    "explanation": "Mạng Feistel cung cấp giải pháp sinh hoán vị giả ngẫu nhiên hoàn hảo với không gian bộ nhớ \\$O(1)\\$, mở khóa khả năng xáo trộn dữ liệu tất định quy mô vô hạn cho các cụm siêu máy tính.",
     "slide_ref": "Day 23 - Slide: Feistel Network Permutations for Infinite Streaming Datasets"
   },
   {
@@ -19340,12 +19340,12 @@
     "question": "Khi đóng gói các chuỗi văn bản có độ dài biến thiên vào các khung 8,192 tokens cho quá trình Pre-training, làm thế nào để thuật toán Quy hoạch Động Cái Túi (2D Knapsack Packing Optimization) đạt tỉ lệ lấp đầy > 99.8% (Gần như Zero Padding)?",
     "options": [
       "Xác suất để hai văn bản có độ tương đồng Jaccard $s$ rơi vào cùng ít nhất một bucket là: $P(\\text{Match}) = 1 - (1 - s^r)^b$. Điểm uốn (S-curve Threshold $s^*$) xuất hiện tại vị trí $s^* \\approx \\left(\\frac{1}{b}\\right)^{1/r}$. Để $s^* = 0.8$ với $b \\times r = 128$, giải phương trình tối ưu ta tìm được $r = 8$ và $b = 16$ (vì $(1/16)^{1/8} = (0.0625)^{0.125} \\approx 0.707$, tinh chỉnh lên $r=9, b=14$ cho $s^* \\approx 0.802$), tối đa hóa độ dốc phân biệt của đường cong S-curve",
-      "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác $8,192$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung",
-      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên $O(1)$ tức thời mà không cần nạp toàn bộ file vào RAM",
+      "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác \\$8,192\\$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung",
+      "File `.bin` là một mảng byte nhị phân liên tục chứa toàn bộ các Token IDs (kiểu `uint16` hoặc `int32`); File `.idx` là bảng chỉ mục nhị phân chứa vị trí Byte Offset và Độ dài của từng tài liệu, cho phép truy xuất ngẫu nhiên \\$O(1)\\$ tức thời mà không cần nạp toàn bộ file vào RAM",
       "1. Phân đoạn văn bản thành tập hợp các $k$-shingles (n-grams); 2. Áp dụng $M$ hàm băm ngẫu nhiên sinh vector chữ ký MinHash (Signature Vector); 3. LSH Banding phân chia vector thành $b$ dải (Bands) để nhóm các văn bản tương đồng vào Buckets; 4. Tính toán khoảng cách Jaccard chính xác trên các cặp ứng viên để loại bỏ trùng lặp"
     ],
     "correct_index": 1,
-    "correct_answer": "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác $8,192$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung",
+    "correct_answer": "Mô hình hóa bài toán đóng gói dưới dạng Bài toán Đóng gói Thùng Đa chiều (Multi-Capacity Bin Packing with First-Fit Decreasing & Best-Fit Dynamic Programming): Sắp xếp các đoạn văn bản theo độ dài giảm dần -> Sử dụng thuật toán Best-Fit DP tìm kiếm tổ hợp các đoạn văn bản có tổng độ dài tiệm cận chính xác \\$8,192\\$ tokens; Áp dụng Block-Diagonal Attention Mask để ngăn chặn việc các đoạn văn bản khác nhau chú ý chéo vào nhau trong cùng một khung",
     "explanation": "Tối ưu hóa đóng gói theo thuật toán Cái Túi (Knapsack Packing) triệt tiêu 99.8% các token đệm thừa thãi, tiết kiệm hàng trăm nghìn giờ tính toán GPU trong các chiến dịch tiền huấn luyện lớn.",
     "slide_ref": "Day 23 - Slide: Knapsack DP Optimization for Sequence Packing in Pre-training"
   },
@@ -19393,7 +19393,7 @@
     "difficulty": "Hard",
     "question": "Làm thế nào để đảm bảo rằng trong suốt quá trình nạp 100TB dữ liệu qua mạng phân tán, không có bất kỳ mẫu dữ liệu nào bị biến dạng âm thầm do lỗi phần cứng (Silent Bit Rot) làm sai lệch quá trình học?",
     "options": [
-      "Thuật toán Sinh Hoán vị Giả Ngẫu nhiên Dựa trên Khối (Pseudo-Random Permutation Generator with Feistel Network Block Ciphers): Sử dụng một Mạng Feistel 4-Round siêu nhẹ ánh xạ chỉ số mẫu tuần tự $i \\in [0, N-1]$ thành chỉ số xáo trộn $j = \\text{Feistel}(i, \\text{Seed}_{\\text{epoch}})$ với không gian nhớ $O(1)$; Cho phép tính toán tức thời vị trí của bất kỳ mẫu dữ liệu nào tại bất kỳ thời điểm nào mà không cần tạo mảng chỉ mục khổng lồ trong RAM",
+      "Thuật toán Sinh Hoán vị Giả Ngẫu nhiên Dựa trên Khối (Pseudo-Random Permutation Generator with Feistel Network Block Ciphers): Sử dụng một Mạng Feistel 4-Round siêu nhẹ ánh xạ chỉ số mẫu tuần tự $i \\in [0, N-1]$ thành chỉ số xáo trộn $j = \\text{Feistel}(i, \\text{Seed}_{\\text{epoch}})$ với không gian nhớ \\$O(1)\\$; Cho phép tính toán tức thời vị trí của bất kỳ mẫu dữ liệu nào tại bất kỳ thời điểm nào mà không cần tạo mảng chỉ mục khổng lồ trong RAM",
       "Sử dụng Apache Spark / Ray Data phân tán trên 100 CPU Nodes kết hợp HuggingFace Fast Tokenizers (Rust Engine): Phân mảnh dữ liệu thành các tệp Parquet 1GB -> Mỗi Worker chạy đa luồng CPU (Ray Tasks) mã hóa song song thành các mảng số nguyên `uint16` -> Đóng gói trực tiếp thành các tệp nhị phân Indexed Binary Format (Megatron `.bin` / `.idx`)",
       "Xây dựng Cây Khóa Băm Mật mã học Đầu Cuối (End-to-End Merkle Hash Verification Pipeline): Mỗi Shard dữ liệu nhị phân đi kèm một cây Merkle Tree được tính toán từ nguồn; Khi Data Loader nạp từng Block dữ liệu vào RAM/VRAM, một SIMD/CUDA Kernel siêu tốc tính lại mã băm CRC32C/SHA-256 trên bộ nhớ và so khớp với chữ ký gốc trong < 1 micro-giây; Nếu phát hiện bit-flip, lập tức loại bỏ Block và nạp lại từ nguồn dự phòng",
       "1. Phân đoạn văn bản thành tập hợp các $k$-shingles (n-grams); 2. Áp dụng $M$ hàm băm ngẫu nhiên sinh vector chữ ký MinHash (Signature Vector); 3. LSH Banding phân chia vector thành $b$ dải (Bands) để nhóm các văn bản tương đồng vào Buckets; 4. Tính toán khoảng cách Jaccard chính xác trên các cặp ứng viên để loại bỏ trùng lặp"
@@ -19787,15 +19787,15 @@
     "day": "Day 24",
     "topic": "AI Security, Privacy & Governance (Shamir's Secret Sharing in SMPC)",
     "difficulty": "Medium",
-    "question": "Thuật toán Chia sẻ Bí mật của Shamir (Shamir's $(k, n)$-Threshold Secret Sharing) phân chia một giá trị bí mật $S$ như thế nào?",
+    "question": "Thuật toán Chia sẻ Bí mật của Shamir (Shamir's \\$(k, n)$-Threshold Secret Sharing) phân chia một giá trị bí mật $S\\$ như thế nào?",
     "options": [
       "Tự động phát hiện và xóa bỏ hoặc ẩn danh toàn bộ các thông tin định danh cá nhân (Số CMND/CCCD, Tên, Số điện thoại, Email, Số thẻ tín dụng) trên hàng Terabytes dữ liệu trước khi huấn luyện",
       "Phân tích Phân phối Truy vấn (Query Distribution Monitoring) để phát hiện các mẫu quét có hệ thống, kết hợp Làm nhiễu nhẹ phân phối xác suất đầu ra (Output Probability Perturbation / Truncating Top-K Logits) làm mất thông tin gradient cần thiết để kẻ tấn công chưng cất mô hình",
       "Phân tích Phân rã Giá trị Kỳ dị (SVD) trên ma trận kích hoạt (Representation Activations): Các mẫu dữ liệu bị cài cửa sau thường tạo ra một cụm tín hiệu tập trung cao bất thường dọc theo vector riêng chính (Top Right Singular Vector) của không gian biểu diễn",
-      "Mã hóa $S$ thành hệ số tự do của một đa thức bậc $k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)"
+      "Mã hóa $S$ thành hệ số tự do của một đa thức bậc \\$k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S\\$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)"
     ],
     "correct_index": 3,
-    "correct_answer": "Mã hóa $S$ thành hệ số tự do của một đa thức bậc $k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)",
+    "correct_answer": "Mã hóa $S$ thành hệ số tự do của một đa thức bậc \\$k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S\\$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)",
     "explanation": "Shamir's Secret Sharing là nền tảng toán học của bảo mật đa bên, đảm bảo bí mật chỉ được mở khóa khi đạt được sự đồng thuận của một nhóm thiểu số tối thiểu định trước.",
     "slide_ref": "Day 24 - Slide: Shamir's Secret Sharing Scheme"
   },
@@ -20075,7 +20075,7 @@
     "day": "Day 24",
     "topic": "AI Security, Privacy & Governance (End-to-End Certified Robustness against Adversarial Attacks via Randomized Smoothing)",
     "difficulty": "Hard",
-    "question": "Chứng minh toán học và thiết kế Khung Đảm bảo Độ Bền vững Chứng nhận Mật mã học (Certified Robustness Framework via Randomized Smoothing) đảm bảo mô hình phân loại $f(x)$ giữ nguyên kết quả dự đoán trước mọi nhiễu đối kháng $\\|\\delta\\|_2 \\le R$?",
+    "question": "Chứng minh toán học và thiết kế Khung Đảm bảo Độ Bền vững Chứng nhận Mật mã học (Certified Robustness Framework via Randomized Smoothing) đảm bảo mô hình phân loại \\$f(x)$ giữ nguyên kết quả dự đoán trước mọi nhiễu đối kháng $\\|\\delta\\|_2 \\le R\\$?",
     "options": [
       "Xây dựng Bộ Phân loại Làm mịn Xác suất (Smoothed Classifier $g(x) = \\arg\\max_c P(f(x + \\epsilon) = c)$ với $\\epsilon \\sim \\mathcal{N}(0, \\sigma^2 I)$): Theo Định lý Neyman-Pearson, bán kính bền vững chứng nhận tuyệt đối được tính bằng công thức toán học: $R = \\frac{\\sigma}{2} \\left( \\Phi^{-1}(p_A) - \\Phi^{-1}(p_B) \\right)$, trong đó $p_A$ là xác suất của lớp chiến thắng, $p_B$ là lớp thứ hai, và $\\Phi^{-1}$ là hàm phân phối chuẩn tích lũy nghịch đảo; Đảm bảo 100% không có bất kỳ vector tấn công nào trong hình cầu bán kính $R$ có thể làm đổi nhãn dự đoán",
       "Triển khai Tầng Lọc Phổ & Khử Nhiễu Đa Phương Thức (Multi-Modal Spectral Sanitizer & Adversarial Purification Engine): Áp dụng thuật toán Biến đổi Fourier/Wavelet (DWT/FFT) lọc bỏ các tần số âm thanh ngoài dải giọng nói con người (Cutoff > 8kHz và < 80Hz), kết hợp Làm mờ Gaussian thích ứng và Tái tạo Khuếch tán (Diffusion-based Image Purification) trước khi nạp vào Vision-Language Model",
@@ -20169,7 +20169,7 @@
     "options": [
       "Áp dụng Thuật toán Bù trừ Gradient Ngược Lịch sử (Historical Gradient Compensation & Projected Newton Subspace Unlearning): Sử dụng thông tin tích lũy của ma trận Hessian để tính toán một vector hiệu chỉnh nghịch đảo $\\Delta w_{\\text{unlearn}}$; Áp dụng gián tiếp qua bộ đệm trung gian $\\Delta w$ vào mô hình toàn cục để triệt tiêu chính xác ảnh hưởng toán học của các mẫu dữ liệu bị xóa trong không gian trọng số mà không làm suy thoái độ chính xác trên các dữ liệu còn lại",
       "Áp dụng Thuật toán Bù trừ Gradient Ngược Lịch sử (Historical Gradient Compensation & Projected Newton Subspace Unlearning): Sử dụng thông tin tích lũy của ma trận Hessian để tính toán một vector hiệu chỉnh nghịch đảo $\\Delta w_{\\text{unlearn}}$; Áp dụng trực tiếp $\\Delta w$ vào mô hình toàn cục để triệt tiêu chính xác ảnh hưởng toán học của các mẫu dữ liệu bị xóa trong không gian trọng số mà không làm suy thoái độ chính xác trên các dữ liệu còn lại",
-      "Mã hóa $S$ thành hệ số tự do của một đa thức bậc $k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)",
+      "Mã hóa $S$ thành hệ số tự do của một đa thức bậc \\$k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S\\$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)",
       "Triển khai Môi trường Thực thi Tin cậy Phần cứng (Hardware TEE / Confidential Computing on NVIDIA H100 Hopper TEE & Intel TDX): Mô hình và dữ liệu chỉ được giải mã và thực thi bên trong VRAM đã được mã hóa phần cứng của GPU; Mỗi quyết định suy luận sinh ra một Bằng chứng Ký số Phần cứng (Hardware Attestation Report & Merkle Inclusion Proof) liên kết với Model Weights Hash trên Blockchain Ledger bất biến, cung cấp bằng chứng pháp lý không thể chối cãi"
     ],
     "correct_index": 1,
@@ -20239,7 +20239,7 @@
     "difficulty": "Hard",
     "question": "Khi kẻ tấn công sử dụng Kỹ thuật Giấu tin Đối kháng Đa phương thức (Multi-Modal Steganographic Injection) để giấu mã độc bẻ khóa vào các tần số âm thanh không nghe thấy hoặc phổ màu ảnh, kiến trúc phòng thủ lọc phổ (Spectral Filtering & Multi-Modal Quarantine) bóc tách và vô hiệu hóa ra sao?",
     "options": [
-      "Mã hóa $S$ thành hệ số tự do của một đa thức bậc $k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)",
+      "Mã hóa $S$ thành hệ số tự do của một đa thức bậc \\$k-1$: Tạo ra $n$ điểm tọa độ (Shares) chia cho $n$ bên; BẮT BUỘC PHẢI CÓ ĐỦ ÍT NHẤT $k$ bên cùng hợp tác mới có thể khôi phục lại bí mật $S\\$ (Dưới $k$ bên hoàn toàn không suy ra được bất kỳ thông tin nào)",
       "Vì các mô hình AI có nguy cơ bị tấn công đánh cắp dữ liệu bí mật, thao túng hành vi độc hại, rò rỉ thông tin cá nhân và gây ra các rủi ro pháp lý/đạo đức nghiêm trọng nếu không được kiểm soát",
       "Triển khai Tầng Lọc Phổ & Khử Nhiễu Đa Phương Thức (Multi-Modal Spectral Sanitizer & Adversarial Purification Engine): Áp dụng thuật toán Biến đổi Fourier/Wavelet (DWT/FFT) lọc bỏ các tần số âm thanh ngoài dải giọng nói con người (Cutoff > 8kHz và < 80Hz), kết hợp Làm mờ Gaussian thích ứng và Tái tạo Khuếch tán (Diffusion-based Image Purification) trước khi nạp vào Vision-Language Model",
       "Cơ chế Gaussian phù hợp khi đo lường độ nhạy theo Chuẩn bậc hai ($L_2$-Sensitivity) trong các không gian vector nhiều chiều (như Gradient của mạng nơ-ron sâu), và cho phép áp dụng Định lý $(\\epsilon, \\delta)$-DP chặt chẽ hơn qua nhiều bước lặp"
@@ -20347,7 +20347,7 @@
     "difficulty": "Easy",
     "question": "Kỹ thuật 'Model Pruning' (Cắt tỉa Mô hình) giảm dung lượng tính toán bằng cách nào?",
     "options": [
-      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
       "Phân tích mức sử dụng tài nguyên thực tế và điều chỉnh lại cấu hình phần cứng (hạ cấp từ GPU 80GB xuống GPU 24GB, hoặc giảm số CPU Cores được cấp phát) sao cho vừa đủ đáp ứng nhu cầu mà không lãng phí",
       "Tập trung tối ưu hóa Hiệu quả Năng lượng (Energy Efficiency), Giảm lượng Khí thải Carbon ($CO_2$) và Chi phí Tính toán trong quá trình nghiên cứu và triển khai AI thay vì chỉ chạy đua kích thước mô hình bằng mọi giá (Red AI)",
       "Xác định và loại bỏ các trọng số (Weights) hoặc toàn bộ các nơ-ron/Attention Heads ít đóng góp nhất vào kết quả dự đoán (trọng số gần bằng 0), tạo ra mô hình thưa (Sparse Model) nhẹ hơn và nhanh hơn"
@@ -20457,7 +20457,7 @@
     "options": [
       "Áp dụng Hierarchical Summarization: tóm tắt định kỳ đoạn cũ thành Structured State Summary cô đọng và ghép với tin nhắn gần nhất",
       "Theo dõi mức tiêu thụ điện năng thực tế của GPU/CPU (Watts), Thời gian chạy, và Tọa độ Địa lý của Trung tâm Dữ liệu (Carbon Intensity của lưới điện khu vực)",
-      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
       "Tận dụng cơ chế Tản nhiệt Không khí Tự nhiên (Free-Air Cooling / Direct Outside Air Cooling), loại bỏ nhu cầu sử dụng các hệ thống máy lạnh công nghiệp (Chillers) tiêu tốn hàng Megawatts điện, đưa chỉ số PUE về mức tiệm cận 1.05"
     ],
     "correct_index": 1,
@@ -20491,7 +20491,7 @@
     "difficulty": "Easy",
     "question": "Chiến lược 'Model Tiering / Cascading' trong thiết kế sản phẩm AI hoạt động theo nguyên lý nào để tiết kiệm chi phí?",
     "options": [
-      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
       "Tận dụng cơ chế Tản nhiệt Không khí Tự nhiên (Free-Air Cooling / Direct Outside Air Cooling), loại bỏ nhu cầu sử dụng các hệ thống máy lạnh công nghiệp (Chillers) tiêu tốn hàng Megawatts điện, đưa chỉ số PUE về mức tiệm cận 1.05",
       "Định tuyến câu hỏi qua mô hình Siêu nhẹ / Giá rẻ trước (ví dụ: GPT-4o-mini hoặc SLM 1B); Chỉ khi câu hỏi quá phức tạp hoặc mô hình nhỏ không tự tin mới chuyển tiếp lên Frontier LLM đắt tiền (GPT-4o)",
       "$\\text{Cost per Inference} = \\frac{\\text{Tổng Chi phí GPU/Server} + \\text{Chi phí Mạng/Lưu trữ} + \\text{Chi phí API bên thứ 3} + \\text{Chi phí Bản quyền}}{\\text{Tổng số Lượt Request Phục vụ Thành công}}$, phản ánh chính xác hiệu quả kinh tế đơn vị của sản phẩm AI"
@@ -20561,7 +20561,7 @@
     "day": "Day 25",
     "topic": "Cost Optimization & Green AI (Knowledge Distillation: Hard vs Soft Targets)",
     "difficulty": "Medium",
-    "question": "Trong quy trình Chưng cất Tri thức (Knowledge Distillation), tại sao việc huấn luyện Mô hình Học sinh trên 'Phân phối Xác suất Mềm' (Soft Targets / Logits với Nhiệt độ $T > 1$) lại hiệu quả hơn việc chỉ học nhãn cứng (Hard Targets)?",
+    "question": "Trong quy trình Chưng cất Tri thức (Knowledge Distillation), tại sao việc huấn luyện Mô hình Học sinh trên 'Phân phối Xác suất Mềm' (Soft Targets / Logits với Nhiệt độ \\$T > 1\\$) lại hiệu quả hơn việc chỉ học nhãn cứng (Hard Targets)?",
     "options": [
       "Giá thành cực rẻ (giảm 70-90% so với On-demand), nhưng nhà cung cấp đám mây có quyền thu hồi máy chủ bất kỳ lúc nào với cảnh báo trước 30 giây khi có khách hàng khác trả giá cao hơn",
       "Soft Targets chứa 'Tri thức Ẩn' (Dark Knowledge: Mối quan hệ tương đồng giữa các lớp sai, ví dụ: 'Bức ảnh này giống mèo 80%, giống chó 19% và chỉ giống ô tô 0.001%'), cung cấp mật độ thông tin phong phú hơn gấp nhiều lần so với nhãn cứng nhị phân",
@@ -20707,13 +20707,13 @@
     "difficulty": "Medium",
     "question": "Khi cuộc hội thoại của người dùng vượt quá giới hạn ngữ cảnh, tại sao việc 'Cắt tỉa Trượt' (Sliding Window Truncation) lại tiết kiệm chi phí hơn việc 'Liên tục Tóm tắt Ngữ cảnh' (Context Summarization)?",
     "options": [
-      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
       "Đo lường Chỉ số Dư thừa Khối (Block Importance / Cosine Similarity giữa Input và Output của từng tầng): Loại bỏ các tầng có ma trận biến đổi gần như đồng nhất (Hidden states không thay đổi nhiều), giảm 25% độ trễ suy luận với mức suy giảm năng lực tối thiểu",
       "Tối ưu hóa theo 2 chiều: 1. Không gian (Spatial Shifting: Tự động điều phối Job sang Trung tâm Dữ liệu đặt tại khu vực đang có năng lượng xanh dồi dào như Thủy điện/Điện gió ở Bắc Âu); 2. Thời gian (Temporal Shifting: Trì hoãn Job vài giờ để chờ thời điểm năng lượng mặt trời đạt đỉnh)",
       "$\\text{Cost per Inference} = \\frac{\\text{Tổng Chi phí GPU/Server} + \\text{Chi phí Mạng/Lưu trữ} + \\text{Chi phí API bên thứ 3} + \\text{Chi phí Bản quyền}}{\\text{Tổng số Lượt Request Phục vụ Thành công}}$, phản ánh chính xác hiệu quả kinh tế đơn vị của sản phẩm AI"
     ],
     "correct_index": 0,
-    "correct_answer": "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+    "correct_answer": "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
     "explanation": "Cắt tỉa trượt là giải pháp tiết kiệm chi phí tuyệt đối cho các tác vụ hội thoại ngắn hạn không yêu cầu ghi nhớ ngữ cảnh lịch sử sâu.",
     "slide_ref": "Day 25 - Slide: Token Truncation vs Summarization Cost-Benefit Analysis"
   },
@@ -20725,7 +20725,7 @@
     "difficulty": "Medium",
     "question": "Chỉ số 'Chi phí trên Mỗi Lượt Suy luận Hợp lệ' (Cost per Successful Inference) trong FinOps được tính toán bằng cách tổng hợp những chi phí nào?",
     "options": [
-      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
       "Xác định và loại bỏ các trọng số (Weights) hoặc toàn bộ các nơ-ron/Attention Heads ít đóng góp nhất vào kết quả dự đoán (trọng số gần bằng 0), tạo ra mô hình thưa (Sparse Model) nhẹ hơn và nhanh hơn",
       "Tối ưu hóa theo 2 chiều: 1. Không gian (Spatial Shifting: Tự động điều phối Job sang Trung tâm Dữ liệu đặt tại khu vực đang có năng lượng xanh dồi dào như Thủy điện/Điện gió ở Bắc Âu); 2. Thời gian (Temporal Shifting: Trì hoãn Job vài giờ để chờ thời điểm năng lượng mặt trời đạt đỉnh)",
       "$\\text{Cost per Inference} = \\frac{\\text{Tổng Chi phí GPU/Server} + \\text{Chi phí Mạng/Lưu trữ} + \\text{Chi phí API bên thứ 3} + \\text{Chi phí Bản quyền}}{\\text{Tổng số Lượt Request Phục vụ Thành công}}$, phản ánh chính xác hiệu quả kinh tế đơn vị của sản phẩm AI"
@@ -20797,7 +20797,7 @@
     "difficulty": "Medium",
     "question": "Phương pháp 'Layer Pruning' (như ShortGPT) loại bỏ bớt các tầng Transformer thừa thãi mà không cần huấn luyện lại từ đầu dựa trên tiêu chí nào?",
     "options": [
-      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
       "Đo lường Chỉ số Dư thừa Khối (Block Importance / Cosine Similarity giữa Input và Output của từng tầng): Loại bỏ các tầng có ma trận biến đổi gần như đồng nhất (Hidden states không thay đổi nhiều), giảm 25% độ trễ suy luận với mức suy giảm năng lực tối thiểu",
       "Theo dõi mức tiêu thụ điện năng thực tế của GPU/CPU (Watts), Thời gian chạy, và Tọa độ Địa lý của Trung tâm Dữ liệu (Carbon Intensity của lưới điện khu vực)",
       "Tối ưu hóa theo 2 chiều: 1. Không gian (Spatial Shifting: Tự động điều phối Job sang Trung tâm Dữ liệu đặt tại khu vực đang có năng lượng xanh dồi dào như Thủy điện/Điện gió ở Bắc Âu); 2. Thời gian (Temporal Shifting: Trì hoãn Job vài giờ để chờ thời điểm năng lượng mặt trời đạt đỉnh)"
@@ -20889,7 +20889,7 @@
     "options": [
       "Sử dụng một mô hình ngôn ngữ nhỏ siêu nhẹ tính toán Độ thông tin (Perplexity / Information Entropy) của từng từ trong prompt; Tự động loại bỏ các từ đệm, từ nối thừa thãi có độ bất định thấp, giảm 40-70% số lượng token mà vẫn bảo toàn 95% ý nghĩa cốt lõi",
       "$\\text{Cost per Inference} = \\frac{\\text{Tổng Chi phí GPU/Server} + \\text{Chi phí Mạng/Lưu trữ} + \\text{Chi phí API bên thứ 3} + \\text{Chi phí Bản quyền}}{\\text{Tổng số Lượt Request Phục vụ Thành công}}$, phản ánh chính xác hiệu quả kinh tế đơn vị của sản phẩm AI",
-      "Gắn các Đầu Phân loại Sớm (Early-Exit Classifiers / Probes) tại các tầng trung gian (Tầng 6, Tầng 12, Tầng 18): Sau mỗi tầng, tính toán Độ tự tin của Phân phối Logits (Softmax Entropy); Nếu Entropy $< 0.05$ (Mô hình cực kỳ tự tin vào token tiếp theo), lập tức xuất kết quả và kết thúc tính toán cho token đó (Bỏ qua 20 tầng còn lại), giảm 60% điện năng tiêu thụ và độ trễ",
+      "Gắn các Đầu Phân loại Sớm (Early-Exit Classifiers / Probes) tại các tầng trung gian (Tầng 6, Tầng 12, Tầng 18): Sau mỗi tầng, tính toán Độ tự tin của Phân phối Logits (Softmax Entropy); Nếu Entropy \\$< 0.05\\$ (Mô hình cực kỳ tự tin vào token tiếp theo), lập tức xuất kết quả và kết thúc tính toán cho token đó (Bỏ qua 20 tầng còn lại), giảm 60% điện năng tiêu thụ và độ trễ",
       "Triển khai Tầng Cache Ngữ nghĩa Tự Thích ứng (Adaptive Density-Aware Semantic Cache Engine): 1. Tầng 1: Cloudflare Edge Cache lưu Top-10,000 câu hỏi phổ biến (Độ trễ 5ms); 2. Tầng 2: Cụm Redis HNSW Vector Cache lưu 10 triệu vector; 3. Dynamic Threshold Controller: Tự động điều chỉnh ngưỡng Cosine $\\tau(x)$ theo mật độ cục bộ của không gian ngữ nghĩa: Với các chủ đề y tế/pháp lý nhạy cảm, nâng ngưỡng lên $\\tau = 0.98$; với các chủ đề giải trí thông thường, hạ ngưỡng xuống $\\tau = 0.92$, cân bằng hoàn hảo giữa Hit Rate và Tính chính xác"
     ],
     "correct_index": 3,
@@ -20996,12 +20996,12 @@
     "question": "Làm thế nào để xây dựng một Engine Suy luận Tiết kiệm Năng lượng (Early-Exit Dynamic Decoding Engine) tự động cho phép các câu hỏi dễ 'Thoát sớm' ở tầng Transformer thứ 6 thay vì phải chạy hết 32 tầng?",
     "options": [
       "Tận dụng cơ chế Tản nhiệt Không khí Tự nhiên (Free-Air Cooling / Direct Outside Air Cooling), loại bỏ nhu cầu sử dụng các hệ thống máy lạnh công nghiệp (Chillers) tiêu tốn hàng Megawatts điện, đưa chỉ số PUE về mức tiệm cận 1.05",
-      "Gắn các Đầu Phân loại Sớm (Early-Exit Classifiers / Probes) tại các tầng trung gian (Tầng 6, Tầng 12, Tầng 18): Sau mỗi tầng, tính toán Độ tự tin của Phân phối Logits (Softmax Entropy); Nếu Entropy $< 0.05$ (Mô hình cực kỳ tự tin vào token tiếp theo), lập tức xuất kết quả và kết thúc tính toán cho token đó (Bỏ qua 20 tầng còn lại), giảm 60% điện năng tiêu thụ và độ trễ",
-      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí $0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
+      "Gắn các Đầu Phân loại Sớm (Early-Exit Classifiers / Probes) tại các tầng trung gian (Tầng 6, Tầng 12, Tầng 18): Sau mỗi tầng, tính toán Độ tự tin của Phân phối Logits (Softmax Entropy); Nếu Entropy \\$< 0.05\\$ (Mô hình cực kỳ tự tin vào token tiếp theo), lập tức xuất kết quả và kết thúc tính toán cho token đó (Bỏ qua 20 tầng còn lại), giảm 60% điện năng tiêu thụ và độ trễ",
+      "Tóm tắt ngữ cảnh đòi hỏi phải gọi LLM thêm một lần để sinh bản tóm tắt (tốn thêm chi phí token sinh ra); Cắt tỉa trượt là thao tác xử lý chuỗi trên CPU với chi phí \\$0, mặc dù có thể làm mất thông tin của các lượt hội thoại rất cũ",
       "Tích hợp Khung Bù trừ Carbon Tự động (Automated Carbon Offset Ledger via Smart Contracts): Sau mỗi Job huấn luyện, `codecarbon` xuất báo cáo lượng $CO_2$ tiêu thụ có chữ ký số mật mã học; Hệ thống tự động kích hoạt Hợp đồng Thông minh (Smart Contract API) mua số lượng Chứng chỉ Năng lượng Tái tạo (RECs / Tokenized Carbon Offsets) tương ứng theo thời gian thực và ghi vào Báo cáo Phát triển Bền vững (ESG Compliance Report)"
     ],
     "correct_index": 1,
-    "correct_answer": "Gắn các Đầu Phân loại Sớm (Early-Exit Classifiers / Probes) tại các tầng trung gian (Tầng 6, Tầng 12, Tầng 18): Sau mỗi tầng, tính toán Độ tự tin của Phân phối Logits (Softmax Entropy); Nếu Entropy $< 0.05$ (Mô hình cực kỳ tự tin vào token tiếp theo), lập tức xuất kết quả và kết thúc tính toán cho token đó (Bỏ qua 20 tầng còn lại), giảm 60% điện năng tiêu thụ và độ trễ",
+    "correct_answer": "Gắn các Đầu Phân loại Sớm (Early-Exit Classifiers / Probes) tại các tầng trung gian (Tầng 6, Tầng 12, Tầng 18): Sau mỗi tầng, tính toán Độ tự tin của Phân phối Logits (Softmax Entropy); Nếu Entropy \\$< 0.05\\$ (Mô hình cực kỳ tự tin vào token tiếp theo), lập tức xuất kết quả và kết thúc tính toán cho token đó (Bỏ qua 20 tầng còn lại), giảm 60% điện năng tiêu thụ và độ trễ",
     "explanation": "Early-Exit Dynamic Inference điều chỉnh linh hoạt khối lượng tính toán theo độ khó thực tế của từng token, tiết kiệm năng lượng khổng lồ và tăng tốc độ phục vụ.",
     "slide_ref": "Day 25 - Slide: Early-Exit Dynamic Inference & Energy Optimization"
   },
@@ -21303,11 +21303,11 @@
     "options": [
       "Kênh truyền dẫn Cáp quang Chuyên dụng Riêng biệt (Dedicated Physical Fiber Connection) kết nối trực tiếp từ Trung tâm Dữ liệu On-Premise tới Đám mây với Băng thông khổng lồ (100Gbps+) và Độ trễ cực thấp ổn định",
       "Dòng chảy tính toán liền mạch trải dài từ Thiết bị Biên (Sensors/Điện thoại) -> Máy chủ Biên Cục bộ (Edge Servers) -> Trung tâm Dữ liệu On-Premise -> Đám mây Công cộng (Cloud)",
-      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ $0.05 - $0.09 / GB)",
+      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ \\$0.05 - \\$0.09 / GB)",
       "Dữ liệu cá nhân và nhạy cảm của công dân BẮT BUỘC PHẢI ĐƯỢC LƯU TRỮ VÀ XỬ LÝ TRONG PHẠM VI RANH GIỚI ĐỊA LÝ của quốc gia đó (ví dụ: Lưu trữ tại On-Premise hoặc Data Center nội địa theo quy định pháp luật)"
     ],
     "correct_index": 2,
-    "correct_answer": "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ $0.05 - $0.09 / GB)",
+    "correct_answer": "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ \\$0.05 - \\$0.09 / GB)",
     "explanation": "Data Egress Cost là rào cản tài chính lớn trong kiến trúc đa đám mây, đòi hỏi các giải pháp nén và tối ưu hóa luồng truyền dữ liệu xuyên đám mây.",
     "slide_ref": "Day 26 - Slide: Cloud Egress Costs & Financial Governance"
   },
@@ -21320,7 +21320,7 @@
     "question": "Dịch vụ AWS Transit Gateway hoặc Multi-Cloud VPN kết nối các mạng ảo (VPCs) xuyên đám mây bằng cách nào?",
     "options": [
       "Dữ liệu cá nhân và nhạy cảm của công dân BẮT BUỘC PHẢI ĐƯỢC LƯU TRỮ VÀ XỬ LÝ TRONG PHẠM VI RANH GIỚI ĐỊA LÝ của quốc gia đó (ví dụ: Lưu trữ tại On-Premise hoặc Data Center nội địa theo quy định pháp luật)",
-      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ $0.05 - $0.09 / GB)",
+      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ \\$0.05 - \\$0.09 / GB)",
       "Thiết lập các Đường hầm Mã hóa An toàn (Encrypted IPsec VPN Tunnels / BGP Peering) kết nối các mạng ảo riêng biệt (AWS VPC, GCP VPC, On-Premise) thành một Mạng Riêng Ảo Hợp nhất (Unified Mesh Network)",
       "Dòng chảy tính toán liền mạch trải dài từ Thiết bị Biên (Sensors/Điện thoại) -> Máy chủ Biên Cục bộ (Edge Servers) -> Trung tâm Dữ liệu On-Premise -> Đám mây Công cộng (Cloud)"
     ],
@@ -21373,7 +21373,7 @@
     "difficulty": "Medium",
     "question": "Khi xây dựng một Tầng Phục vụ Mô hình Độc lập Đám mây (Cloud-Agnostic Serving Layer), kiến trúc kết hợp nào mang lại sự linh hoạt và hiệu năng cao nhất?",
     "options": [
-      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ $0.05 - $0.09 / GB)",
+      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ \\$0.05 - \\$0.09 / GB)",
       "Cài đặt OpenTelemetry Collector tại từng đám mây: Collector cục bộ thực hiện gom cụm, lọc PII và nén dữ liệu -> Xuất khẩu (Export) luồng Telemetry qua giao thức OTLP/gRPC an toàn về Cụm Lưu trữ Giám sát Trung tâm (Centralized M3DB / Grafana Tempo); Grafana truy vấn tập trung toàn bộ dữ liệu",
       "Sử dụng NVIDIA Triton Inference Server làm Máy chủ Phục vụ Tiêu chuẩn (Standard Container): Bên trong Triton nạp mô hình đã được tối ưu hóa bằng TensorRT-LLM (cho GPU NVIDIA) hoặc ONNX Runtime (cho CPU/AMD), cho phép triển khai cùng một container image trên bất kỳ nhà cung cấp nào",
       "Dữ liệu gốc khổng lồ được lưu trữ vĩnh viễn trên AWS S3; Cụm máy chủ On-Premise triển khai MinIO / Alluxio hoạt động như một Cụm Bộ nhớ Đệm Cục bộ Tốc độ Cao (Local Distributed Read-Through Cache): Tự động tải trước và lưu đệm dữ liệu trên mảng SSD NVMe cục bộ để phục vụ GPU với thông lượng hàng chục GB/s"
@@ -21412,7 +21412,7 @@
       "Sử dụng Kubeflow Pipelines với Cloud Providers SDKs & Centralized MLMD: Step 1 gọi Vertex AI API xử lý dữ liệu -> Lưu Artifacts vào S3/GCS chung -> Step 2 kích hoạt SageMaker Endpoint Deployment qua AWS Boto3 API; Toàn bộ trạng thái và Lineage được ghi vết tập trung trong cùng một DAG",
       "Sử dụng Cơ chế Đồng bộ Dữ liệu Thay đổi (Change Data Capture - CDC & Delta Lake Time-Travel): Chỉ xuất và truyền tải duy nhất các tệp tin Parquet mới được Thêm/Sửa/Xóa (Delta Files) kết hợp nén Zstandard (Zstd) tối đa, giảm 98% khối lượng dữ liệu di chuyển qua mạng",
       "Dòng chảy tính toán liền mạch trải dài từ Thiết bị Biên (Sensors/Điện thoại) -> Máy chủ Biên Cục bộ (Edge Servers) -> Trung tâm Dữ liệu On-Premise -> Đám mây Công cộng (Cloud)",
-      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ $0.05 - $0.09 / GB)"
+      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ \\$0.05 - \\$0.09 / GB)"
     ],
     "correct_index": 1,
     "correct_answer": "Sử dụng Cơ chế Đồng bộ Dữ liệu Thay đổi (Change Data Capture - CDC & Delta Lake Time-Travel): Chỉ xuất và truyền tải duy nhất các tệp tin Parquet mới được Thêm/Sửa/Xóa (Delta Files) kết hợp nén Zstandard (Zstd) tối đa, giảm 98% khối lượng dữ liệu di chuyển qua mạng",
@@ -21500,7 +21500,7 @@
     "question": "Làm thế nào để thu thập toàn bộ Metrics và Traces từ 3 đám mây khác nhau về một Bảng điều khiển Grafana duy nhất mà không bị thất lạc dữ liệu?",
     "options": [
       "Sử dụng NVIDIA Triton Inference Server làm Máy chủ Phục vụ Tiêu chuẩn (Standard Container): Bên trong Triton nạp mô hình đã được tối ưu hóa bằng TensorRT-LLM (cho GPU NVIDIA) hoặc ONNX Runtime (cho CPU/AMD), cho phép triển khai cùng một container image trên bất kỳ nhà cung cấp nào",
-      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ $0.05 - $0.09 / GB)",
+      "Khoản phí mà các nhà cung cấp đám mây (AWS/GCP/Azure) thu khi bạn chuyển dữ liệu TỪ BÊN TRONG đám mây của họ RA NGOÀI INTERNET hoặc sang một nhà cung cấp đám mây khác (thường từ \\$0.05 - \\$0.09 / GB)",
       "Kênh truyền dẫn Cáp quang Chuyên dụng Riêng biệt (Dedicated Physical Fiber Connection) kết nối trực tiếp từ Trung tâm Dữ liệu On-Premise tới Đám mây với Băng thông khổng lồ (100Gbps+) và Độ trễ cực thấp ổn định",
       "Cài đặt OpenTelemetry Collector tại từng đám mây: Collector cục bộ thực hiện gom cụm, lọc PII và nén dữ liệu -> Xuất khẩu (Export) luồng Telemetry qua giao thức OTLP/gRPC an toàn về Cụm Lưu trữ Giám sát Trung tâm (Centralized M3DB / Grafana Tempo); Grafana truy vấn tập trung toàn bộ dữ liệu"
     ],
@@ -22724,7 +22724,7 @@
     "question": "Công nghệ 'Quang tử Silicon' (Silicon Photonics) sử dụng hạt nào thay cho electron để truyền dữ liệu giữa các chip AI?",
     "options": [
       "Mô hình hóa bài toán lập lịch phân bổ tài nguyên dưới dạng Bài toán Đồ thị Ising / QUBO (Quadratic Unconstrained Binary Optimization); Sử dụng mạch lượng tử biến phân luân phiên áp dụng Hamilton Mục tiêu và Hamilton Trộn để tìm kiếm cấu hình phân bổ tài nguyên tối ưu toàn cục",
-      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes $(x, y, t, p)$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
+      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes \\$(x, y, t, p)\\$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
       "Sử dụng các Hạt Ánh sáng (Photons / Tia sáng quang học) truyền trên các ống dẫn sóng silicon siêu nhỏ, mang lại băng thông truyền tải Terabits/giây với độ trễ gần như bằng 0 và không tỏa nhiệt",
       "Sử dụng Sự Giao thoa và Khúc xạ của các Chùm Tia Sáng (Optical Interference & Phase Shifters on Mach-Zehnder Interferometers): Thực hiện phép nhân ma trận ở tốc độ ánh sáng với mức tiêu thụ năng lượng gần như bằng 0"
     ],
@@ -22742,7 +22742,7 @@
     "question": "Khóa học Kỹ nghệ Hạ tầng AI (AI Infrastructure Track - Days 16 to 28) đã trang bị những trụ cột kiến trúc cốt lõi nào?",
     "options": [
       "Sử dụng các Hạt Ánh sáng (Photons / Tia sáng quang học) truyền trên các ống dẫn sóng silicon siêu nhỏ, mang lại băng thông truyền tải Terabits/giây với độ trễ gần như bằng 0 và không tỏa nhiệt",
-      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes $(x, y, t, p)$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
+      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes \\$(x, y, t, p)\\$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
       "1. Phần cứng Tính toán (GPU/TPU/ASIC); 2. Huấn luyện Phân tán (3D Parallelism & FSDP); 3. Mạng & Lưu trữ Hiệu năng cao (InfiniBand/GDS); 4. Phục vụ Suy luận Tối ưu (vLLM/TensorRT); 5. Điều phối Cụm (K8s/Slurm/Ray); 6. MLOps & Quản trị An ninh Quyền riêng tư",
       "1. KV Cache Memory Size ($4 \\times n_{\\text{layers}} \\times n_{\\text{heads}} \\times d_{\\text{head}}$); 2. AllReduce Communication Volume ($2 \\frac{N-1}{N} M$); 3. Model FLOPs Utilization (MFU %); 4. Pipeline Bubble Ratio ($F_{\\text{bubble}} = \\frac{p-1}{m+p-1}$); 5. Differential Privacy Budget (RDP Composition); 6. Roofline Arithmetic Intensity (FLOPs/Byte)"
     ],
@@ -22903,7 +22903,7 @@
     "difficulty": "Easy",
     "question": "Định luật Mở rộng Quy mô (Scaling Laws như Chinchilla Scaling Law) khẳng định mối quan hệ tối ưu giữa Kích thước Mô hình ($N$) và Kích thước Dữ liệu ($D$) như thế nào?",
     "options": [
-      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes $(x, y, t, p)$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
+      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes \\$(x, y, t, p)\\$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
       "Mật độ lưu trữ siêu khổng lồ (Có thể lưu trữ toàn bộ dữ liệu internet của thế giới trong một khối lập phương DNA kích thước bằng viên đường) và Độ bền vững vật lý kéo dài hàng nghìn năm mà không sợ hỏng hóc",
       "Để tối ưu hóa hiệu quả tính toán, Số lượng Tham số Mô hình ($N$) và Số lượng Tokens Huấn luyện ($D$) BẮT BUỘC PHẢI ĐƯỢC MỞ RỘNG ĐỒNG ĐỀU THEO TỶ LỆ CÂN BẰNG ($D \\approx 20N$ tokens cho mỗi tham số)",
       "Xác định rõ Ràng buộc Cốt lõi của bài toán (Độ trễ, Băng thông, Bộ nhớ hay Chi phí) -> Phân tích Đánh đổi Kỹ thuật (Trade-off Analysis giữa các giải pháp) -> Lựa chọn công nghệ giải quyết triệt để nút thắt cổ chai đó"
@@ -22957,13 +22957,13 @@
     "difficulty": "Medium",
     "question": "Trong chip Neuromorphic (như SynSense / Loihi 2), phép toán Tích chập Xung (Spiking Convolution) xử lý luồng dữ liệu từ Cảm biến Thị giác Hướng Sự kiện (Event Camera / DVS) như thế nào?",
     "options": [
-      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes $(x, y, t, p)$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
+      "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes \\$(x, y, t, p)\\$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
       "Sử dụng các Ống Dẫn Sóng Quang học Silicon (Optical Waveguides) kết hợp Kỹ thuật Ghép kênh Phân chia Bước sóng (Wavelength Division Multiplexing - WDM): Truyền hàng chục bước sóng ánh sáng khác nhau đồng thời trên 1 ống dẫn duy nhất, mang lại băng thông nội bộ chip hàng chục TB/s với độ trễ nano-giây",
       "ANN truyền các giá trị số thực liên tục tại mọi chu kỳ xung nhịp (tiêu tốn năng lượng liên tục); SNN chỉ phát ra các xung nhị phân rời rạc (Discrete Spikes) khi điện thế màng nơ-ron vượt ngưỡng kích hoạt (xử lý không đồng bộ theo thời gian)",
       "Trọng số $W$ được lập trình trực tiếp dưới dạng Độ dẫn điện ($G = 1/R$) của các ô nhớ Memristor; Điện áp đầu vào $V_i$ đại diện cho vector $X$; Dòng điện đầu ra thu được tại các cột tự động bằng tổng tích ma trận theo Định luật Ohm ($I = V \\cdot G$) và Định luật Kirchhoff ($I_j = \\sum I_{ij}$) trong 1 chu kỳ nano-giây duy nhất"
     ],
     "correct_index": 0,
-    "correct_answer": "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes $(x, y, t, p)$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
+    "correct_answer": "Chỉ thực hiện phép cộng tích lũy trên các tọa độ pixel có phát sinh sự kiện thay đổi độ sáng (Event Spikes \\$(x, y, t, p)\\$), loại bỏ hoàn toàn 95% các pixel tĩnh không đổi, giảm độ trễ xử lý thị giác xuống < 1ms với công suất vài Milliwatts",
     "explanation": "Xử lý tích chập hướng sự kiện chỉ tiêu tốn năng lượng khi có chuyển động thực tế trong khung nhìn, mang lại hiệu suất năng lượng phi thường cho robot và drone.",
     "slide_ref": "Day 28 - Slide: Event-Driven Spiking Convolutions"
   },
@@ -23281,7 +23281,7 @@
     "difficulty": "Hard",
     "question": "Thiết kế một Bản quy hoạch Kiến trúc Hạ tầng Siêu Trí tuệ Toàn cầu (Master Planetary-Scale Superintelligence Infrastructure Blueprint) kết nối 1 Triệu Bộ gia tốc Phân tán (Hybrid Quantum-Photonic-Neuromorphic Supercluster). Trình bày chi tiết cấu trúc 5 phân tầng từ Mạng Lưới Quang Tử Silicon, Lưới Tính Toán Đa Hình, Bộ Nhớ DNA Vĩnh Cửu đến Điều Phối Đa Tác Tử Toàn Cầu?",
     "options": [
-      "Xét ma trận dữ liệu $A \\in \\mathbb{C}^{N \\times N}$ có độ thưa $s$ và số điều kiện $\\kappa$. Thuật toán cổ điển giải $A x = b$ (như Phân rã Cholesky hoặc Conjugate Gradient) đòi hỏi độ phức tạp tính toán đa thức $O(N s \\kappa)$. Thuật toán HHL sử dụng Ước lượng Pha Lượng tử (Quantum Phase Estimation) và Biến đổi Fourier Lượng tử (QFT) để giải và trích xuất vector trạng thái lượng tử $|x\\rangle = A^{-1} |b\\rangle$ với độ phức tạp hàm logarit $O(s^2 \\kappa^2 \\ln(N) / \\epsilon)$, mang lại bước nhảy vọt tốc độ theo hàm mũ (Exponential Speedup $O(\\ln N)$ vs $O(N)$) khi số chiều dữ liệu $N \\to \\infty$",
+      "Xét ma trận dữ liệu $A \\in \\mathbb{C}^{N \\times N}$ có độ thưa $s$ và số điều kiện $\\kappa$. Thuật toán cổ điển giải $A x = b$ (như Phân rã Cholesky hoặc Conjugate Gradient) đòi hỏi độ phức tạp tính toán đa thức $O(N s \\kappa)$. Thuật toán HHL sử dụng Ước lượng Pha Lượng tử (Quantum Phase Estimation) và Biến đổi Fourier Lượng tử (QFT) để giải và trích xuất vector trạng thái lượng tử $|x\\rangle = A^{-1} |b\\rangle$ với độ phức tạp hàm logarit $O(s^2 \\kappa^2 \\ln(N) / \\epsilon)$, mang lại bước nhảy vọt tốc độ theo hàm mũ (Exponential Speedup $O(\\ln N)$ vs \\$O(N)$) khi số chiều dữ liệu $N \\to \\infty\\$",
       "1. Kiểm tra Lớp Lưu trữ & Ingestion: GPU Starvation wait time trên DataLoader; 2. Kiểm tra Lớp Mạng Giao tiếp: Thời gian chờ `ncclKernel_AllReduce` và phát hiện nghẽn cáp quang qua INT/DOM; 3. Kiểm tra Lớp Tính toán GPU: CUDA Kernel Launch overhead và Mức sử dụng Tensor Cores qua Nsight Systems; 4. Kiểm tra Lớp Phần cứng Vật lý: Hiện tượng GPU Thermal Throttling và lỗi ECC memory",
       "Triển khai Bản thiết kế Kiến trúc Siêu Trí tuệ 5 Phân tầng Tương lai: 1. Optical Network-on-Chip & CPO Fabric: Mạng lưới quang tử Silicon Photonics ghép kênh WDM kết nối 1 triệu nút với băng thông Petabits/s và độ trễ ánh sáng Zero-Heat; 2. Heterogeneous Polymorphic Compute Engine: Nhân tính toán kết hợp tam giác (Tensor Cores FP8 cho Deep Learning + Quantum Processors QML cho Tối ưu hóa Tổ hợp + Neuromorphic SNN Cores cho Nhận thức Hướng Sự kiện); 3. Eternal DNA & Holographic Memory Tier: Kho lưu trữ tri thức phân tử DNA bất biến hàng nghìn năm kết hợp Bộ nhớ đệm Quang học Tức thời; 4. Universal Autonomous Orchestration Mesh: Bộ điều phối tự thích ứng lượng tử tối ưu hóa 100% dòng chảy tính toán; 5. Net-Zero Geothermal Energy Integration: Vận hành 100% bằng năng lượng địa nhiệt và làm mát bằng chất lỏng tuần hoàn kín",
       "Hiện thực hóa Quy tắc Tính dẻo Nơ-ron Dựa trên Thời Gian Xung (Spike-Timing-Dependent Plasticity - STDP) trực tiếp tại từng Synapse vật lý: Trọng số khớp thần kinh $\\Delta w$ tự động tăng lên nếu Nơ-ron Trước phát xung ngay trước Nơ-ron Sau ($t_{\\text{pre}} < t_{\\text{post}}$ - Quan hệ nhân quả củng cố); $\\Delta w$ tự động giảm nếu thứ tự đảo ngược; Toàn bộ quá trình học tập diễn ra liên tục tại chỗ ở cấp độ mạch bán dẫn nano mà không cần lưu trữ gradient hay tính đạo hàm"
@@ -23302,10 +23302,10 @@
       "Tích hợp Mạng Nơ-ron Xung Quang học trên Chip (Photonic SNN with Phase-Change Materials like GeSbTe / GST): Các xung thần kinh là các chùm xung laser pico-giây; Các khớp thần kinh Synapses được lưu trữ bằng vật liệu đổi pha quang học (PCM cells); Khi tích lũy đủ năng lượng ánh sáng, nơ-ron quang học tự động phát xung chuyển mạch trong 10 Pico-giây, cho phép robot phản ứng với các va chạm vật lý ở tốc độ ánh sáng",
       "1. Dữ liệu cổ điển được mã hóa vào trạng thái lượng tử (Quantum Feature Map / State Preparation); 2. Mạch lượng tử tham số hóa (Parameterized Quantum Circuit) thực hiện quay các Qubits; 3. Đo lường giá trị kỳ vọng (Measurement); 4. Thuật toán tối ưu hóa cổ điển (như Adam/COBYLA) cập nhật các tham số góc quay $\\theta$ của mạch",
       "1. Kiểm tra Lớp Lưu trữ & Ingestion: GPU Starvation wait time trên DataLoader; 2. Kiểm tra Lớp Mạng Giao tiếp: Thời gian chờ `ncclKernel_AllReduce` và phát hiện nghẽn cáp quang qua INT/DOM; 3. Kiểm tra Lớp Tính toán GPU: CUDA Kernel Launch overhead và Mức sử dụng Tensor Cores qua Nsight Systems; 4. Kiểm tra Lớp Phần cứng Vật lý: Hiện tượng GPU Thermal Throttling và lỗi ECC memory",
-      "Xét ma trận dữ liệu $A \\in \\mathbb{C}^{N \\times N}$ có độ thưa $s$ và số điều kiện $\\kappa$. Thuật toán cổ điển giải $A x = b$ (như Phân rã Cholesky hoặc Conjugate Gradient) đòi hỏi độ phức tạp tính toán đa thức $O(N s \\kappa)$. Thuật toán HHL sử dụng Ước lượng Pha Lượng tử (Quantum Phase Estimation) và Biến đổi Fourier Lượng tử (QFT) để giải và trích xuất vector trạng thái lượng tử $|x\\rangle = A^{-1} |b\\rangle$ với độ phức tạp hàm logarit $O(s^2 \\kappa^2 \\ln(N) / \\epsilon)$, mang lại bước nhảy vọt tốc độ theo hàm mũ (Exponential Speedup $O(\\ln N)$ vs $O(N)$) khi số chiều dữ liệu $N \\to \\infty$"
+      "Xét ma trận dữ liệu $A \\in \\mathbb{C}^{N \\times N}$ có độ thưa $s$ và số điều kiện $\\kappa$. Thuật toán cổ điển giải $A x = b$ (như Phân rã Cholesky hoặc Conjugate Gradient) đòi hỏi độ phức tạp tính toán đa thức $O(N s \\kappa)$. Thuật toán HHL sử dụng Ước lượng Pha Lượng tử (Quantum Phase Estimation) và Biến đổi Fourier Lượng tử (QFT) để giải và trích xuất vector trạng thái lượng tử $|x\\rangle = A^{-1} |b\\rangle$ với độ phức tạp hàm logarit $O(s^2 \\kappa^2 \\ln(N) / \\epsilon)$, mang lại bước nhảy vọt tốc độ theo hàm mũ (Exponential Speedup $O(\\ln N)$ vs \\$O(N)$) khi số chiều dữ liệu $N \\to \\infty\\$"
     ],
     "correct_index": 3,
-    "correct_answer": "Xét ma trận dữ liệu $A \\in \\mathbb{C}^{N \\times N}$ có độ thưa $s$ và số điều kiện $\\kappa$. Thuật toán cổ điển giải $A x = b$ (như Phân rã Cholesky hoặc Conjugate Gradient) đòi hỏi độ phức tạp tính toán đa thức $O(N s \\kappa)$. Thuật toán HHL sử dụng Ước lượng Pha Lượng tử (Quantum Phase Estimation) và Biến đổi Fourier Lượng tử (QFT) để giải và trích xuất vector trạng thái lượng tử $|x\\rangle = A^{-1} |b\\rangle$ với độ phức tạp hàm logarit $O(s^2 \\kappa^2 \\ln(N) / \\epsilon)$, mang lại bước nhảy vọt tốc độ theo hàm mũ (Exponential Speedup $O(\\ln N)$ vs $O(N)$) khi số chiều dữ liệu $N \\to \\infty$",
+    "correct_answer": "Xét ma trận dữ liệu $A \\in \\mathbb{C}^{N \\times N}$ có độ thưa $s$ và số điều kiện $\\kappa$. Thuật toán cổ điển giải $A x = b$ (như Phân rã Cholesky hoặc Conjugate Gradient) đòi hỏi độ phức tạp tính toán đa thức $O(N s \\kappa)$. Thuật toán HHL sử dụng Ước lượng Pha Lượng tử (Quantum Phase Estimation) và Biến đổi Fourier Lượng tử (QFT) để giải và trích xuất vector trạng thái lượng tử $|x\\rangle = A^{-1} |b\\rangle$ với độ phức tạp hàm logarit $O(s^2 \\kappa^2 \\ln(N) / \\epsilon)$, mang lại bước nhảy vọt tốc độ theo hàm mũ (Exponential Speedup $O(\\ln N)$ vs \\$O(N)$) khi số chiều dữ liệu $N \\to \\infty\\$",
     "explanation": "Thuật toán HHL cung cấp bằng chứng toán học đanh thép khẳng định điện toán lượng tử có khả năng giải quyết các phép nghịch đảo ma trận khổng lồ trong không gian logarit, phá vỡ mọi rào cản tính toán cổ điển.",
     "slide_ref": "Day 28 - Slide: Mathematical Formulation of HHL Quantum Matrix Inversion"
   },
