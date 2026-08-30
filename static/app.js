@@ -118,6 +118,7 @@ async function initApp() {
     updateStatsDisplay();
     refreshIcons();
     renderMathInContainer(document.body);
+    initPullToRefresh();
   } catch (err) {
     console.error('Error initializing app:', err);
   }
@@ -359,7 +360,15 @@ function renderCurrentQuestion() {
   }
 
   if (nextBtn) {
-    nextBtn.textContent = (state.currentIndex === total - 1) ? 'Quay lại câu 1' : 'Câu tiếp theo →';
+    const isLast = state.currentIndex === total - 1;
+    const isExamSubmittable = isLast && state.quizMode === 'exam' && !state.isSubmitted;
+    if (isExamSubmittable) {
+      nextBtn.textContent = 'Nộp bài ✓';
+      nextBtn.classList.add('btn-nav-submit');
+    } else {
+      nextBtn.textContent = isLast ? 'Quay lại câu 1' : 'Câu tiếp theo →';
+      nextBtn.classList.remove('btn-nav-submit');
+    }
   }
 
   renderPalette();
@@ -392,6 +401,11 @@ function goToPrevQuestion() {
 
 function goToNextQuestion() {
   const total = state.currentQuizList.length;
+  const isLast = state.currentIndex === total - 1;
+  if (isLast && state.quizMode === 'exam' && !state.isSubmitted) {
+    openSubmitModal();
+    return;
+  }
   if (state.currentIndex < total - 1) {
     state.currentIndex++;
   } else {
@@ -647,16 +661,10 @@ function setupEventListeners() {
   const topSubmit = document.getElementById('topSubmitExamBtn');
   if (topSubmit) topSubmit.onclick = openSubmitModal;
 
-  // Palette collapse toggle
-  const togglePaletteBtn = document.getElementById('togglePaletteBtn');
-  if (togglePaletteBtn) togglePaletteBtn.onclick = togglePaletteCollapse;
-
+  // Palette collapse toggle — single handler on the full header row
   const paletteHeaderToggle = document.getElementById('paletteHeaderToggle');
   if (paletteHeaderToggle) {
-    paletteHeaderToggle.onclick = (e) => {
-      if (e.target.closest('#togglePaletteBtn')) return;
-      togglePaletteCollapse();
-    };
+    paletteHeaderToggle.addEventListener('click', togglePaletteCollapse);
   }
 
   // Submit Modal Actions
@@ -795,6 +803,157 @@ function setupEventListeners() {
       document.getElementById('globalSearchInput').focus();
     }
   });
+}
+
+// =========================================================
+// PULL-TO-REFRESH (mobile only)
+// =========================================================
+function initPullToRefresh() {
+  if (window.innerWidth > 768) return;
+
+  const workspace = document.querySelector('.content-workspace');
+  if (!workspace) return;
+
+  // Inject indicator at top of workspace
+  const indicator = document.createElement('div');
+  indicator.id = 'ptrIndicator';
+  indicator.innerHTML = `
+    <div class="ptr-icon-wrap">
+      <svg class="ptr-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none"
+           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="1 4 1 10 7 10"></polyline>
+        <path d="M3.51 15a9 9 0 1 0 .49-3.51"></path>
+      </svg>
+      <svg class="ptr-spinner hidden" viewBox="0 0 24 24" width="22" height="22" fill="none"
+           stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10" stroke-dasharray="50" stroke-dashoffset="15"/>
+      </svg>
+    </div>
+    <span class="ptr-text">Kéo xuống để làm mới</span>
+  `;
+  workspace.prepend(indicator);
+
+  // Toast element
+  const toast = document.createElement('div');
+  toast.className = 'ptr-toast';
+  document.body.appendChild(toast);
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  const THRESHOLD = 75;
+  let startY = 0;
+  let currentPull = 0;
+  let isPulling = false;
+  let isRefreshing = false;
+
+  workspace.addEventListener('touchstart', (e) => {
+    if (workspace.scrollTop === 0 && !isRefreshing) {
+      startY = e.touches[0].clientY;
+      isPulling = true;
+      currentPull = 0;
+      indicator.style.transition = '';
+    }
+  }, { passive: true });
+
+  workspace.addEventListener('touchmove', (e) => {
+    if (!isPulling || isRefreshing) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy <= 0) { currentPull = 0; return; }
+
+    // Dampen so it feels elastic (square-root damping)
+    currentPull = Math.min(dy * 0.55, THRESHOLD * 1.6);
+
+    const progress = Math.min(currentPull / THRESHOLD, 1);
+
+    indicator.style.height = currentPull + 'px';
+    indicator.style.opacity = progress;
+
+    const arrow = indicator.querySelector('.ptr-arrow');
+    if (arrow) arrow.style.transform = `rotate(${progress * 270}deg)`;
+
+    const textEl = indicator.querySelector('.ptr-text');
+    if (textEl) textEl.textContent = progress >= 1 ? 'Thả để làm mới ↑' : 'Kéo xuống để làm mới';
+  }, { passive: true });
+
+  workspace.addEventListener('touchend', async () => {
+    if (!isPulling) return;
+    isPulling = false;
+
+    if (currentPull >= THRESHOLD) {
+      isRefreshing = true;
+
+      // Show spinner
+      const arrow = indicator.querySelector('.ptr-arrow');
+      const spinner = indicator.querySelector('.ptr-spinner');
+      const textEl = indicator.querySelector('.ptr-text');
+
+      if (arrow) { arrow.style.transform = ''; arrow.classList.add('hidden'); }
+      if (spinner) spinner.classList.remove('hidden');
+      if (textEl) textEl.textContent = 'Đang làm mới...';
+
+      indicator.style.transition = 'height 0.2s ease';
+      indicator.style.height = '64px';
+      indicator.style.opacity = '1';
+
+      // Reload data
+      await ptrRefreshData();
+
+      showToast('✓ Đã làm mới dữ liệu');
+
+      // Collapse
+      indicator.style.transition = 'height 0.3s ease, opacity 0.3s ease';
+      indicator.style.height = '0px';
+      indicator.style.opacity = '0';
+
+      setTimeout(() => {
+        indicator.style.transition = '';
+        if (arrow) arrow.classList.remove('hidden');
+        if (spinner) spinner.classList.add('hidden');
+        if (textEl) textEl.textContent = 'Kéo xuống để làm mới';
+        isRefreshing = false;
+        currentPull = 0;
+      }, 300);
+
+    } else {
+      // Snap back without refresh
+      indicator.style.transition = 'height 0.22s ease, opacity 0.22s ease';
+      indicator.style.height = '0px';
+      indicator.style.opacity = '0';
+      setTimeout(() => { indicator.style.transition = ''; }, 220);
+      currentPull = 0;
+    }
+  }, { passive: true });
+}
+
+async function ptrRefreshData() {
+  const candidates = [
+    '/api/questions',
+    '/static/data/questions.json',
+    'static/data/questions.json',
+    '/data/questions.json',
+    'data/questions.json'
+  ];
+  for (const path of candidates) {
+    try {
+      const res = await fetch(path + (path.includes('?') ? '&' : '?') + '_t=' + Date.now());
+      if (res.ok) {
+        const data = await res.json();
+        const loaded = Array.isArray(data) ? data : (data.questions || []);
+        if (loaded && loaded.length > 0) {
+          state.questions = loaded;
+          break;
+        }
+      }
+    } catch (e) { /* try next */ }
+  }
+
+  renderTopicsGrid();
+  updateStatsDisplay();
+  refreshIcons();
 }
 
 if (document.readyState === 'loading') {
