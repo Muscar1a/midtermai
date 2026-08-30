@@ -135,7 +135,7 @@ function renderMathInContainer(container) {
           { left: '\\[', right: '\\]', display: true }
         ],
         throwOnError: false,
-        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre']
       });
     } catch (e) {
       console.warn('KaTeX rendering error:', e);
