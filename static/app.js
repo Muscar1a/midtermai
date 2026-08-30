@@ -13,6 +13,57 @@ let state = {
   activeView: 'home'
 };
 
+const STORAGE_KEY = 'midtermai_state';
+
+function saveState() {
+  try {
+    const toSave = {
+      currentQuizListIds: state.currentQuizList.map(q => q.id),
+      currentIndex: state.currentIndex,
+      quizMode: state.quizMode,
+      isSubmitted: state.isSubmitted,
+      examUserAnswers: state.examUserAnswers,
+      activeView: state.activeView,
+      savedAt: Date.now()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  } catch (e) {}
+}
+
+function restoreState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+
+    // Expire after 24 hours
+    if (Date.now() - saved.savedAt > 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(STORAGE_KEY);
+      return false;
+    }
+
+    if (!saved.currentQuizListIds || saved.currentQuizListIds.length === 0) return false;
+
+    const idMap = new Map(state.questions.map(q => [q.id, q]));
+    const restored = saved.currentQuizListIds.map(id => idMap.get(id)).filter(Boolean);
+    if (restored.length === 0) return false;
+
+    state.currentQuizList = restored;
+    state.currentIndex = saved.currentIndex || 0;
+    state.quizMode = saved.quizMode || 'exam';
+    state.isSubmitted = saved.isSubmitted || false;
+    state.examUserAnswers = saved.examUserAnswers || {};
+    state.activeView = saved.activeView || 'home';
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function clearSavedState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
 function refreshIcons() {
   if (window.lucide) {
     lucide.createIcons();
@@ -119,6 +170,36 @@ async function initApp() {
     refreshIcons();
     renderMathInContainer(document.body);
     initPullToRefresh();
+
+    if (restoreState() && state.currentQuizList.length > 0) {
+      const modeBadge = document.getElementById('examModeBadge');
+      if (state.quizMode === 'exam') {
+        if (modeBadge) modeBadge.textContent = 'LUYỆN ĐỀ THI (NỘP BÀI ĐỂ XEM ĐÁP ÁN)';
+      } else {
+        const dayName = state.currentQuizList[0]?.day || '';
+        if (modeBadge) modeBadge.textContent = `ÔN TẬP ${dayName.toUpperCase()} (PHẢN HỒI TỨC THÌ)`;
+      }
+
+      if (state.isSubmitted) {
+        let correctCount = 0;
+        state.currentQuizList.forEach(q => {
+          if (state.examUserAnswers[q.id] === q.correct_index) correctCount++;
+        });
+        const total = state.currentQuizList.length;
+        const percent = Math.round((correctCount / total) * 100);
+        const banner = document.getElementById('examResultBanner');
+        if (banner) {
+          banner.classList.remove('hidden');
+          document.getElementById('examScorePercent').textContent = `${percent}%`;
+          document.getElementById('examResultTitle').textContent = percent >= 80 ? '🎉 Xuất Sắc!' : (percent >= 50 ? '👍 Đạt Yêu Cầu!' : '⚠️ Cần Ôn Tập Thêm!');
+          document.getElementById('examResultDesc').textContent = `Bạn đã trả lời đúng ${correctCount}/${total} câu hỏi (${percent}%). Hãy xem lại chi tiết từng câu bên dưới.`;
+        }
+      }
+
+      switchView(state.activeView);
+      renderCurrentQuestion();
+      renderPalette();
+    }
   } catch (err) {
     console.error('Error initializing app:', err);
   }
@@ -170,6 +251,7 @@ async function startRandomQuiz(customTrack, customDiff) {
   switchView('random-quiz');
   renderCurrentQuestion();
   renderPalette();
+  saveState();
 }
 
 // Start a Day-specific practice (45 questions with INSTANT FEEDBACK)
@@ -209,6 +291,7 @@ async function startDayQuiz(dayName, trackName) {
   switchView('random-quiz');
   renderCurrentQuestion();
   renderPalette();
+  saveState();
 }
 
 function togglePaletteCollapse() {
@@ -255,6 +338,7 @@ function renderPalette() {
 
     item.onclick = () => {
       state.currentIndex = idx;
+      saveState();
       renderCurrentQuestion();
       renderPalette();
     };
@@ -389,12 +473,14 @@ function selectExamOption(idx) {
   if (!q) return;
 
   state.examUserAnswers[q.id] = idx;
+  saveState();
   renderCurrentQuestion();
 }
 
 function goToPrevQuestion() {
   if (state.currentIndex > 0) {
     state.currentIndex--;
+    saveState();
     renderCurrentQuestion();
   }
 }
@@ -411,6 +497,7 @@ function goToNextQuestion() {
   } else {
     state.currentIndex = 0;
   }
+  saveState();
   renderCurrentQuestion();
 }
 
@@ -501,6 +588,7 @@ function processExamSubmission() {
   document.getElementById('examResultDesc').textContent = `Bạn đã trả lời đúng ${correctCount}/${total} câu hỏi (${percent}%). Hãy xem lại chi tiết từng câu bên dưới.`;
 
   state.currentIndex = 0;
+  saveState();
   renderCurrentQuestion();
   renderPalette();
   updateStatsDisplay();
@@ -711,6 +799,7 @@ function setupEventListeners() {
 
   // Back button
   document.getElementById('quizBackBtn').onclick = () => {
+    clearSavedState();
     switchView(state.activeView === 'random-quiz' && state.currentQuizList.length > 30 ? 'topic-quiz' : 'home');
   };
 
