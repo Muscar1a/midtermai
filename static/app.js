@@ -197,6 +197,7 @@ async function initApp() {
     refreshIcons();
     renderMathInContainer(document.body);
     initPullToRefresh();
+    initSwipeNavigation();
 
     if (restoreState() && state.currentQuizList.length > 0) {
       const modeBadge = document.getElementById('examModeBadge');
@@ -934,6 +935,48 @@ function setupEventListeners() {
       document.getElementById('globalSearchInput').focus();
     }
   });
+}
+
+// =========================================================
+// SWIPE TO NAVIGATE (mobile only)
+// =========================================================
+function initSwipeNavigation() {
+  const workspace = document.querySelector('.content-workspace');
+  if (!workspace) return;
+
+  const MIN_SWIPE_X = 60;  // minimum horizontal distance px
+  const MAX_SWIPE_Y = 80;  // maximum vertical drift to still count as horizontal swipe
+
+  let startX = 0;
+  let startY = 0;
+  let tracking = false;
+
+  workspace.addEventListener('touchstart', (e) => {
+    if (state.activeView !== 'random-quiz') return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+
+  workspace.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+
+    if (state.activeView !== 'random-quiz') return;
+
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+
+    if (Math.abs(dx) < MIN_SWIPE_X || Math.abs(dy) > MAX_SWIPE_Y) return;
+
+    if (dx < 0) {
+      // Swipe left → next question
+      goToNextQuestion();
+    } else {
+      // Swipe right → previous question
+      goToPrevQuestion();
+    }
+  }, { passive: true });
 }
 
 // =========================================================
