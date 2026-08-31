@@ -486,7 +486,216 @@ TERM_RULES = [
     (r'chuỗi JSON thuần túy', ['chuỗi Markdown', 'XML thuần túy', 'plain text']),
     (r'Markdown codeblock', ['JSON wrapper', 'XML wrapper', 'HTML wrapper']),
     (r'fence', ['tag', 'delimiter', 'separator']),
+
+    # -----------------------------------------------------------------------
+    # Model hubs / libraries / serving / tooling (recurring proper nouns)
+    # -----------------------------------------------------------------------
+    (r'\bHugging Face\b', ['Kaggle Hub', 'Replicate', 'Modal']),
+    (r'\bsentence-transformers\b', ['Gensim', 'FastText', 'spaCy']),
+    (r'\bUvicorn\b', ['Hypercorn', 'Daphne', 'Waitress']),
+    (r'\bGunicorn\b', ['uWSGI', 'mod_wsgi', 'Passenger']),
+    (r'\bLangSmith\b', ['Weights & Biases', 'MLflow', 'Comet ML']),
+    (r'\bLangfuse\b', ['Grafana Cloud', 'Datadog APM', 'New Relic']),
+    (r'\bPhoenix \(Arize AI\)\b', ['Fiddler AI', 'WhyLabs', 'Evidently AI']),
+    (r'\bHarmBench\b', ['ToxiGen', 'RealToxicityPrompts', 'BBQ']),
+    (r'\bJailbreakBench\b', ['AdvBench', 'DoNotAnswer', 'SafetyBench']),
+    (r'\bAdvGLUE\b', ['ANLI', 'CheckList', 'HANS']),
+    (r'\bRclone\b', ['DistCp', 'AzCopy', 's3cmd']),
+
+    # -----------------------------------------------------------------------
+    # Distributed-training parallelism (often listed together DP+TP+PP)
+    # -----------------------------------------------------------------------
+    (r'Pipeline Parallelism \(PP\)', ['Sequence Parallelism (SP)', 'Expert Parallelism (EP)', 'Context Parallelism (CP)']),
+    (r'Tensor Parallelism \(TP\)', ['Sequence Parallelism (SP)', 'Expert Parallelism (EP)', 'Zero Redundancy (ZeRO)']),
+    (r'Data Parallelism \(DP\)', ['Model Parallelism (MP)', 'Hybrid Parallelism (HP)', 'Sharded Data Parallelism (SDP)']),
+
+    # -----------------------------------------------------------------------
+    # Numeric precision formats
+    # -----------------------------------------------------------------------
+    (r'\bFloat32 \(Single Precision\)\b', ['Int8 (Quantized)', 'Float64 (Double Precision)', 'Float8 (E4M3)']),
+    (r'\bFloat16/Bfloat16\b', ['Int8/Int4', 'Float8/Int8', 'TF32/Float64']),
+    (r'\bBfloat16\b', ['Float8', 'Int4', 'TensorFloat32']),
+    (r'\bFloat32\b', ['Int8', 'Float64', 'Float8']),
+    (r'\bFloat16\b', ['Int8', 'Int4', 'Float8']),
 ]
+
+# ---------------------------------------------------------------------------
+# General-purpose antonym / opposite map (bidirectional).
+# Applied to ANY answer so that even complex sentences with no domain term
+# still yield corrupted variants of THEIR OWN correct answer (no borrowing).
+# Longer phrases are matched first. Function words (có/không/và/là) are left
+# to the dedicated negation strategy below.
+# ---------------------------------------------------------------------------
+VN_ANTONYM_PAIRS = [
+    # comparative adjectives / adverbs
+    ('cao', 'thấp'), ('lớn', 'nhỏ'), ('nhanh', 'chậm'), ('dài', 'ngắn'),
+    ('rộng', 'hẹp'), ('sâu', 'nông'), ('mạnh', 'yếu'), ('nặng', 'nhẹ'),
+    ('dày', 'mỏng'), ('xa', 'gần'), ('đắt', 'rẻ'), ('nóng', 'lạnh'),
+    # quantity / degree
+    ('nhiều', 'ít'), ('tối đa', 'tối thiểu'), ('tăng cường', 'suy giảm'),
+    ('toàn bộ', 'một phần'), ('tất cả', 'một số'), ('mọi', 'một vài'),
+    ('duy nhất', 'nhiều'), ('đầy đủ', 'thiếu sót'), ('dư thừa', 'thiếu hụt'),
+    # correctness / quality
+    ('đúng', 'sai'), ('tốt', 'kém'), ('chính xác', 'sai lệch'),
+    ('hợp lệ', 'không hợp lệ'), ('thành công', 'thất bại'),
+    ('an toàn', 'nguy hiểm'), ('ổn định', 'bất ổn'), ('rõ ràng', 'mơ hồ'),
+    ('đơn giản', 'phức tạp'), ('dễ dàng', 'khó khăn'), ('sạch', 'nhiễu'),
+    # temporal / order
+    ('trước đó', 'sau đó'), ('ban đầu', 'cuối cùng'), ('hiện tại', 'trước đây'),
+    ('bắt đầu', 'kết thúc'), ('sớm', 'muộn'), ('tiếp theo', 'trước đó'),
+    ('đầu tiên', 'cuối cùng'), ('quá khứ', 'tương lai'), ('cũ', 'mới'),
+    # spatial / direction
+    ('bên trong', 'bên ngoài'), ('nội bộ', 'bên ngoài'), ('phía trên', 'phía dưới'),
+    ('đầu vào', 'đầu ra'), ('cục bộ', 'toàn cục'), ('trung tâm', 'ngoại vi'),
+    ('lên', 'xuống'), ('tiến', 'lùi'),
+    # process / behavior
+    ('tập trung', 'phân tán'), ('gộp', 'tách'), ('mở rộng', 'thu hẹp'),
+    ('tăng tốc', 'làm chậm'), ('tối ưu hóa', 'lãng phí'), ('giữ lại', 'loại bỏ'),
+    ('chấp nhận', 'từ chối'), ('cho phép', 'ngăn chặn'), ('kích hoạt', 'vô hiệu hóa'),
+    ('bảo toàn', 'đánh mất'), ('liên tục', 'gián đoạn'), ('song song', 'tuần tự'),
+    ('trực tiếp', 'gián tiếp'), ('thủ công', 'tự động'), ('đồng bộ', 'bất đồng bộ'),
+    ('tĩnh', 'động'), ('công khai', 'riêng tư'), ('hiển thị', 'ẩn đi'),
+    ('chủ động', 'bị động'), ('đồng thời', 'lần lượt'), ('tuyến tính', 'phi tuyến'),
+    ('chi tiết', 'tổng quát'), ('cụ thể', 'trừu tượng'), ('bắt buộc', 'tùy chọn'),
+    ('nén', 'giải nén'), ('mã hóa', 'giải mã'), ('tổng hợp', 'phân rã'),
+    ('tương đồng', 'khác biệt'), ('đồng nhất', 'không đồng nhất'),
+    ('ghi nhớ', 'lãng quên'), ('bền vững', 'tạm thời'),
+    # certainty / logic
+    ('luôn luôn', 'đôi khi'), ('chắc chắn', 'ngẫu nhiên'), ('tất định', 'ngẫu nhiên'),
+    ('bao gồm', 'loại trừ'), ('phụ thuộc', 'độc lập'), ('bắt buộc phải', 'không cần'),
+    # logical connective (A or B <-> A and B) — subtle but valid corruption
+    ('hoặc', 'và'),
+    # English pairs (guarded to plain text, not code)
+    ('increase', 'decrease'), ('high', 'low'), ('input', 'output'),
+    ('before', 'after'), ('static', 'dynamic'), ('local', 'global'),
+    ('synchronous', 'asynchronous'), ('enable', 'disable'), ('true', 'false'),
+    ('success', 'failure'), ('maximum', 'minimum'), ('first', 'last'),
+    ('read', 'write'), ('add', 'remove'), ('encode', 'decode'),
+]
+
+# Build directional pattern list, longest source first, with Vietnamese-aware
+# word boundaries. Each pattern maps a matched word to its opposite.
+_LETTER = r'0-9A-Za-zÀ-Ỹà-ỹ'
+_ANTONYM_PATTERNS = []
+for _a, _b in VN_ANTONYM_PAIRS:
+    for _src, _dst in ((_a, _b), (_b, _a)):
+        _pat = re.compile(
+            r'(?<![' + _LETTER + r'])' + re.escape(_src) + r'(?![' + _LETTER + r'])',
+            re.IGNORECASE,
+        )
+        _ANTONYM_PATTERNS.append((len(_src), _pat, _dst))
+# longest source phrase first so multi-word opposites win over their parts
+_ANTONYM_PATTERNS.sort(key=lambda t: -t[0])
+
+
+def _match_case(sample, replacement):
+    """Copy leading capitalization of `sample` onto `replacement`."""
+    if sample[:1].isupper():
+        return replacement[:1].upper() + replacement[1:]
+    return replacement
+
+
+# Verbs commonly starting/appearing in these answers; used by the negation
+# strategy to insert "không" (not) and produce one clearly-wrong variant.
+_NEG_VERBS = [
+    'là', 'sử dụng', 'dùng', 'sinh ra', 'sinh', 'tạo ra', 'tạo', 'kích hoạt',
+    'hủy bỏ', 'hủy', 'giữ lại', 'giữ', 'lưu trữ', 'lưu', 'gửi', 'nhận',
+    'xử lý', 'thực thi', 'thực hiện', 'giúp', 'cho phép', 'đảm bảo',
+    'kiểm tra', 'giảm', 'tăng', 'phân tích', 'đánh giá', 'chuyển đổi',
+    'chuyển', 'ánh xạ', 'khai báo', 'khởi tạo', 'đóng gói', 'biểu diễn',
+    'tìm kiếm', 'so sánh', 'ước lượng', 'quản lý', 'xây dựng', 'đưa ra',
+    'áp dụng', 'tính toán', 'trả về', 'ghi', 'đọc', 'chọn', 'loại bỏ',
+    'thêm', 'cập nhật', 'định nghĩa', 'mô tả', 'phân loại', 'tổng hợp',
+    'trích xuất', 'nạp', 'tải', 'phát', 'gọi', 'yêu cầu', 'phục vụ',
+    'hỗ trợ', 'ngăn chặn', 'tối ưu', 'cân bằng', 'phân phối', 'điều phối',
+]
+# match verbs at a word boundary, longest first
+_NEG_VERBS.sort(key=len, reverse=True)
+_NEG_VERB_RE = re.compile(
+    r'(?<![' + _LETTER + r'])(' + '|'.join(re.escape(v) for v in _NEG_VERBS)
+    + r')(?![' + _LETTER + r'])',
+    re.IGNORECASE,
+)
+_ALREADY_NEG_RE = re.compile(
+    r'(?<![' + _LETTER + r'])(không phải|không|chưa|đừng)(?![' + _LETTER + r'])',
+    re.IGNORECASE,
+)
+
+
+def _outside_backticks(text, pos):
+    """True if position `pos` is not inside a `...` code span."""
+    return text[:pos].count('`') % 2 == 0
+
+
+def _collect_antonym_edits(text):
+    """Collect independent antonym edits as (start, end, replacement) tuples on
+    the original text. At most one edit per antonym pattern, none inside code
+    spans, and no two edits overlapping the same characters."""
+    edits = []
+    for _len, pat, dst in _ANTONYM_PATTERNS:
+        for m in pat.finditer(text):
+            if not _outside_backticks(text, m.start()):
+                continue
+            s, e = m.start(), m.end()
+            if any(not (e <= es or s >= ee) for es, ee, _ in edits):
+                continue  # overlaps an already-chosen edit
+            edits.append((s, e, _match_case(m.group(0), dst)))
+            break  # only first hit per pattern
+    return edits
+
+
+def _apply_edits(text, chosen):
+    """Apply a set of non-overlapping (start, end, replacement) edits."""
+    for s, e, rep in sorted(chosen, key=lambda x: -x[0]):
+        text = text[:s] + rep + text[e:]
+    return text
+
+
+def antonym_variants(text):
+    """Yield corrupted variants by swapping opposite-meaning words. Produces
+    single-word swaps first, then combinations of two independent swaps so that
+    answers with several corruptible words yield enough distinct distractors of
+    their OWN content (avoiding the need to borrow other answers)."""
+    edits = _collect_antonym_edits(text)
+    out = []
+    # single-word opposite swaps
+    for ed in edits:
+        out.append(_apply_edits(text, [ed]))
+    # pairwise combinations (two opposites flipped at once)
+    for i in range(len(edits)):
+        for j in range(i + 1, len(edits)):
+            out.append(_apply_edits(text, [edits[i], edits[j]]))
+    return out
+
+
+def negation_variant(text):
+    """Return a single clearly-wrong variant by toggling negation:
+    remove an existing negation, else insert 'không' before the first verb
+    ('không phải là' for the copula 'là'). Returns [] if no verb found."""
+    # If a negation already exists near the start, drop it (affirmative-wrong)
+    neg = _ALREADY_NEG_RE.search(text)
+    if neg and neg.start() < max(40, len(text) // 3):
+        stripped = text[:neg.start()] + text[neg.end():]
+        # tidy double spaces
+        stripped = re.sub(r'\s{2,}', ' ', stripped).replace(' ,', ',')
+        return [stripped.strip()]
+    # Otherwise insert negation before the first main verb outside code
+    for m in _NEG_VERB_RE.finditer(text):
+        if not _outside_backticks(text, m.start()):
+            continue
+        verb = m.group(1)
+        if verb.lower() == 'là':
+            insert = 'không phải là'
+            new = text[:m.start()] + _match_case(m.group(1), insert) + text[m.end():]
+        else:
+            # keep verb, prepend "không "
+            new = text[:m.start()] + 'không ' + m.group(1).lower() + text[m.end():]
+            # if verb was capitalized (sentence start), capitalize "Không"
+            if m.group(1)[:1].isupper() and m.start() == 0:
+                new = 'Không ' + m.group(1).lower() + text[m.end():]
+        return [new]
+    return []
+
 
 NUM_SCALE = [0.5, 2.0, 10.0, 0.1]  # multipliers for number mutation
 
@@ -565,6 +774,18 @@ def generate_mutations(text):
                     seen.add(mutated)
                     candidates.append(mutated)
 
+    # General antonym swaps (opposite-meaning variants of the same answer)
+    for mutated in antonym_variants(text):
+        if mutated not in seen:
+            seen.add(mutated)
+            candidates.append(mutated)
+
+    # Negation toggle (one clearly-wrong variant for declarative answers)
+    for mutated in negation_variant(text):
+        if mutated not in seen:
+            seen.add(mutated)
+            candidates.append(mutated)
+
     # Number mutation — only on numbers not inside backtick formulas (those handled by term rules above)
     # Find numbers in plain text portions
     num_pat = re.compile(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b|\b\d+(?:\.\d+)?\b')
@@ -592,18 +813,27 @@ def jaccard_similarity(a, b):
 
 
 def pick_distractors(correct, candidates, n=3, rng=None):
-    """Pick n diverse distractors from candidates, all different from correct."""
+    """Pick n distractors from candidates, all different from correct.
+
+    Distractors here are deliberate minimal corruptions of the correct answer,
+    so they legitimately share most tokens with it and with each other; the key
+    discriminating word is what differs. We therefore only reject options that
+    are *virtually identical* (punctuation/whitespace-only differences), not
+    ones that merely overlap heavily."""
     if rng is None:
         rng = random.Random(42)
+    correct_norm = correct.strip()
     selected = []
-    seen = {correct}
+    seen = {correct_norm}
     for c in candidates:
         c = c.strip()
         if not c or c in seen:
             continue
-        # Not too similar to already-selected distractors
-        too_close = any(jaccard_similarity(c, s) > 0.85 for s in selected)
-        if too_close:
+        # Reject a candidate that is essentially identical to the correct
+        # answer or to one already selected (differs only by punctuation/space).
+        if jaccard_similarity(c, correct_norm) >= 1.0:
+            continue
+        if any(jaccard_similarity(c, s) >= 1.0 for s in selected):
             continue
         seen.add(c)
         selected.append(c)
