@@ -399,13 +399,19 @@ function renderCurrentQuestion() {
 
   document.getElementById('qTrackBadge').textContent = q.track;
   document.getElementById('qDayBadge').textContent = q.day;
-  
+
   const diffBadge = document.getElementById('qDiffBadge');
   diffBadge.textContent = q.difficulty;
   diffBadge.className = `badge-editorial badge-editorial-diff`;
 
   document.getElementById('qQuestionText').innerHTML = formatContent(q.question.replace(/^\[.*?\]\s*/, ''));
   document.getElementById('quizProgressText').textContent = `${currNum}/${total}`;
+
+  // In exam mode, update the mode badge per-question to show which day it belongs to
+  const modeBadge = document.getElementById('examModeBadge');
+  if (modeBadge && state.quizMode === 'exam') {
+    modeBadge.textContent = `LUYỆN ĐỀ · ${q.day}`;
+  }
 
   // Top Submit Button: Only shown in Exam Mode before submitting
   const topSubmitBtn = document.getElementById('topSubmitExamBtn');
