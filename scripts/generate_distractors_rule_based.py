@@ -2,7 +2,7 @@
 """
 Rule-based distractor generation: mutate each correct answer to produce 3 plausible wrong variants.
 No API calls. Mutations: term swaps, number changes, operator swaps.
-Falls back to same-day topic-filtered cross-pollination if too few mutations apply.
+Falls back to same-day cross-pollination (other correct answers from the same day) if too few mutations apply.
 """
 
 import json
@@ -829,11 +829,11 @@ def pick_distractors(correct, candidates, n=3, rng=None):
         c = c.strip()
         if not c or c in seen:
             continue
-        # Reject a candidate that is essentially identical to the correct
-        # answer or to one already selected (differs only by punctuation/space).
-        if jaccard_similarity(c, correct_norm) >= 1.0:
+        # Reject a candidate whose token set exactly matches the correct answer
+        # or one already selected (same words, any order).
+        if set(c.lower().split()) == set(correct_norm.lower().split()):
             continue
-        if any(jaccard_similarity(c, s) >= 1.0 for s in selected):
+        if any(set(c.lower().split()) == set(s.lower().split()) for s in selected):
             continue
         seen.add(c)
         selected.append(c)
@@ -843,7 +843,7 @@ def pick_distractors(correct, candidates, n=3, rng=None):
 
 
 def build_day_pool(questions):
-    """Group correct answers by day for cross-day fallback."""
+    """Group correct answers by day for same-day fallback."""
     pool = defaultdict(list)
     for q in questions:
         pool[q['day']].append((q['id'], q['correct_answer']))

@@ -973,6 +973,10 @@ function initSwipeNavigation() {
     tracking = true;
   }, { passive: true });
 
+  workspace.addEventListener('touchcancel', () => {
+    tracking = false;
+  }, { passive: true });
+
   workspace.addEventListener('touchend', (e) => {
     if (!tracking) return;
     tracking = false;
