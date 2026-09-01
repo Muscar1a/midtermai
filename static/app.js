@@ -981,47 +981,124 @@ function setupEventListeners() {
 }
 
 // =========================================================
-// SWIPE TO NAVIGATE (mobile only)
+// SWIPE TO NAVIGATE (mobile only) — with live drag + animation
 // =========================================================
 function initSwipeNavigation() {
   const workspace = document.querySelector('.content-workspace');
   if (!workspace) return;
 
-  const MIN_SWIPE_X = 60;  // minimum horizontal distance px
-  const MAX_SWIPE_Y = 80;  // maximum vertical drift to still count as horizontal swipe
+  const MIN_SWIPE_X = 50;
+  const MAX_SWIPE_Y = 80;
 
-  let startX = 0;
-  let startY = 0;
-  let tracking = false;
+  let startX = 0, startY = 0, tracking = false, dragging = false;
+
+  function card() { return document.getElementById('questionCard'); }
+
+  function resetCard() {
+    const c = card();
+    if (!c) return;
+    c.style.transition = '';
+    c.style.transform = '';
+    c.style.opacity = '';
+  }
+
+  function snapBack() {
+    const c = card();
+    if (!c) return;
+    c.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease';
+    c.style.transform = 'translateX(0)';
+    c.style.opacity = '1';
+    c.addEventListener('transitionend', resetCard, { once: true });
+  }
+
+  function slideAndNavigate(direction, navigate) {
+    const c = card();
+    if (!c) { navigate(); return; }
+
+    const exitX  = direction === 'left' ? '-110%' : '110%';
+    const enterX = direction === 'left' ?  '110%' : '-110%';
+
+    // Slide current card out
+    c.style.transition = 'transform 0.18s ease-in, opacity 0.18s ease-in';
+    c.style.transform  = `translateX(${exitX})`;
+    c.style.opacity    = '0';
+
+    setTimeout(() => {
+      // Position new card on opposite side (invisible)
+      c.style.transition = 'none';
+      c.style.transform  = `translateX(${enterX})`;
+      c.style.opacity    = '0';
+
+      navigate(); // update content
+
+      // Slide new card in
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        c.style.transition = 'transform 0.22s ease-out, opacity 0.18s ease-out';
+        c.style.transform  = 'translateX(0)';
+        c.style.opacity    = '1';
+        c.addEventListener('transitionend', resetCard, { once: true });
+      }));
+    }, 185);
+  }
 
   workspace.addEventListener('touchstart', (e) => {
     if (state.activeView !== 'random-quiz') return;
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
     tracking = true;
+    dragging = false;
+    const c = card();
+    if (c) c.style.transition = 'none';
   }, { passive: true });
 
+  workspace.addEventListener('touchmove', (e) => {
+    if (!tracking) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+
+    if (!dragging) {
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) dragging = true;
+      else if (Math.abs(dy) > 8) { tracking = false; return; }
+      else return;
+    }
+
+    e.preventDefault();
+    const c = card();
+    if (c) {
+      c.style.transform = `translateX(${dx}px)`;
+      c.style.opacity   = String(Math.max(0.4, 1 - Math.abs(dx) / 260));
+    }
+  }, { passive: false });
+
   workspace.addEventListener('touchcancel', () => {
+    if (dragging) snapBack();
     tracking = false;
+    dragging = false;
   }, { passive: true });
 
   workspace.addEventListener('touchend', (e) => {
     if (!tracking) return;
     tracking = false;
-
-    if (state.activeView !== 'random-quiz') return;
+    if (state.activeView !== 'random-quiz') { if (dragging) snapBack(); dragging = false; return; }
 
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
+    const wasDragging = dragging;
+    dragging = false;
 
-    if (Math.abs(dx) < MIN_SWIPE_X || Math.abs(dy) > MAX_SWIPE_Y) return;
+    if (!wasDragging || Math.abs(dx) < MIN_SWIPE_X || Math.abs(dy) > MAX_SWIPE_Y) {
+      if (wasDragging) snapBack();
+      return;
+    }
 
     if (dx < 0) {
-      // Swipe left → next question
-      goToNextQuestion();
+      slideAndNavigate('left', goToNextQuestion);
     } else {
-      // Swipe right → previous question
-      goToPrevQuestion();
+      if (state.currentIndex > 0) {
+        slideAndNavigate('right', goToPrevQuestion);
+      } else {
+        snapBack();
+      }
     }
   }, { passive: true });
 }
