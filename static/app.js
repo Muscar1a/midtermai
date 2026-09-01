@@ -770,11 +770,17 @@ function switchView(viewId) {
 
 function setupEventListeners() {
   document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.onclick = () => switchView(btn.getAttribute('data-view'));
+    btn.onclick = () => {
+      const view = btn.getAttribute('data-view');
+      if (view === 'random-quiz') startRandomQuiz(); else switchView(view);
+    };
   });
 
   document.querySelectorAll('.mobile-nav-item[data-view]').forEach(btn => {
-    btn.onclick = () => switchView(btn.getAttribute('data-view'));
+    btn.onclick = () => {
+      const view = btn.getAttribute('data-view');
+      if (view === 'random-quiz') startRandomQuiz(); else switchView(view);
+    };
   });
 
   // Mobile drawer buttons
