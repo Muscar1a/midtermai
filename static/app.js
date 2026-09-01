@@ -417,20 +417,28 @@ function renderCurrentQuestion() {
   const total = state.currentQuizList.length;
   const currNum = state.currentIndex + 1;
 
-  document.getElementById('qTrackBadge').textContent = q.track;
-  document.getElementById('qDayBadge').textContent = q.day;
+  const isExam = state.quizMode === 'exam';
 
+  const trackBadge = document.getElementById('qTrackBadge');
+  const dayBadge = document.getElementById('qDayBadge');
   const diffBadge = document.getElementById('qDiffBadge');
+
+  trackBadge.textContent = q.track;
+  dayBadge.textContent = q.day;
   diffBadge.textContent = q.difficulty;
   diffBadge.className = `badge-editorial badge-editorial-diff`;
+
+  // Hide track/day/difficulty badges in exam mode — reveal only in practice mode
+  trackBadge.classList.toggle('hidden', isExam);
+  dayBadge.classList.toggle('hidden', isExam);
+  diffBadge.classList.toggle('hidden', isExam);
 
   document.getElementById('qQuestionText').innerHTML = formatContent(q.question.replace(/^\[.*?\]\s*/, ''));
   document.getElementById('quizProgressText').textContent = `${currNum}/${total}`;
 
-  // In exam mode, update the mode badge per-question to show which day it belongs to
   const modeBadge = document.getElementById('examModeBadge');
-  if (modeBadge && state.quizMode === 'exam') {
-    modeBadge.textContent = `LUYỆN ĐỀ · ${q.day}`;
+  if (modeBadge && isExam) {
+    modeBadge.textContent = 'LUYỆN ĐỀ';
   }
 
   // Top Submit Button: Only shown in Exam Mode before submitting
