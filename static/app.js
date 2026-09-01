@@ -399,13 +399,19 @@ function renderCurrentQuestion() {
 
   document.getElementById('qTrackBadge').textContent = q.track;
   document.getElementById('qDayBadge').textContent = q.day;
-  
+
   const diffBadge = document.getElementById('qDiffBadge');
   diffBadge.textContent = q.difficulty;
   diffBadge.className = `badge-editorial badge-editorial-diff`;
 
   document.getElementById('qQuestionText').innerHTML = formatContent(q.question.replace(/^\[.*?\]\s*/, ''));
   document.getElementById('quizProgressText').textContent = `${currNum}/${total}`;
+
+  // In exam mode, update the mode badge per-question to show which day it belongs to
+  const modeBadge = document.getElementById('examModeBadge');
+  if (modeBadge && state.quizMode === 'exam') {
+    modeBadge.textContent = `LUYỆN ĐỀ · ${q.day}`;
+  }
 
   // Top Submit Button: Only shown in Exam Mode before submitting
   const topSubmitBtn = document.getElementById('topSubmitExamBtn');
@@ -722,10 +728,13 @@ function switchView(viewId) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.mobile-nav-item[data-view]').forEach(b => b.classList.remove('active'));
 
-  const activeBtn = document.querySelector(`.nav-item[data-view="${viewId}"]`);
+  // Day practice lives in the quiz panel but should highlight the "Ôn tập theo Day" nav
+  const navViewId = (viewId === 'random-quiz' && state.quizMode === 'practice') ? 'topic-quiz' : viewId;
+
+  const activeBtn = document.querySelector(`.nav-item[data-view="${navViewId}"]`);
   if (activeBtn) activeBtn.classList.add('active');
 
-  const activeMobileBtn = document.querySelector(`.mobile-nav-item[data-view="${viewId}"]`);
+  const activeMobileBtn = document.querySelector(`.mobile-nav-item[data-view="${navViewId}"]`);
   if (activeMobileBtn) activeMobileBtn.classList.add('active');
 
   closeMobileSidebar();
@@ -744,7 +753,7 @@ function switchView(viewId) {
     'random-quiz': 'Đề thi ngẫu nhiên',
     'topic-quiz': 'Ôn tập theo Day'
   };
-  document.getElementById('currentViewTitle').textContent = titles[viewId] || '';
+  document.getElementById('currentViewTitle').textContent = titles[navViewId] || '';
   
   if (viewId === 'topic-quiz') {
     renderTopicsGrid();
@@ -843,7 +852,7 @@ function setupEventListeners() {
   // Back button — only clear exam state, practice persists
   document.getElementById('quizBackBtn').onclick = () => {
     if (state.quizMode === 'exam') clearSavedState();
-    switchView(state.activeView === 'random-quiz' && state.currentQuizList.length > 30 ? 'topic-quiz' : 'home');
+    switchView(state.quizMode === 'practice' ? 'topic-quiz' : 'home');
   };
 
   // Custom Dropdowns
