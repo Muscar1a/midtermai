@@ -261,9 +261,29 @@ async function startRandomQuiz(customTrack, customDiff) {
     qList = [...state.questions];
   }
 
-  // Shuffle and pick 30 questions
-  qList.sort(() => Math.random() - 0.5);
-  state.currentQuizList = qList.slice(0, 30);
+  // Pick 30 questions with balanced difficulty: 10 Easy + 10 Medium + 10 Hard
+  const byDiff = { Easy: [], Medium: [], Hard: [] };
+  for (const q of qList) {
+    const d = q.difficulty || 'Medium';
+    if (byDiff[d]) byDiff[d].push(q);
+  }
+  for (const arr of Object.values(byDiff)) arr.sort(() => Math.random() - 0.5);
+
+  let selected = [
+    ...byDiff.Easy.slice(0, 10),
+    ...byDiff.Medium.slice(0, 10),
+    ...byDiff.Hard.slice(0, 10)
+  ];
+
+  // Fill remaining slots if any difficulty group had fewer than 10
+  if (selected.length < 30) {
+    const usedIds = new Set(selected.map(q => q.id));
+    const overflow = qList.filter(q => !usedIds.has(q.id)).sort(() => Math.random() - 0.5);
+    selected = [...selected, ...overflow.slice(0, 30 - selected.length)];
+  }
+
+  selected.sort(() => Math.random() - 0.5);
+  state.currentQuizList = selected.slice(0, 30);
   state.currentIndex = 0;
   state.quizMode = 'exam';
   state.isSubmitted = false;
@@ -690,7 +710,7 @@ function renderTopicsGrid() {
           <div class="topic-card-progress mt-2">
             <div class="flex-between mt-2">
               <span class="text-xs text-muted">Trọn bộ 45 câu</span>
-              <span class="text-xs text-terracotta font-bold topic-card-cta">Làm bài thi Day này ➔</span>
+              <span class="text-xs text-terracotta font-bold topic-card-cta">Luyện tập Day này ➔</span>
             </div>
           </div>
         </div>
