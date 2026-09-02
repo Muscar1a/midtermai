@@ -417,7 +417,9 @@ body {
 }
 
 .badge-editorial-track { background-color: #EBF2FA; color: #2B6CB0; }
-.badge-editorial-day { background-color: var(--terracotta-light); color: var(--terracotta-primary); font-family: var(--font-mono); }
+/* Sans, not mono: this badge now carries Vietnamese lesson titles and
+   JetBrains Mono has no Vietnamese coverage — diacritics break on fallback. */
+.badge-editorial-day { background-color: var(--terracotta-light); color: var(--terracotta-primary); font-family: var(--font-sans); }
 .badge-editorial-diff { background-color: #FEF6E4; color: #B7791F; }
 
 .btn-bookmark-quick {

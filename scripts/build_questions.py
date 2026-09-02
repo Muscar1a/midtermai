@@ -13,7 +13,14 @@ from collections import Counter
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 QBANK = os.path.join(HERE, "qbank")
-OUT = os.path.join(ROOT, "data", "questions.json")
+# Both copies must be written. Vercel only bundles api/ and static/ (see
+# vercel.json), so the repo-root data/ file is not present in the deployed
+# serverless function — the API and the frontend both fall back to the static
+# copy. Leaving it stale silently serves an old question bank in production.
+OUTPUTS = [
+    os.path.join(ROOT, "data", "questions.json"),
+    os.path.join(ROOT, "static", "data", "questions.json"),
+]
 
 P1 = "Phase 1: COMP2010"
 T2 = "Track 2: Infrastructure"
@@ -142,10 +149,11 @@ def main():
         print("Not written — some days are still missing.")
         return 1
 
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as fh:
-        json.dump(all_questions, fh, ensure_ascii=False, indent=2)
-    print(f"Wrote {OUT}")
+    for out in OUTPUTS:
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out, "w", encoding="utf-8") as fh:
+            json.dump(all_questions, fh, ensure_ascii=False, indent=2)
+        print(f"Wrote {out}")
     return 0
 
 
