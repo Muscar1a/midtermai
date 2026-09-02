@@ -445,7 +445,7 @@ function renderCurrentQuestion() {
   const diffBadge = document.getElementById('qDiffBadge');
 
   trackBadge.textContent = q.track;
-  dayBadge.textContent = q.day;
+  dayBadge.textContent = q.day_title ? `${q.day} — ${q.day_title}` : q.day;
   diffBadge.textContent = q.difficulty;
   diffBadge.className = `badge-editorial badge-editorial-diff`;
 
@@ -709,7 +709,7 @@ function renderTopicsGrid() {
     const tKey = q.track.includes("Phase 1") ? "Phase 1: COMP2010 (AI Application & Agents)" : "Track 2: BIOM3010 (AI Infrastructure & LLMOps)";
     if (!tracks[tKey][q.day]) {
       tracks[tKey][q.day] = {
-        topic: q.topic,
+        topic: q.day_title || q.topic,
         track: q.track,
         count: 0,
         day: q.day,

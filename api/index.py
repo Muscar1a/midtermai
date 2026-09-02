@@ -46,8 +46,14 @@ def get_questions(
         filtered = [q for q in filtered if track.lower() in q.get("track", "").lower()]
     
     if day and day != "all":
-        filtered = [q for q in filtered if day.lower() in q.get("day", "").lower()]
-        
+        # Exact match first: "Day 23" must not also pull in "Day 23 / Track 3".
+        exact = [q for q in filtered if q.get("day", "").lower() == day.lower()]
+        if exact:
+            filtered = exact
+        else:
+            filtered = [q for q in filtered if day.lower() in q.get("day", "").lower()]
+
+
     if difficulty and difficulty != "all":
         filtered = [q for q in filtered if q.get("difficulty", "").lower() == difficulty.lower()]
         

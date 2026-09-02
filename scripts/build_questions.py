@@ -18,37 +18,37 @@ OUT = os.path.join(ROOT, "data", "questions.json")
 P1 = "Phase 1: COMP2010"
 T2 = "Track 2: Infrastructure"
 
-# (file stem, day label, track) in the order they should appear
+# (file stem, day label, track, lesson title as it appears on the slide deck)
 DAYS = [
-    ("day01", "Day 01", P1),
-    ("day02", "Day 02", P1),
-    ("day03", "Day 03", P1),
-    ("day04", "Day 04", P1),
-    ("day05", "Day 05", P1),
-    ("day06", "Day 06", P1),
-    ("day07", "Day 07", P1),
-    ("day08", "Day 08", P1),
-    ("day09", "Day 09", P1),
-    ("day10", "Day 10", P1),
-    ("day11", "Day 11", P1),
-    ("day12", "Day 12", P1),
-    ("day13", "Day 13", P1),
-    ("day14", "Day 14", P1),
-    ("day15", "Day 15", P1),
-    ("day16", "Day 16", T2),
-    ("day17", "Day 17", T2),
-    ("day18", "Day 18", T2),
-    ("day19", "Day 19", T2),
-    ("day20", "Day 20", T2),
-    ("day21", "Day 21", T2),
-    ("day22", "Day 22", T2),
-    ("day23", "Day 23", T2),
-    ("day23_track3", "Day 23 / Track 3", P1),
-    ("day24", "Day 24", T2),
-    ("day25", "Day 25", T2),
-    ("day26", "Day 26", T2),
-    ("day27", "Day 27", T2),
-    ("day28", "Day 28", T2),
+    ("day01", "Day 01", P1, "Nhập Môn AI, LLM & Agent"),
+    ("day02", "Day 02", P1, "Xác Định Bài Toán AI: Rule, Workflow hay Agent?"),
+    ("day03", "Day 03", P1, "Từ Chatbot Đến Agentic Agent"),
+    ("day04", "Day 04", P1, "Prompt Engineering & Tool Calling"),
+    ("day05", "Day 05", P1, "AI Product Thinking & Requirements"),
+    ("day06", "Day 06", P1, "AI Product & Project Management"),
+    ("day07", "Day 07", P1, "Data Foundations: Embedding & Vector Store"),
+    ("day08", "Day 08", P1, "RAG Pipeline"),
+    ("day09", "Day 09", P1, "Multi-Agent & Kết Nối Hệ Thống"),
+    ("day10", "Day 10", P1, "Data Pipeline & Data Observability"),
+    ("day11", "Day 11", P1, "Guardrails, HITL & Responsible AI"),
+    ("day12", "Day 12", P1, "Deployment — Đưa Agent Lên Cloud"),
+    ("day13", "Day 13", P1, "Monitoring, Logging & Observability"),
+    ("day14", "Day 14", P1, "AI Evaluation & Benchmarking"),
+    ("day15", "Day 15", P1, "Triển Khai Thực Tế, Chi Phí Vận Hành & Định Hướng"),
+    ("day16", "Day 16", T2, "Cloud Infrastructure for AI"),
+    ("day17", "Day 17", T2, "Data Pipeline Engineering"),
+    ("day18", "Day 18", T2, "Data Lakehouse Architecture"),
+    ("day19", "Day 19", T2, "Vector Store & Feature Store"),
+    ("day20", "Day 20", T2, "Model Serving & Inference Optimization"),
+    ("day21", "Day 21", T2, "CI/CD for AI Systems"),
+    ("day22", "Day 22", T2, "LLMOps & Prompt Versioning"),
+    ("day23", "Day 23", T2, "Disaster Recovery & High Availability"),
+    ("day23_track3", "Day 23 / Track 3", P1, "LangGraph & Agentic Orchestration"),
+    ("day24", "Day 24", T2, "Data Governance & Security"),
+    ("day25", "Day 25", T2, "GPU FinOps & Cost Optimization"),
+    ("day26", "Day 26", T2, "MCP & A2A Infrastructure"),
+    ("day27", "Day 27", T2, "Data Observability & Lineage"),
+    ("day28", "Day 28", T2, "Platform Engineering & Documentation"),
 ]
 
 REQUIRED = {"topic", "difficulty", "question", "options", "correct_index",
@@ -99,7 +99,7 @@ def main():
     errors = []
     missing_files = []
 
-    for stem, day, track in DAYS:
+    for stem, day, track, day_title in DAYS:
         path = os.path.join(QBANK, f"{stem}.json")
         if not os.path.exists(path):
             missing_files.append(stem)
@@ -112,6 +112,7 @@ def main():
                 "id": f"{slug(stem)}_{i:03d}",
                 "track": track,
                 "day": day,
+                "day_title": day_title,
                 "topic": q["topic"],
                 "difficulty": q["difficulty"],
                 "question": q["question"],
@@ -131,7 +132,7 @@ def main():
         return 1
 
     by_day = Counter(q["day"] for q in all_questions)
-    for _, day, _ in DAYS:
+    for _, day, _, _ in DAYS:
         if day in by_day:
             c = Counter(q["difficulty"] for q in all_questions if q["day"] == day)
             print(f"  OK {day}: E={c['Easy']} M={c['Medium']} H={c['Hard']} total={by_day[day]}")
