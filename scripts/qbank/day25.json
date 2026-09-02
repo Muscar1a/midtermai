@@ -1,0 +1,422 @@
+[
+ {
+  "topic": "Đơn vị đo chi phí đúng",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - $/GPU-hr Là Vanity Metric",
+  "question": "Đơn vị đo đúng để lập ngân sách cho workload inference là gì?",
+  "options": [
+   "$/GPU-hr",
+   "$/1M-token",
+   "$/node-tháng",
+   "$/TFLOP"
+  ],
+  "correct_index": 1,
+  "explanation": "$/GPU-hr là vanity metric: GB300 NVL72 đắt hơn theo giờ nhưng rẻ hơn ~35× theo token so với Hopper. Với training thì đơn vị tương ứng là $/job."
+ },
+ {
+  "topic": "Break-even utilization",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - Thang Cam Kết 2026",
+  "question": "Công thức xấp xỉ để tính break-even utilization của một cam kết reserved là gì?",
+  "options": [
+   "break-even ≈ discount%",
+   "break-even ≈ 1 − discount%",
+   "break-even ≈ discount% / 2",
+   "break-even ≈ 1 / discount%"
+  ],
+  "correct_index": 1,
+  "explanation": "Discount 45% → cần khoảng 55% utilization (~13.2h/ngày) thì reserved mới có lời. Reserved chạy ở 70% util vẫn phí ~30% — nên quyết định mua phải gắn vào util đo được, không phải util kỳ vọng."
+ },
+ {
+  "topic": "GPU-Util% nói dối",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - GPU-Util% Nói Dối",
+  "question": "`nvidia-smi` báo \"GPU-Util\" thực chất đo cái gì?",
+  "options": [
+   "Phần trăm FLOPS đỉnh đang được sử dụng",
+   "Phần trăm thời gian có ít nhất một kernel đang chạy",
+   "Phần trăm băng thông HBM đang được dùng",
+   "Phần trăm bộ nhớ VRAM đã cấp phát"
+  ],
+  "correct_index": 1,
+  "explanation": "Chỉ cần 1 thread trên 1 SM là đồng hồ đã báo 100%. Đó là đồng hồ \"đang bận\", không phải \"đang hiệu quả\" — training có thể báo 100% GPU-Util trong khi MFU thực chỉ 20–30%."
+ },
+ {
+  "topic": "MFU vs MBU",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - MFU, MBU & Roofline",
+  "question": "MFU và MBU nên được dùng cho loại workload nào?",
+  "options": [
+   "MFU cho training (compute-bound), MBU cho decode (memory-bound)",
+   "MFU cho inference, MBU cho training",
+   "MFU cho GPU NVIDIA, MBU cho GPU AMD",
+   "MFU cho batch job, MBU cho job realtime"
+  ],
+  "correct_index": 0,
+  "explanation": "MFU = achieved FLOPs / peak FLOPs (tốt 35–45%, xuất sắc 50%+). MBU = achieved bandwidth / peak bandwidth (target ~60% với H100-80GB batch-1). Decode batch-1 chỉ 1–2 FLOP/byte trong khi ridge point của H100 là ~295 FLOP/byte, nên nó memory-bound."
+ },
+ {
+  "topic": "Discount stack",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - Discount Stack",
+  "question": "Kết hợp Batch API (−50%) với prompt caching read (−90%) cho mức giảm tổng khoảng bao nhiêu?",
+  "options": [
+   "−60%",
+   "−75%",
+   "≈ −95%",
+   "−99%"
+  ],
+  "correct_index": 2,
+  "explanation": "Hai multiplier nhân được với nhau (Anthropic xác nhận): 0.5 × 0.1 = 0.05, tức khoảng 95% off. Điều kiện: Batch API đòi SLA 24h nên chỉ dùng cho workload chịu được độ trễ (eval, enrich, nightly)."
+ },
+ {
+  "topic": "Spot notice",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - Spot Instances",
+  "question": "Thời gian báo trước (notice) khi spot instance bị thu hồi trên AWS và GCP lần lượt là bao nhiêu?",
+  "options": [
+   "~2 phút (AWS) và ~30 giây (GCP)",
+   "~30 giây (AWS) và ~2 phút (GCP)",
+   "~10 phút cả hai",
+   "Không có thông báo trước ở cả hai"
+  ],
+  "correct_index": 0,
+  "explanation": "AWS Spot giảm 40–70% với notice ~2 phút; GCP Spot/Preemptible giảm tới 80% nhưng chỉ ~30 giây. Cửa sổ ngắn đó là lý do checkpoint phải được lưu định kỳ ra S3/GCS chứ không chờ tới lúc nhận tín hiệu."
+ },
+ {
+  "topic": "Tỷ lệ gián đoạn theo chip",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - Spot Instances",
+  "question": "Theo số liệu bài học, tỷ lệ gián đoạn spot xếp theo chip như thế nào?",
+  "options": [
+   "H100 cao nhất vì nhu cầu lớn nhất",
+   "H100 <5%, A100 15–20%, V100/RTX PRO 6000 >20% — chip mới thì spot an toàn hơn",
+   "Tất cả các chip đều khoảng 10%",
+   "Tỷ lệ phụ thuộc region chứ không phụ thuộc loại chip"
+  ],
+  "correct_index": 1,
+  "explanation": "Trực giác thông thường bị đảo: chip mới nhất lại có spot ổn định hơn. Chiến lược mixed fleet đề xuất là 20% on-demand làm baseline + 80% spot cho burst."
+ },
+ {
+  "topic": "Fractional GPU",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - Fractional GPU",
+  "question": "So với time-slicing/MPS, MIG (trên A100/H100) khác biệt ở điểm nào?",
+  "options": [
+   "MIG cho mật độ cao hơn nhưng isolation thấp hơn",
+   "MIG phân vùng phần cứng với bộ nhớ riêng nên isolation cao, đổi lại mật độ thấp hơn",
+   "MIG chỉ hoạt động cho training, time-slicing chỉ cho inference",
+   "MIG là phần mềm còn time-slicing là phần cứng"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây là đánh đổi cost density ↔ isolation. Run:ai báo cáo 0.5 GPU vẫn đạt 77% throughput và 86% user capacity, và co-location đưa số user lên tới 3×."
+ },
+ {
+  "topic": "Cold start là dead time",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - Serverless GPU & Scale-to-Zero",
+  "question": "Vì sao cold start của serverless GPU được gọi là \"paid dead time\"?",
+  "options": [
+   "Vì request đầu tiên bị timeout nên phải trả tiền hai lần",
+   "Vì 20–60s init + model-load được tính theo full rate dù chưa phục vụ request nào",
+   "Vì scale-to-zero làm mất KV-cache nên phải tính lại prefill",
+   "Vì nhà cung cấp tính phí tối thiểu một giờ cho mỗi lần khởi động"
+  ],
+  "correct_index": 1,
+  "explanation": "Bên cạnh đó còn \"Model Parking Tax\": giữ warm tốn thêm 26–66 W/GPU, tức hơn 98% mức điện idle. Break-even của serverless nằm quanh 30% duty cycle: tải spiky thì serverless, tải ổn định cao thì reserved."
+ },
+ {
+  "topic": "Token bill chỉ là 1/9",
+  "difficulty": "Easy",
+  "slide_ref": "Day 25 - Bức Tranh Công Cụ & Cảnh Báo",
+  "question": "Theo FinOps X 2026, hóa đơn token chiếm vị trí nào trong tổng chi phí của một hệ thống AI?",
+  "options": [
+   "Là khoản chi lớn nhất, thường trên 70%",
+   "Chỉ là 1 trong 9 khoản chi — 8 khoản còn lại (retrieval, orchestration, KV-cache infra, eval, governance, nhân lực, lãng phí/lỗi, tích hợp) thường không được đo",
+   "Là khoản duy nhất đáng theo dõi vì các khoản khác cố định",
+   "Chiếm đúng 50%, phần còn lại là hạ tầng"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây là lý do thang trưởng thành đi từ visibility → cost/token → cost per verified outcome: tối ưu mỗi hóa đơn token là tối ưu một phần chín của bài toán."
+ },
+ {
+  "topic": "Giá H100 2026 đảo chiều",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Cú Sụp Giá H100",
+  "question": "Bài học rút ra từ diễn biến giá H100 (đỉnh ~$8/hr 2023 → ~$2/hr cuối 2025 → hợp đồng 1 năm bật lại +40% đầu 2026) là gì?",
+  "options": [
+   "Giá GPU giảm đều theo thời gian nên luôn nên chờ thêm",
+   "Giá GPU mang tính chu kỳ theo cung–cầu thực; phải re-baseline TCO về giá hiện tại và không đặt cược một chiều \"năm nào cũng rẻ hơn\"",
+   "Chỉ nên mua GPU vật lý vì giá thuê không dự đoán được",
+   "Neocloud sẽ luôn rẻ hơn hyperscaler nên chọn theo provider là đủ"
+  ],
+  "correct_index": 1,
+  "explanation": "Dùng số A100/A10G thời 2023 làm baseline thổi phồng chi phí 3–4×. Đồng thời thị trường đang siết lại (on-demand Hopper \"sold out\", hyperscaler on-demand lên ~$7.44/hr) nên khóa reserved sớm hợp lý hơn là chờ rẻ."
+ },
+ {
+  "topic": "Chọn chip theo workload",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Thực Đơn Silicon 2026",
+  "question": "Với workload decode (memory-bound), tiêu chí mua sắm đúng là gì?",
+  "options": [
+   "Trả tiền cho $/TFLOP vì decode cần nhiều phép nhân ma trận",
+   "Trả tiền cho $/TB-bandwidth — decode scale theo HBM BW (H100 3.35 → H200 4.8 → B200 8 TB/s)",
+   "Trả tiền cho $/GB-VRAM vì decode cần chứa toàn bộ model",
+   "Chọn chip có số SM nhiều nhất trong tầm giá"
+  ],
+  "correct_index": 1,
+  "explanation": "Decode nằm ở phía memory-bound của roofline nên throughput bị chặn bởi băng thông chứ không phải FLOPS — đó là lý do H200 cho inference nhanh hơn H100 khoảng 1.9× chủ yếu nhờ bandwidth. $/GB-VRAM là tiêu chí riêng của bài toán nhét model lớn vào một GPU (thế mạnh MI300X 288GB)."
+ },
+ {
+  "topic": "Goodput",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Goodput & Cost-per-Token",
+  "question": "Một hệ thống xử lý 10 req/s nhưng chỉ 3 req/s đạt SLO (TTFT + TPOT). Ý nghĩa FinOps của con số này là gì?",
+  "options": [
+   "Goodput là 10 vì hệ thống đã xử lý xong toàn bộ request",
+   "Goodput là 3; 7 request còn lại đã tốn tiền GPU nhưng vô dụng",
+   "Goodput là 7 vì đó là phần cần tối ưu",
+   "Goodput không tính được nếu chưa biết cost/token"
+  ],
+  "correct_index": 1,
+  "explanation": "Bạn trả tiền cho mọi request được tính toán, nhưng chỉ request đạt SLO mới tạo giá trị. Tối ưu goodput trực tiếp cắt kích thước fleet GPU — disaggregation có thể tăng tới ~2× request/GPU."
+ },
+ {
+  "topic": "Utilization là đòn bẩy lớn nhất",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Goodput & Cost-per-Token",
+  "question": "Vì sao utilization được gọi là đòn bẩy lớn nhất của cost/token?",
+  "options": [
+   "Vì utilization cao làm nhà cung cấp giảm giá theo bậc",
+   "Vì chi phí GPU gần như cố định theo thời gian: GPU chạy ở 10% tải nghĩa là cost/token gấp 10 lần",
+   "Vì utilization quyết định tỷ lệ cache hit",
+   "Vì utilization là điều kiện để dùng được spot instance"
+  ],
+  "correct_index": 1,
+  "explanation": "Bạn thuê GPU theo giờ dù nó bận hay rỗi, nên mẫu số (số token sinh ra) mới là thứ thay đổi. Cũng vì vậy mà thuê GPU thô chỉ chiếm 25–35% TCO self-host — phần còn lại là những thứ quanh nó."
+ },
+ {
+  "topic": "Karpenter, KEDA, Kueue",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Kubernetes Cost-Autoscaling Stack",
+  "question": "Trong stack cost-autoscaling trên Kubernetes, thành phần nào chống \"GPU hoarding\" giữa các team?",
+  "options": [
+   "Karpenter — consolidation và bin-packing",
+   "KEDA — scale-to-zero khi util = 0",
+   "Kueue — gang scheduling + quota theo team + cohort borrowing",
+   "DRA — cấp phát \"GPU ≥ X GB\" native"
+  ],
+  "correct_index": 2,
+  "explanation": "Kueue quản lý hàng đợi theo quota và cho phép mượn hạn ngạch giữa các cohort, nên một team không giữ khư khư GPU rỗi. Karpenter gom pod và xóa node rỗng, KEDA đưa replica về 0, DRA + KAI Scheduler là nền cho fractioning."
+ },
+ {
+  "topic": "Hai lớp lãng phí",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Kubernetes Cost-Autoscaling Stack",
+  "question": "Hai lớp lãng phí GPU mà bài học nói là \"nhân nhau\" là gì?",
+  "options": [
+   "Idle ban đêm và idle cuối tuần",
+   "Idle trong-card (một phần GPU không dùng) và idle nguyên-node (node chạy nhưng không có pod)",
+   "Chi phí compute và chi phí power",
+   "Over-provisioned VRAM và over-provisioned storage"
+  ],
+  "correct_index": 1,
+  "explanation": "Fractioning (MIG/time-slicing/DRA) tấn công lớp thứ nhất; autoscaling + spot (Karpenter/KEDA) tấn công lớp thứ hai. Vì hai hệ số nhân nhau, sửa một lớp mà bỏ lớp kia thì phần tiết kiệm bị giới hạn nhanh."
+ },
+ {
+  "topic": "Model cascading",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Tầng Small-Model",
+  "question": "Model cascading hoạt động theo cơ chế nào?",
+  "options": [
+   "Chạy song song nhiều model rồi lấy kết quả có confidence cao nhất",
+   "Model nhỏ (8B) xử lý phần lớn request (~80%), chỉ escalate phần khó (~20%) lên model lớn",
+   "Chia prompt thành nhiều đoạn và gửi mỗi đoạn tới một model khác nhau",
+   "Fine-tune model lớn thành model nhỏ rồi thay thế hoàn toàn"
+  ],
+  "correct_index": 1,
+  "explanation": "FrugalGPT báo cáo tiết kiệm tới 98%, RouteLLM giữ 85%+ chất lượng. Cùng với batching (throughput ~8×), semantic cache (hit 30–40%) và quantization (AWQ 4-bit tiết kiệm ~34%), stack này cắt 70–85% so với triển khai ngây thơ."
+ },
+ {
+  "topic": "Disaggregation prefill/decode",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Disaggregation",
+  "question": "Ý tưởng cốt lõi của việc tách pool prefill và pool decode là gì?",
+  "options": [
+   "Prefill và decode dùng model khác nhau nên phải chạy riêng",
+   "Prefill là compute-bound còn decode là memory-bound; chạy chung lãng phí cả hai, tách ra để right-size mỗi pool theo SKU rẻ nhất cho nó",
+   "Tách ra để prefill chạy trên spot còn decode chạy on-demand",
+   "Tách ra để mỗi pool có KV-cache riêng, tránh tranh chấp bộ nhớ"
+  ],
+  "correct_index": 1,
+  "explanation": "DistServe (OSDI'24) đạt 7.4× request với SLO chặt hơn 12.6×; NVIDIA Dynamo đạt tới 30× request với DeepSeek-R1 671B trên GB200 NVL72. Cảnh báo: KV-transfer tăng theo độ dài context, nên nó thắng ở QPS cao + context dài chia sẻ, còn deployment nhỏ có thể lỗ."
+ },
+ {
+  "topic": "Cache-hit% là KPI",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - KV-cache Là Tiền",
+  "question": "Vì sao cache-hit% nên thay \"số token\" làm KPI chi phí chính?",
+  "options": [
+   "Vì số token không đo được chính xác qua nhiều provider",
+   "Vì chênh lệch giá giữa hit và miss lên tới 50–100×, nên cùng một lượng token có thể tốn rất khác nhau",
+   "Vì cache-hit% tương quan trực tiếp với chất lượng câu trả lời",
+   "Vì provider tính phí theo số lần gọi API chứ không theo token"
+  ],
+  "correct_index": 1,
+  "explanation": "Anthropic tính cache read 0.1× (~90% off), OpenAI 50→90%. Hệ quả thiết kế: cấu trúc prompt sao cho phần prefix tĩnh (system prompt, RAG context, few-shot) ổn định để cache bám được."
+ },
+ {
+  "topic": "Showback → chargeback",
+  "difficulty": "Medium",
+  "slide_ref": "Day 25 - Từ Showback Đến Chargeback",
+  "question": "Theo lộ trình đề xuất, khi nào nên chuyển từ showback sang chargeback trên cụm GPU dùng chung?",
+  "options": [
+   "Ngay từ đầu để tạo áp lực tiết kiệm sớm nhất",
+   "Sau 4–6 tuần showback để vá lỗ hổng tag, và khi tag-coverage vượt 80%",
+   "Khi utilization trung bình vượt 80%",
+   "Khi đã export được dữ liệu theo chuẩn FOCUS"
+  ],
+  "correct_index": 1,
+  "explanation": "Chargeback trên dữ liệu tag thiếu sót sẽ tính sai tiền cho team và phá vỡ niềm tin vào cả chương trình. Giai đoạn showback tồn tại để phát hiện và vá những khoảng trống đó trước khi hóa đơn nội bộ trở nên có hiệu lực."
+ },
+ {
+  "topic": "Neocloud vs hyperscaler",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Neocloud vs Hyperscaler + Stack Neocloud",
+  "question": "Khi so sánh neocloud (~$2.5/GPU-hr) với hyperscaler (~$7.44/GPU-hr), yếu tố nào FinOps BẮT BUỘC phải định giá thêm?",
+  "options": [
+   "Chi phí băng thông vì neocloud tính egress cao hơn",
+   "Chi phí exit/migration và khả năng thanh toán của nhà cung cấp — managed services mỏng, rủi ro đối tác là thật (một neocloud ~$8.7B nợ, ~$7.5B đáo hạn 2026)",
+   "Phí license NVIDIA AI Enterprise vì neocloud không bao gồm",
+   "Chi phí đào tạo lại team vì API khác nhau"
+  ],
+  "correct_index": 1,
+  "explanation": "Giá rẻ của neocloud đến từ arbitrage chi phí vốn (năng lượng rẻ + nợ GPU-backed). Điều đó cũng có nghĩa mô hình kinh doanh của họ nhạy với lãi suất và chu kỳ — nên rủi ro nhà cung cấp biến mất giữa chừng là một khoản chi phí thật cần đưa vào tính toán, bên cạnh SLA 99.99% vẫn tương đương ~52 phút downtime/năm."
+ },
+ {
+  "topic": "Sửa MFU thấp",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - MFU, MBU & Roofline",
+  "question": "Một job training 70B chạy với config mặc định đạt MFU dưới 30%. Bài học đề xuất hướng sửa nào và tác động chi phí ra sao?",
+  "options": [
+   "Tăng số GPU để rút ngắn thời gian train, chi phí giữ nguyên",
+   "Sửa TP từ 8 xuống 1 kèm selective checkpointing, đạt khoảng 2× MFU tức khoảng 2× rẻ hơn",
+   "Chuyển sang GPU có VRAM lớn hơn để giảm số shard",
+   "Giảm batch size để tránh tràn bộ nhớ và ổn định throughput"
+  ],
+  "correct_index": 1,
+  "explanation": "Tensor parallel quá mức đưa giao tiếp collective lên critical path và làm FLOPS thực rơi xuống. Vì bạn trả tiền theo GPU-giờ, tăng gấp đôi MFU nghĩa là hoàn thành cùng lượng tính toán trong nửa số giờ — thêm GPU thì ngược lại, làm tăng chi phí mà không sửa được hiệu suất."
+ },
+ {
+  "topic": "Thuế reasoning",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Reasoning = Bom Chi Phí",
+  "question": "Vì sao 21.8% các cặp model bị \"đảo giá\" (model rẻ hơn trên bảng giá lại đắt hơn khi chạy thật, tới 28×)?",
+  "options": [
+   "Vì nhà cung cấp áp phụ phí cho request có context dài",
+   "Vì thinking-token ẩn được tính theo giá output: một câu trả lời 500 token kèm ~10k token suy luận làm chi phí thật gấp khoảng 21 lần giá niêm yết gợi ý",
+   "Vì model rẻ cần nhiều lần retry hơn do chất lượng thấp",
+   "Vì model rẻ không hỗ trợ prompt caching nên mất chiết khấu 90%"
+  ],
+  "correct_index": 1,
+  "explanation": "Giá $/1M-token chỉ có nghĩa khi bạn biết số token thực sự bị tính. Kết luận thực hành: benchmark $/task thực trên workload của mình, đừng so giá niêm yết — và với reasoning thì \"chờ & định giá lại\" là chiến lược hợp lý vì giá đang rơi nhanh (o4-mini-low ~$0.05/task)."
+ },
+ {
+  "topic": "Speculative decoding có vùng lỗ",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Mỗi Tối Ưu Có Vùng Chi Phí Riêng",
+  "question": "Speculative decoding giảm 48% $/1M-token khi hệ thống latency-bound nhưng LÀM TĂNG 19% khi throughput đã bão hòa. Vì sao?",
+  "options": [
+   "Vì draft model chiếm VRAM làm giảm batch size tối đa",
+   "Vì khi GPU đã bão hòa, phần tính toán suy đoán bị bỏ đi không còn là năng lực nhàn rỗi mà cạnh tranh trực tiếp với công việc thật",
+   "Vì acceptance rate giảm khi số request đồng thời tăng",
+   "Vì chi phí đồng bộ giữa draft model và target model tăng theo batch"
+  ],
+  "correct_index": 1,
+  "explanation": "Speculative decoding đổi FLOPS lấy latency: nó chỉ \"miễn phí\" khi còn năng lực tính toán thừa. Ở chế độ throughput-bound, mọi token suy đoán bị từ chối là tài nguyên đáng lẽ phục vụ request khác. Đây là minh họa cho quy tắc chung: mỗi lever có chế độ tải phù hợp, phải đo unit economics trước/sau chứ đừng giả định \"nhanh hơn = rẻ hơn\"."
+ },
+ {
+  "topic": "Chunked prefill overhead",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Mỗi Tối Ưu Có Vùng Chi Phí Riêng",
+  "question": "Chunked prefill bảo vệ ITL (inter-token latency) nhưng kích thước chunk ảnh hưởng chi phí thế nào?",
+  "options": [
+   "Chunk càng nhỏ càng tốt vì bảo vệ ITL tốt hơn mà không tốn thêm",
+   "Chunk 512 thêm tới +25% overhead, còn chunk khoảng 2048 gần như không overhead",
+   "Chunk lớn làm tăng overhead vì phải giữ nhiều KV-cache trung gian",
+   "Overhead không phụ thuộc chunk size mà phụ thuộc độ dài prompt"
+  ],
+  "correct_index": 1,
+  "explanation": "Chia nhỏ prefill làm mất hiệu quả của phép nhân ma trận lớn, và chi phí đó tăng nhanh khi chunk quá nhỏ. Nên chọn chunk đủ lớn để giữ được hiệu suất tính toán mà vẫn chen được token decode vào giữa."
+ },
+ {
+  "topic": "TCO của DeepSeek",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Cú Sốc DeepSeek",
+  "question": "Con số $5.576M của DeepSeek bị hiểu sai như thế nào, và bài học FinOps là gì?",
+  "options": [
+   "Đó là chi phí một năm vận hành API, không phải chi phí train",
+   "Đó chỉ là GPU pre-training (~2.048 H800 × 55 ngày); TCO thực ước tính ~$1.6B CapEx + $944M opex — chênh khoảng 100×, nên luôn đòi full TCO thay vì tin headline",
+   "Đó là chi phí sau khi trừ tài trợ phần cứng nên không so sánh được",
+   "Đó là chi phí tính theo giá GPU 2023 nên cần re-baseline về 2026"
+  ],
+  "correct_index": 1,
+  "explanation": "Headline chỉ tính một lát cắt (giờ GPU của lần train cuối), bỏ qua CapEx hạ tầng, R&D và các lần thử thất bại. Điều đó không phủ nhận các đòn bẩy kiến trúc thật của DeepSeek — MLA giảm 93.3% KV-cache, MoE chỉ kích hoạt 37B/671B params mỗi token, FP8 — vốn là lý do API R1 rẻ hơn o1 khoảng 27×."
+ },
+ {
+  "topic": "Power là nút thắt",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Power, Không Phải GPU, Là Nút Thắt",
+  "question": "Vì sao bài học nói năng lượng, chứ không phải chip, mới là thứ giới hạn tăng trưởng AI?",
+  "options": [
+   "Vì giá điện chiếm hơn 50% TCO của một cluster GPU",
+   "Vì một site AI cần 100–750MW và đấu nối lưới mới mất 24–36 tháng (4–7 năm ở hub nghẽn), trong khi chip có thể đặt mua",
+   "Vì GPU thế hệ mới tiêu thụ điện gấp đôi thế hệ trước",
+   "Vì các nhà cung cấp điện từ chối bán cho data center AI"
+  ],
+  "correct_index": 1,
+  "explanation": "Chip là hàng hóa mua được; năng lực lưới điện là hạ tầng vật lý mất nhiều năm để xây. Giá capacity lưới PJM đã tăng ~11× trong 2 năm ($28.92 → $329.17/MW-day) với data center chịu 63% khoản tăng, và $/MW đã trở thành đơn vị mới (~$30–44M/MW all-in)."
+ },
+ {
+  "topic": "Wh/query như unit economics",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Tokens-per-Watt",
+  "question": "Reasoning model tốn 74–86× năng lượng mỗi truy vấn (o3 ~39.2 Wh, DeepSeek-R1 ~33.6 Wh vs GPT-4.1 nano ~0.45 Wh). Đòn bẩy FinOps tương ứng là gì?",
+  "options": [
+   "Chuyển toàn bộ workload sang region có điện rẻ nhất",
+   "Model routing + đặt ngân sách reasoning-token, cắt được năng lượng và chi phí 1–2 bậc; theo dõi Wh/query như theo dõi $/1M-token",
+   "Mua PPA hạt nhân dài hạn như các hyperscaler",
+   "Tăng batch size để phân bổ chi phí năng lượng trên nhiều request hơn"
+  ],
+  "correct_index": 1,
+  "explanation": "Chênh lệch gần hai bậc giữa model nghĩa là quyết định định tuyến quan trọng hơn mọi tối ưu hạ tầng ở đây. Chọn region điện rẻ/sạch vẫn hữu ích cho batch chịu được độ trễ (~5–6¢ ở E. Washington vs ~15¢/kWh ở CA; carbon ~6 vs ~660 gCO₂/kWh) nhưng nó không sửa được việc gọi nhầm model."
+ },
+ {
+  "topic": "Token yield rate",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - AI Unit Economics",
+  "question": "Câu \"một token rẻ đi, nhưng tổng token thì không\" (chi GenAI doanh nghiệp $1.7B năm 2023 → $37B năm 2025) dẫn tới KPI nào?",
+  "options": [
+   "Cost/Token — vì nó là mẫu số chung của mọi so sánh",
+   "Token yield rate — % token tạo ra hành động kinh doanh; mục tiêu là tối ưu giá trị mỗi token, không phải tối thiểu hóa số token",
+   "Utilization — vì đó là đòn bẩy lớn nhất",
+   "ROI = (Benefit − Cost)/Cost tính theo quý"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây là nghịch lý Jevons ở quy mô doanh nghiệp: giá đơn vị giảm 10×/năm nhưng tiêu thụ tăng nhanh hơn thế. Tối thiểu hóa token có thể cắt luôn phần token đang tạo ra giá trị; structured output là ví dụ tốt của hướng ngược lại — cắt 30–60% token mà không mất kết quả."
+ },
+ {
+  "topic": "Idle: workload vs infrastructure",
+  "difficulty": "Hard",
+  "slide_ref": "Day 25 - Hai Tầng Quan Sát Chi Phí AI",
+  "question": "Vì sao dashboard chi phí GPU phải tách \"Workload Idle\" khỏi \"Infrastructure Idle\"?",
+  "options": [
+   "Vì hai loại idle được nhà cung cấp tính giá khác nhau",
+   "Vì hai loại quy trách nhiệm và cách chữa khác nhau: workload idle là team phải sửa (job giữ GPU mà không dùng), infrastructure idle là platform phải sửa (node dư, bin-packing kém)",
+   "Vì chỉ workload idle mới xuất hiện trong export FOCUS",
+   "Vì infrastructure idle không tính vào chargeback theo chuẩn Kubecost"
+  ],
+  "correct_index": 1,
+  "explanation": "Gộp chung thì chargeback đổ toàn bộ lãng phí hạ tầng lên team dùng, hoặc ngược lại platform gánh phần lãng phí do job viết kém — cả hai cách đều làm mất tín hiệu để ai đó hành động. Kubecost 3.0 (GA 9/2025) là công cụ GPU-aware qua DCGM cho việc tách này."
+ }
+]
