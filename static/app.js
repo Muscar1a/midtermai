@@ -302,7 +302,7 @@ async function startRandomQuiz(customTrack, customDiff) {
   saveState();
 }
 
-// Start a Day-specific practice (45 questions with INSTANT FEEDBACK)
+// Start a Day-specific practice (30 questions with INSTANT FEEDBACK, balanced difficulty)
 async function startDayQuiz(dayName, trackName) {
   // Restore saved progress for this day if available
   if (restorePracticeForDay(dayName)) {
@@ -337,6 +337,27 @@ async function startDayQuiz(dayName, trackName) {
   if (qList.length === 0 && state.questions.length > 0) {
     qList = getFilteredQuestions(trackName || 'all', 'all', dayName);
   }
+
+  // Pick 30 questions with balanced difficulty: 10 Easy + 10 Medium + 10 Hard
+  const byDiff = { Easy: [], Medium: [], Hard: [] };
+  for (const q of qList) {
+    const d = q.difficulty || 'Medium';
+    if (byDiff[d]) byDiff[d].push(q);
+  }
+  for (const arr of Object.values(byDiff)) arr.sort(() => Math.random() - 0.5);
+
+  let selected = [
+    ...byDiff.Easy.slice(0, 10),
+    ...byDiff.Medium.slice(0, 10),
+    ...byDiff.Hard.slice(0, 10)
+  ];
+  if (selected.length < 30) {
+    const usedIds = new Set(selected.map(q => q.id));
+    const overflow = qList.filter(q => !usedIds.has(q.id)).sort(() => Math.random() - 0.5);
+    selected = [...selected, ...overflow.slice(0, 30 - selected.length)];
+  }
+  selected.sort(() => Math.random() - 0.5);
+  qList = selected;
 
   state.currentQuizList = qList;
   state.currentIndex = 0;
@@ -717,7 +738,7 @@ function renderTopicsGrid() {
           <h4 class="topic-card-name font-editorial">${formatContent(dayInfo.topic)}</h4>
           <div class="topic-card-progress mt-2">
             <div class="flex-between mt-2">
-              <span class="text-xs text-muted">Trọn bộ 45 câu</span>
+              <span class="text-xs text-muted">30 câu · Easy / Medium / Hard</span>
               <span class="text-xs text-terracotta font-bold topic-card-cta">Luyện tập Day này ➔</span>
             </div>
           </div>
