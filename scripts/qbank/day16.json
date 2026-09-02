@@ -1,63 +1,422 @@
 [
-{"topic":"So sánh cloud provider cho AI","difficulty":"Easy","slide_ref":"Day 16 - Section 1: Cloud Providers","question":"Provider nào có Azure OpenAI Service độc quyền và Prompt Flow cho LLMOps?","options":["AWS","GCP","Azure","Viettel Cloud"],"correct_index":2,"explanation":"AWS mạnh ở ecosystem rộng nhất với Bedrock và SageMaker HyperPod. GCP mạnh PyTorch/JAX, GKE GPU auto-provisioning, Vertex AI và TPU v5p. Azure có OpenAI Service exclusive và Prompt Flow LLMOps — chọn khi đã ở Microsoft stack. VN cloud (Viettel/VNG/FPT) mạnh ở giá 60–70% global và data residency theo NĐ13."},
-
-{"topic":"Bốn mô hình cloud cho AI","difficulty":"Easy","slide_ref":"Day 16 - Section 2: Mô hình Cloud","question":"OpenAI API, Bedrock và Vertex AI thuộc mô hình cloud nào?","options":["AI-aaS — pay-per-token, nhanh nhất, không cần infra","PaaS — managed training và serving","IaaS — full GPU control nhưng cần ops","Physical — on-premise, max control"],"correct_index":0,"explanation":"Bốn tầng từ trên xuống: AI-aaS (OpenAI API, Bedrock, Vertex AI — pay-per-token, nhanh nhất), PaaS (SageMaker, Azure ML — managed scaling, ít ops), IaaS (EC2 GPU, GCE — full control, cần ops), Physical (on-premise/colocation). Thực tế AI thường hybrid: training dùng IaaS, serving dùng PaaS, prototype dùng AI-aaS."},
-
-{"topic":"GPU pricing và use case","difficulty":"Easy","slide_ref":"Day 16 - Section 3: GPU Pricing 2026","question":"Theo rule of thumb, GPU nào phù hợp cho tác vụ inference model nhỏ (≤7B)?","options":["T4 (16GB, $0.35/hr)","A100 (80GB, $1.79–2.70/hr)","H100 (80GB HBM3, $2.99–4.31/hr)","B200 (192GB HBM3e, $6.84–8.64/hr)"],"correct_index":0,"explanation":"Rule of thumb: inference → T4/L40S/A10G; fine-tuning → A100; pre-training → H100 cluster. T4 16GB giá $0.35/hr với bandwidth 320 GB/s là lựa chọn rẻ nhất cho inference model nhỏ. A100 và H100 dành cho tác vụ nặng hơn, B200 cho ultra-scale với khả dụng còn hạn chế."},
-
-{"topic":"MIG — Multi-Instance GPU","difficulty":"Easy","slide_ref":"Day 16 - Section 3: MIG","question":"MIG (Multi-Instance GPU) cho phép làm gì?","options":["Gộp nhiều GPU thành một GPU ảo có VRAM lớn hơn","Chia một A100/H100 thành tối đa 7 instance cô lập để serve nhiều model nhỏ song song","Chia sẻ một GPU cho nhiều pod theo tỷ lệ phần trăm động","Chuyển đổi workload giữa GPU và CPU tự động"],"correct_index":1,"explanation":"MIG chia A100/H100 thành tối đa 7 instance — ví dụ 1× A100 80GB thành 7× 10GB instance, mỗi instance cô lập cho inference model nhỏ. Dùng khi cần serve nhiều small model song song để maximize utilization. Bài cũng cảnh báo: KHÔNG BAO GIỜ overcommit GPU, dùng MIG thay vì fractional sharing vốn phức tạp."},
-
-{"topic":"Cost strategy: Spot vs Reserved","difficulty":"Easy","slide_ref":"Day 16 - Section 3: Cost Strategy","question":"Với training job có thể bị gián đoạn, chiến lược mua GPU nào tiết kiệm nhất?","options":["Spot/Preemptible — tiết kiệm 60–70%","Reserved 1 năm — tiết kiệm 30–40%","Reserved 3 năm — tiết kiệm 50–60%","On-demand để đảm bảo không bị gián đoạn"],"correct_index":0,"explanation":"Spot/Preemptible tiết kiệm 60–70% và phù hợp training job vì chúng interruptible. Reserved dành cho serving cần ổn định: dưới 6 tháng thì Spot/On-demand, 6–12 tháng thì Reserved 1 năm (30–40%), trên 12 tháng thì Reserved 3 năm (50–60%). Ví dụ thực tế fine-tune GPT-2 1B token: A100 on-demand $45, Spot $14, Reserved $27."},
-
-{"topic":"Storage tiering","difficulty":"Easy","slide_ref":"Day 16 - Section 6: Storage Strategy","question":"KV cache đang hoạt động và embedding cache nên nằm ở tầng lưu trữ nào?","options":["Hot — Redis / GPU Memory, sub-ms latency","Warm — S3 Standard / EBS","Cool — S3 Infrequent Access","Archive — S3 Glacier Deep Archive"],"correct_index":0,"explanation":"Hot (Redis/GPU memory, sub-ms): active KV cache, embedding cache, session state. Warm (S3 Standard/EBS, $0.023/GB/tháng): model weights, checkpoint gần đây, training data. Cool (S3 IA, $0.0125/GB): checkpoint cũ, dataset ít dùng. Archive (Glacier Deep Archive, $0.00099/GB): dữ liệu compliance."},
-
-{"topic":"Shared Responsibility Model","difficulty":"Easy","slide_ref":"Day 16 - Section 2: Shared Responsibility","question":"Trong Shared Responsibility Model cho AI, trách nhiệm nào thuộc về đội của bạn chứ không phải nhà cung cấp cloud?","options":["Bảo trì phần cứng và tính khả dụng","Network backbone và chống DDoS","Prompt injection prevention và IAM least-privilege","Hạ tầng vật lý và hypervisor"],"correct_index":2,"explanation":"Cloud provider lo hạ tầng vật lý, hypervisor, network backbone, DDoS protection, bảo trì phần cứng. Đội của bạn lo model security, mã hóa dữ liệu, access control (IAM least-privilege), prompt injection prevention và tuân thủ quyền riêng tư (NĐ13, GDPR). Ranh giới này quyết định phần nào bạn phải tự thiết kế."},
-
-{"topic":"vLLM và PagedAttention","difficulty":"Easy","slide_ref":"Day 16 - Section 8: 6 Serving Engines","question":"Kỹ thuật chính của serving engine vLLM là gì?","options":["PagedAttention","RadixAttention","TurboMind engine","llama.cpp backend"],"correct_index":0,"explanation":"vLLM dùng PagedAttention, mạnh ở ecosystem rộng nhất và API tương thích OpenAI. SGLang dùng RadixAttention + prefill-decode disaggregation. LMDeploy dùng TurboMind engine viết bằng C++. Ollama dùng llama.cpp backend cho edge/laptop inference. TensorRT-LLM dùng kernel tối ưu của NVIDIA."},
-
-{"topic":"Tám tầng của production AI agent","difficulty":"Easy","slide_ref":"Day 16 - Section 7: 8 Layers","question":"Trong 8 tầng hạ tầng agent, tầng nào chứa LangGraph, CrewAI hoặc AutoGen?","options":["Tầng 1 — Compute","Tầng 2 — Orchestration","Tầng 3 — Message Queue","Tầng 4 — Cache"],"correct_index":1,"explanation":"Tầng 2 Orchestration chạy LangGraph/CrewAI/AutoGen trên CPU pod, quản lý lifecycle và retry. Tầng 1 Compute gồm GPU cho agent chạy LLM, CPU cho orchestrator, serverless cho tool-calling. Nguyên tắc thiết kế xuyên suốt: agent phải stateless, externalize state ra Redis/Postgres để scale ngang."},
-
-{"topic":"Terraform state management","difficulty":"Easy","slide_ref":"Day 16 - Section 4: Terraform","question":"Vì sao Terraform cần S3 backend kèm DynamoDB lock trong môi trường nhiều người dùng chung?","options":["Để lưu state chung và khóa không cho hai người apply đồng thời gây xung đột","Để tăng tốc độ apply lên khoảng gấp đôi","Để mã hóa các biến nhạy cảm trong file .tf","Để tự động tạo module có thể tái sử dụng"],"correct_index":0,"explanation":"S3 backend lưu state file tập trung để cả team cùng nhìn một nguồn sự thật, còn DynamoDB lock ngăn hai người apply đồng thời làm hỏng state. Đi kèm là workspaces để cô lập dev/staging/prod. Các lựa chọn thay thế: Pulumi (Python/TypeScript, phổ biến với đội AI), OpenTofu (fork mã nguồn mở sau khi HashiCorp đổi sang BSL), AWS CDK."},
-
-{"topic":"Specialized GPU cloud","difficulty":"Medium","slide_ref":"Day 16 - Section 1: Specialized GPU Providers","question":"Theo rule được nêu, nên phân bổ specialized GPU cloud và hyperscaler như thế nào?","options":["Specialized cloud cho training (cost), hyperscaler cho serving (managed scale + SLA)","Specialized cloud cho serving, hyperscaler cho training","Dùng specialized cloud cho tất cả để tối đa tiết kiệm","Dùng hyperscaler cho tất cả để đơn giản vận hành"],"correct_index":0,"explanation":"Specialized cloud (Lambda H100 $2.49/hr, GMI $2.10/hr, RunPod $3.35/hr, CoreWeave) rẻ hơn 40–70% nhưng ít managed service, phải tự quản nhiều hơn và ít availability zone. Vì training là workload chịu được gián đoạn và cần tối ưu cost, còn serving cần managed scale và SLA, nên phân bổ theo đúng đặc tính đó."},
-
-{"topic":"L40S — sleeper pick","difficulty":"Medium","slide_ref":"Day 16 - Section 3: L40S","question":"Vì sao L40S được gọi là \"sleeper pick\" cho production inference?","options":["Vì nó có VRAM lớn nhất trong các GPU inference","Vì 48GB VRAM với FP8 Transformer Engine, giá $0.40–0.86/hr — rẻ hơn H100 3–5 lần mà throughput vẫn cạnh tranh cho model ≤48GB","Vì nó là GPU duy nhất hỗ trợ MIG","Vì nó có bandwidth cao nhất trong bảng giá 2026"],"correct_index":1,"explanation":"L40S kiến trúc Ada Lovelace, 48GB VRAM, hỗ trợ FP8 Transformer Engine, giá chỉ $0.40–0.86/hr so với H100 $2.99–4.31/hr. Với model vừa trong 48GB thì throughput cạnh tranh, nên đây là lựa chọn tối ưu chi phí cho production inference small/medium mà nhiều đội bỏ qua vì mặc định nghĩ tới H100."},
-
-{"topic":"SGLang RadixAttention","difficulty":"Medium","slide_ref":"Day 16 - Section 8: SGLang Deep Dive","question":"RadixAttention của SGLang mang lại lợi ích gì cho ứng dụng multi-turn?","options":["Nén KV cache để tiết kiệm VRAM khoảng 50%","Reuse KV cache giữa các request có chung prefix, mang lại thêm 10–20% nhờ cache hits","Chạy song song trên nhiều GPU không cần tensor parallel","Tự động chuyển model sang định dạng Int4"],"correct_index":1,"explanation":"RadixAttention tái sử dụng KV cache giữa các request có chung prefix — rất hợp với multi-turn chat và agent nơi system prompt cùng lịch sử lặp lại. SGLang còn có Compressed FSM giúp JSON output nhanh gấp 3 lần, prefill-decode disaggregation tách vai trò GPU, và powers hơn 400.000 GPU toàn cầu (xAI Grok 3, Azure DeepSeek R1)."},
-
-{"topic":"LMDeploy TurboMind","difficulty":"Medium","slide_ref":"Day 16 - Section 8: LMDeploy","question":"Vì sao LMDeploy đạt throughput 1.8 lần so với vLLM baseline?","options":["Vì nó chỉ chạy được model nhỏ hơn 13B","TurboMind engine viết hoàn toàn bằng C++ — không có Python overhead, kèm persistent batch inference và blocked KV cache","Vì nó bỏ qua bước tokenization","Vì nó dùng nhiều GPU hơn cho cùng một request"],"correct_index":1,"explanation":"TurboMind viết hoàn toàn bằng C++ nên loại bỏ Python overhead trong vòng lặp inference, kết hợp persistent batch inference và blocked KV cache. Ngoài ra Int4 inference nhanh gấp 2.4 lần FP16, khiến LMDeploy đặc biệt phù hợp cho quantized model deployment và ứng dụng nhạy cảm với latency."},
-
-{"topic":"Docker image optimization cho AI","difficulty":"Medium","slide_ref":"Day 16 - Section 5: Docker Best Practices","question":"Kỹ thuật nào giúp giảm image AI từ 18GB xuống 6–8GB?","options":["Multi-stage build kết hợp cache pip layer riêng và .dockerignore loại trừ dataset/checkpoint","Nén image bằng gzip trước khi push lên registry","Chuyển từ base image CUDA sang Alpine","Xóa toàn bộ thư viện Python và cài lại lúc runtime"],"correct_index":0,"explanation":"Multi-stage build tách giai đoạn build khỏi runtime, cache pip layer riêng (đặt trước COPY source) để tận dụng layer cache, và .dockerignore loại dataset/checkpoint khỏi build context. Base image nên là `nvcr.io/nvidia/cuda:12.1-runtime` chứ không phải bản full. Kết quả trực tiếp: cold start time giảm đáng kể."},
-
-{"topic":"Kubernetes GPU config","difficulty":"Medium","slide_ref":"Day 16 - Section 5: K8s GPU Config","question":"Khi khai báo GPU cho pod trong Kubernetes, quy tắc bắt buộc là gì?","options":["requests phải nhỏ hơn limits để cho phép burst","requests = limits luôn luôn, và không bao giờ overcommit GPU","Chỉ cần khai báo limits, requests là tùy chọn","Đặt limits gấp đôi requests để tận dụng GPU rảnh"],"correct_index":1,"explanation":"`nvidia.com/gpu: 1` phải có requests bằng limits — GPU không chia sẻ được theo kiểu CPU. Bài cảnh báo rõ: NEVER overcommit GPU, vì fractional sharing rất phức tạp; nếu cần chia nhỏ thì dùng MIG. Đi kèm là GPU Operator tự cài driver/toolkit/plugin và init container pre-download weights từ S3."},
-
-{"topic":"Namespace cho ML teams","difficulty":"Medium","slide_ref":"Day 16 - Section 5: K8s Namespaces","question":"Vì sao nên tách namespace `ml-training`, `ml-serving` và `ml-experiments`?","options":["Vì Kubernetes yêu cầu mỗi loại workload một namespace riêng","Để tách resource quota, cost tracking, RBAC và mức độ ràng buộc phù hợp với từng loại workload","Để mỗi namespace dùng một phiên bản Kubernetes khác nhau","Để giảm số lượng node cần provision"],"correct_index":1,"explanation":"ml-training cần resource quota riêng và cost tracking tách bạch; ml-serving cần RBAC riêng và cô lập production; ml-experiments là sandbox không đặt giới hạn chặt. Việc tách này biến các đặc tính vận hành khác nhau thành ranh giới rõ ràng thay vì trộn lẫn trong một namespace chung."},
-
-{"topic":"GPU-to-GPU networking","difficulty":"Medium","slide_ref":"Day 16 - Section 6: Networking","question":"NVLink và InfiniBand khác nhau ở phạm vi sử dụng như thế nào?","options":["NVLink 900 GB/s cho intra-node; InfiniBand 400 Gbps cho inter-node (multi-node training)","NVLink cho inter-node; InfiniBand cho intra-node","Cả hai đều chỉ dùng cho intra-node, khác nhau ở giá","NVLink dùng cho inference, InfiniBand dùng cho training"],"correct_index":0,"explanation":"NVLink 900 GB/s nối các GPU trong CÙNG một node. InfiniBand 400 Gbps nối giữa các node cho distributed training nhiều máy — AWS có EFA làm giải pháp thay thế. Ngoài ra VPC Endpoints (PrivateLink) giúp traffic không đi ra internet, vừa bảo mật vừa tiết kiệm egress cost."},
-
-{"topic":"Multi-level cache cho agent","difficulty":"Medium","slide_ref":"Day 16 - Section 7: Agent Infra","question":"Kiến trúc cache ba tầng cho agent gồm những gì và mục tiêu hit rate là bao nhiêu?","options":["L1 in-process LRU, L2 Redis shared, L3 embedding cache — mục tiêu 60–80% hit rate","L1 Redis, L2 PostgreSQL, L3 S3 — mục tiêu 90% hit rate","L1 GPU memory, L2 CPU memory, L3 đĩa — mục tiêu 50% hit rate","L1 CDN, L2 API Gateway, L3 database — mục tiêu 70% hit rate"],"correct_index":0,"explanation":"L1 là in-process LRU dict (nhanh nhất, riêng từng instance). L2 là Redis chia sẻ giữa các agent theo TTL. L3 là embedding cache để tránh embed lại cùng một truy vấn. Mục tiêu 60–80% hit rate nhằm giảm số lần gọi LLM API — đòn bẩy chi phí trực tiếp."},
-
-{"topic":"Message queue cho agent","difficulty":"Medium","slide_ref":"Day 16 - Section 7: Agent Infra","question":"Khi cần độ trễ dưới 1ms và setup đơn giản cho hệ agent, nên chọn message queue nào?","options":["Redis Streams","Kafka","RabbitMQ","Cả ba đều tương đương về độ trễ"],"correct_index":0,"explanation":"Redis Streams có latency dưới 1ms và setup đơn giản — phù hợp cho phần lớn trường hợp. Kafka mạnh ở throughput cao, durability và replay, dùng cho hệ agent quy mô lớn. RabbitMQ mạnh ở routing rule phức tạp và dead letter queue. Chọn theo yêu cầu chứ không theo độ phổ biến."},
-
-{"topic":"GPU memory utilization","difficulty":"Hard","slide_ref":"Day 16 - Section 8: Practical Deploy Tips","question":"Vì sao nên đặt `gpu-memory-utilization` ở mức 0.80 thay vì 0.95?","options":["Vì 0.95 làm giảm throughput khoảng 15%","Vì 0.95 gây CUDA OOM khi engine thực hiện graph compilation","Vì driver NVIDIA không hỗ trợ mức trên 0.90","Vì 0.80 giúp GPU chạy mát hơn và bền hơn"],"correct_index":1,"explanation":"80% là safe zone. Ở 95%, phần bộ nhớ còn lại không đủ cho bước graph compilation của engine, dẫn tới CUDA OOM ngay lúc khởi động hoặc khi gặp batch lớn. Hai tip đi kèm: continuous batching LUÔN bật, và `max_model_len` phải tune theo sử dụng thực tế — đừng set 128K nếu 99% request dưới 4K."},
-
-{"topic":"Landing Zone","difficulty":"Hard","slide_ref":"Day 16 - Section 2: Landing Zone","question":"Vì sao Landing Zone phải được thiết kế đúng ngay từ đầu?","options":["Vì nhà cung cấp cloud chỉ cho phép cấu hình một lần duy nhất","Vì chi phí làm lại (rework) cao gấp khoảng 10 lần","Vì Landing Zone quyết định GPU nào được phép sử dụng","Vì Terraform không thể thay đổi cấu trúc account sau khi tạo"],"correct_index":1,"explanation":"Rework cost khoảng 10 lần vì Landing Zone chạm vào cấu trúc nền: account structure (workload/shared services/security account), networking (Transit Gateway hub-spoke, private subnet cho GPU), centralized logging (CloudTrail + CloudWatch), và guardrails bằng SCPs. Sửa các thứ này sau khi đã có workload chạy đòi hỏi di chuyển tài nguyên và gián đoạn dịch vụ."},
-
-{"topic":"Karpenter và scale-to-zero","difficulty":"Hard","slide_ref":"Day 16 - Section 3 & 5: Auto-provisioning","question":"Karpenter (AWS) và NAP (GCP) kết hợp với scale-to-zero ngoài giờ mang lại lợi ích gì?","options":["Tự động provision đúng GPU type theo pod request và tiết kiệm hơn 60% chi phí GPU idle","Tự động chuyển model sang GPU rẻ hơn khi phát hiện tải thấp","Tự động chia GPU thành các MIG instance theo nhu cầu","Tự động chuyển workload sang region có giá GPU thấp nhất"],"correct_index":0,"explanation":"Karpenter auto-provision đúng loại GPU theo yêu cầu của pod thay vì phải cấu hình sẵn node group cố định; NAP là Cluster Autoscaler thông minh hơn của GCP. Kết hợp scale-to-zero ngoài giờ cao điểm giúp tiết kiệm trên 60% chi phí GPU idle — khoản lãng phí lớn nhất trong hạ tầng AI."},
-
-{"topic":"Compute pattern cho agent","difficulty":"Hard","slide_ref":"Day 16 - Section 7: Agent Infra Chi Tiết","question":"Pattern compute được khuyến nghị cho hệ multi-agent là gì?","options":["Mọi agent đều chạy trên GPU để đảm bảo tốc độ đồng đều","Supervisor agent chạy CPU dispatch xuống specialist agent chạy GPU; tool-calling nhẹ dùng serverless","Toàn bộ hệ chạy serverless để tối ưu chi phí","Supervisor chạy GPU còn worker chạy CPU"],"correct_index":1,"explanation":"GPU chỉ cần cho agent thực sự chạy LLM inference; orchestrator chủ yếu làm routing và quản lý state nên CPU là đủ. Pattern: supervisor agent (CPU) dispatch xuống specialist agent (GPU), còn tool-calling nhẹ đưa lên Lambda/serverless. Đây là cách cắt chi phí GPU mà không ảnh hưởng chất lượng."},
-
-{"topic":"Multi-cloud và abstraction layer","difficulty":"Hard","slide_ref":"Day 16 - Section 1: Decision Framework","question":"Vì sao tổ chức dùng multi-cloud cần abstraction layer như Terraform hoặc Pulumi?","options":["Để giảm chi phí license của từng nhà cung cấp","Để hạ tầng portable — training ở provider GPU rẻ nhất, serving ở nơi latency tốt nhất, data ở nơi đáp ứng compliance","Vì các nhà cung cấp cloud không cho phép truy cập bằng console khi dùng nhiều provider","Để tự động chuyển đổi giữa các provider khi có sự cố"],"correct_index":1,"explanation":"Chiến lược multi-cloud phân bổ theo thế mạnh: training ở provider có GPU rẻ nhất, serving ở nơi latency tốt nhất, data ở nơi đáp ứng compliance. Nhưng nếu hạ tầng được định nghĩa bằng console hoặc script riêng cho từng cloud thì không thể dịch chuyển; IaC làm cho cấu hình trở thành mã có thể tái tạo ở nhiều nơi."},
-
-{"topic":"GPU-as-currency","difficulty":"Hard","slide_ref":"Day 16 - Section 9: Hot Trends 2026","question":"Câu chuyện Anthropic thuê nguyên Colossus 1 của xAI (220.000 GPU, 300MW, ~$1,25 tỷ/tháng) minh họa xu hướng nào?","options":["Các phòng lab AI đang hợp nhất thành một liên minh chung","\"GPU-as-currency\" — đối thủ trực tiếp thuê chéo compute của nhau khi dư utilization, vì utilization quan trọng hơn sở hữu","Nvidia đang mất dần vị thế trước custom silicon","Chi phí GPU đã giảm tới mức mọi công ty đều mua được"],"correct_index":1,"explanation":"Trước deal này Colossus 1 chỉ chạy ở 11% công suất — hạ tầng đã xây thì để không cũng tốn tiền. Vì vậy hai đối thủ trực tiếp trên thị trường LLM trở thành khách hàng compute của nhau. Đây là một trong bốn xu hướng 2026, cùng với multi-cloud/multi-silicon là chuẩn mới, custom silicon đấu Nvidia, và power là nút thắt mới."},
-
-{"topic":"Power là nút thắt mới","difficulty":"Hard","slide_ref":"Day 16 - Section 9: Hot Trends 2026","question":"Theo xu hướng 2026, nút thắt lớn nhất của hạ tầng AI đã chuyển từ đâu sang đâu?","options":["Từ chip sang điện, đất và hệ thống làm mát","Từ điện sang chip do thiếu hụt sản xuất","Từ băng thông mạng sang dung lượng lưu trữ","Từ nhân lực kỹ thuật sang ngân sách đầu tư"],"correct_index":0,"explanation":"\"Power là nút thắt mới, không phải chip — đất/điện/làm mát khan hiếm hơn GPU.\" Điều này giải thích quy mô các dự án được đo bằng GW: OpenAI + Oracle Stargate kế hoạch 7GW, AWS Trainium Project Rainier tới 5GW, Google mở rộng 3.5GW, xAI Colossus khoảng 1–2GW. Việt Nam vẫn ở quy mô MW nên chơi ngách compliance/data residency."},
-
-{"topic":"Vị thế cloud Việt Nam","difficulty":"Hard","slide_ref":"Day 16 - Section 1 & 9: VN Cloud","question":"Đâu là định vị hợp lý nhất của cloud Việt Nam (Viettel/VNG/FPT) trong bức tranh 2026?","options":["Cạnh tranh trực tiếp về scale GPU với hyperscaler","Chơi ngách compliance và data residency — giá 60–70% global, nhưng chưa có H100/H200 và ít availability zone","Tập trung vào pre-training model nền quy mô lớn","Trở thành nhà cung cấp specialized GPU cloud giá rẻ toàn cầu"],"correct_index":1,"explanation":"VN cloud có GPU T4/V100 với giá khoảng 60–70% mức global và đáp ứng data residency theo NĐ13/PDPD. Hạn chế: chưa có H100/H200 và ít availability zone, quy mô vẫn ở mức MW so với GW của bigtech. Vì vậy lợi thế cạnh tranh thật nằm ở tuân thủ pháp lý chứ không phải năng lực tính toán."},
-
-{"topic":"Chọn serving engine theo use case","difficulty":"Hard","slide_ref":"Day 16 - Section 8: 6 Serving Engines","question":"Hệ thống agent multi-turn cần structured output JSON. Serving engine nào phù hợp nhất và vì sao?","options":["vLLM — vì có ecosystem rộng nhất","SGLang — RadixAttention giúp multi-turn +20% và Compressed FSM cho JSON nhanh gấp 3 lần","TensorRT-LLM — vì nhanh hơn 30–50% ở concurrency cao","Ollama — vì dễ chuyển đổi giữa các model"],"correct_index":1,"explanation":"Hai yêu cầu của bài toán khớp đúng hai điểm mạnh đặc trưng của SGLang: RadixAttention tái dùng KV cache cho prefix lặp lại trong multi-turn, và Compressed FSM tăng tốc sinh JSON gấp 3 lần. TensorRT-LLM mạnh ở ultra-scale concurrency, LMDeploy mạnh ở quantized/latency, còn vLLM là lựa chọn an toàn khi cần tương thích rộng."},
-
-{"topic":"Đọc bảng thị phần cloud 2026","difficulty":"Hard","slide_ref":"Day 16 - Section 9: Cloud Market 2026","question":"AWS dẫn đầu thị phần cloud 28% nhưng chỉ tăng 19% YoY, trong khi Google Cloud 15% thị phần lại tăng 82% YoY. Cách đọc đúng là gì?","options":["AWS đang mất khách hàng vào tay Google Cloud","Thị phần tuyệt đối và tốc độ tăng trưởng là hai chỉ số khác nhau — AWS lớn nhất nhưng tăng chậm nhất, còn động lực tăng trưởng đang nghiêng về Azure (+40%, nhu cầu OpenAI) và GCP (TPU tự chủ)","Số liệu mâu thuẫn nên không đáng tin","Google Cloud sẽ vượt AWS về thị phần trong năm tới"],"correct_index":1,"explanation":"Nền tăng trưởng khác nhau: 82% trên nền 15% thị phần khác hẳn 19% trên nền 28%. Bối cảnh: Azure +40% được đẩy bởi nhu cầu compute của OpenAI, GCP có TPU tự chủ nên biên lợi nhuận tốt hơn. Tổng doanh thu cloud infra Q2/2026 đạt $142B (+43% YoY), trong đó AI chiếm 19% tổng chi tiêu cloud — tăng từ 8% năm 2023."},
-
-{"topic":"Thiết kế hạ tầng tối ưu chi phí","difficulty":"Hard","slide_ref":"Day 16 - Case study mở đầu","question":"Startup đốt $50K/tháng GPU giảm còn $12K nhờ right-size và spot instances. Nguyên nhân gốc của lãng phí ban đầu là gì?","options":["Chọn nhà cung cấp cloud đắt tiền","Dùng GPU lớn hơn nhu cầu thực và mua on-demand cho workload vốn chịu được gián đoạn","Không dùng Kubernetes nên không scale được","Lưu trữ model weights ở tầng storage đắt tiền"],"correct_index":1,"explanation":"Hai đòn bẩy được nêu đúng tên: right-size (chọn đúng GPU theo tác vụ — inference dùng T4/L40S thay vì H100) và spot instances (tiết kiệm 60–70% cho training interruptible). Cộng thêm scale-to-zero ngoài giờ tiết kiệm trên 60% GPU idle. Storage và provider không phải nguồn lãng phí chính vì GPU chiếm phần lớn hóa đơn."}
+ {
+  "topic": "So sánh cloud provider cho AI",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 1: Cloud Providers",
+  "question": "Provider nào có Azure OpenAI Service độc quyền và Prompt Flow cho LLMOps?",
+  "options": [
+   "AWS",
+   "GCP",
+   "Azure",
+   "Viettel Cloud"
+  ],
+  "correct_index": 2,
+  "explanation": "AWS mạnh ở ecosystem rộng nhất với Bedrock và SageMaker HyperPod. GCP mạnh PyTorch/JAX, GKE GPU auto-provisioning, Vertex AI và TPU v5p. Azure có OpenAI Service exclusive và Prompt Flow LLMOps — chọn khi đã ở Microsoft stack. VN cloud (Viettel/VNG/FPT) mạnh ở giá 60–70% global và data residency theo NĐ13."
+ },
+ {
+  "topic": "Bốn mô hình cloud cho AI",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 2: Mô hình Cloud",
+  "question": "OpenAI API, Bedrock và Vertex AI thuộc mô hình cloud nào?",
+  "options": [
+   "AI-aaS — pay-per-token, nhanh nhất, không cần infra",
+   "PaaS — managed training và serving",
+   "IaaS — full GPU control nhưng cần ops",
+   "Physical — on-premise, max control"
+  ],
+  "correct_index": 0,
+  "explanation": "Bốn tầng từ trên xuống: AI-aaS (OpenAI API, Bedrock, Vertex AI — pay-per-token, nhanh nhất), PaaS (SageMaker, Azure ML — managed scaling, ít ops), IaaS (EC2 GPU, GCE — full control, cần ops), Physical (on-premise/colocation). Thực tế AI thường hybrid: training dùng IaaS, serving dùng PaaS, prototype dùng AI-aaS."
+ },
+ {
+  "topic": "GPU pricing và use case",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 3: GPU Pricing 2026",
+  "question": "Theo rule of thumb, GPU nào phù hợp cho tác vụ inference model nhỏ (≤7B)?",
+  "options": [
+   "T4 (16GB, $0.35/hr)",
+   "A100 (80GB, $1.79–2.70/hr)",
+   "H100 (80GB HBM3, $2.99–4.31/hr)",
+   "B200 (192GB HBM3e, $6.84–8.64/hr)"
+  ],
+  "correct_index": 0,
+  "explanation": "Rule of thumb: inference → T4/L40S/A10G; fine-tuning → A100; pre-training → H100 cluster. T4 16GB giá $0.35/hr với bandwidth 320 GB/s là lựa chọn rẻ nhất cho inference model nhỏ. A100 và H100 dành cho tác vụ nặng hơn, B200 cho ultra-scale với khả dụng còn hạn chế."
+ },
+ {
+  "topic": "MIG — Multi-Instance GPU",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 3: MIG",
+  "question": "MIG (Multi-Instance GPU) cho phép làm gì?",
+  "options": [
+   "Gộp nhiều GPU thành một GPU ảo có VRAM lớn hơn",
+   "Chia một A100/H100 thành tối đa 7 instance cô lập để serve nhiều model nhỏ song song",
+   "Chia sẻ một GPU cho nhiều pod theo tỷ lệ phần trăm động",
+   "Chuyển đổi workload giữa GPU và CPU tự động"
+  ],
+  "correct_index": 1,
+  "explanation": "MIG chia A100/H100 thành tối đa 7 instance — ví dụ 1× A100 80GB thành 7× 10GB instance, mỗi instance cô lập cho inference model nhỏ. Dùng khi cần serve nhiều small model song song để maximize utilization. Bài cũng cảnh báo: KHÔNG BAO GIỜ overcommit GPU, dùng MIG thay vì fractional sharing vốn phức tạp."
+ },
+ {
+  "topic": "Cost strategy: Spot vs Reserved",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 3: Cost Strategy",
+  "question": "Với training job có thể bị gián đoạn, chiến lược mua GPU nào tiết kiệm nhất?",
+  "options": [
+   "Spot/Preemptible — tiết kiệm 60–70%",
+   "Reserved 1 năm — tiết kiệm 30–40%",
+   "Reserved 3 năm — tiết kiệm 50–60%",
+   "On-demand để đảm bảo không bị gián đoạn"
+  ],
+  "correct_index": 0,
+  "explanation": "Spot/Preemptible tiết kiệm 60–70% và phù hợp training job vì chúng interruptible. Reserved dành cho serving cần ổn định: dưới 6 tháng thì Spot/On-demand, 6–12 tháng thì Reserved 1 năm (30–40%), trên 12 tháng thì Reserved 3 năm (50–60%). Ví dụ thực tế fine-tune GPT-2 1B token: A100 on-demand $45, Spot $14, Reserved $27."
+ },
+ {
+  "topic": "Storage tiering",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 6: Storage Strategy",
+  "question": "KV cache đang hoạt động và embedding cache nên nằm ở tầng lưu trữ nào?",
+  "options": [
+   "Hot — Redis / GPU Memory, sub-ms latency",
+   "Warm — S3 Standard / EBS",
+   "Cool — S3 Infrequent Access",
+   "Archive — S3 Glacier Deep Archive"
+  ],
+  "correct_index": 0,
+  "explanation": "Hot (Redis/GPU memory, sub-ms): active KV cache, embedding cache, session state. Warm (S3 Standard/EBS, $0.023/GB/tháng): model weights, checkpoint gần đây, training data. Cool (S3 IA, $0.0125/GB): checkpoint cũ, dataset ít dùng. Archive (Glacier Deep Archive, $0.00099/GB): dữ liệu compliance."
+ },
+ {
+  "topic": "Shared Responsibility Model",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 2: Shared Responsibility",
+  "question": "Trong Shared Responsibility Model cho AI, trách nhiệm nào thuộc về đội của bạn chứ không phải nhà cung cấp cloud?",
+  "options": [
+   "Bảo trì phần cứng và tính khả dụng",
+   "Network backbone và chống DDoS",
+   "Prompt injection prevention và IAM least-privilege",
+   "Hạ tầng vật lý và hypervisor"
+  ],
+  "correct_index": 2,
+  "explanation": "Cloud provider lo hạ tầng vật lý, hypervisor, network backbone, DDoS protection, bảo trì phần cứng. Đội của bạn lo model security, mã hóa dữ liệu, access control (IAM least-privilege), prompt injection prevention và tuân thủ quyền riêng tư (NĐ13, GDPR). Ranh giới này quyết định phần nào bạn phải tự thiết kế."
+ },
+ {
+  "topic": "vLLM và PagedAttention",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 8: 6 Serving Engines",
+  "question": "Kỹ thuật chính của serving engine vLLM là gì?",
+  "options": [
+   "PagedAttention",
+   "RadixAttention",
+   "TurboMind engine",
+   "llama.cpp backend"
+  ],
+  "correct_index": 0,
+  "explanation": "vLLM dùng PagedAttention, mạnh ở ecosystem rộng nhất và API tương thích OpenAI. SGLang dùng RadixAttention + prefill-decode disaggregation. LMDeploy dùng TurboMind engine viết bằng C++. Ollama dùng llama.cpp backend cho edge/laptop inference. TensorRT-LLM dùng kernel tối ưu của NVIDIA."
+ },
+ {
+  "topic": "Tám tầng của production AI agent",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 7: 8 Layers",
+  "question": "Trong 8 tầng hạ tầng agent, tầng nào chứa LangGraph, CrewAI hoặc AutoGen?",
+  "options": [
+   "Tầng 1 — Compute",
+   "Tầng 2 — Orchestration",
+   "Tầng 3 — Message Queue",
+   "Tầng 4 — Cache"
+  ],
+  "correct_index": 1,
+  "explanation": "Tầng 2 Orchestration chạy LangGraph/CrewAI/AutoGen trên CPU pod, quản lý lifecycle và retry. Tầng 1 Compute gồm GPU cho agent chạy LLM, CPU cho orchestrator, serverless cho tool-calling. Nguyên tắc thiết kế xuyên suốt: agent phải stateless, externalize state ra Redis/Postgres để scale ngang."
+ },
+ {
+  "topic": "Terraform state management",
+  "difficulty": "Easy",
+  "slide_ref": "Day 16 - Section 4: Terraform",
+  "question": "Vì sao Terraform cần S3 backend kèm DynamoDB lock trong môi trường nhiều người dùng chung?",
+  "options": [
+   "Để lưu state chung và khóa không cho hai người apply đồng thời gây xung đột",
+   "Để tăng tốc độ apply lên khoảng gấp đôi",
+   "Để mã hóa các biến nhạy cảm trong file .tf",
+   "Để tự động tạo module có thể tái sử dụng"
+  ],
+  "correct_index": 0,
+  "explanation": "S3 backend lưu state file tập trung để cả team cùng nhìn một nguồn sự thật, còn DynamoDB lock ngăn hai người apply đồng thời làm hỏng state. Đi kèm là workspaces để cô lập dev/staging/prod. Các lựa chọn thay thế: Pulumi (Python/TypeScript, phổ biến với đội AI), OpenTofu (fork mã nguồn mở sau khi HashiCorp đổi sang BSL), AWS CDK."
+ },
+ {
+  "topic": "Specialized GPU cloud",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 1: Specialized GPU Providers",
+  "question": "Theo rule được nêu, nên phân bổ specialized GPU cloud và hyperscaler như thế nào?",
+  "options": [
+   "Specialized cloud cho training (cost), hyperscaler cho serving (managed scale + SLA)",
+   "Specialized cloud cho serving, hyperscaler cho training",
+   "Dùng specialized cloud cho tất cả để tối đa tiết kiệm",
+   "Dùng hyperscaler cho tất cả để đơn giản vận hành"
+  ],
+  "correct_index": 0,
+  "explanation": "Specialized cloud (Lambda H100 $2.49/hr, GMI $2.10/hr, RunPod $3.35/hr, CoreWeave) rẻ hơn 40–70% nhưng ít managed service, phải tự quản nhiều hơn và ít availability zone. Vì training là workload chịu được gián đoạn và cần tối ưu cost, còn serving cần managed scale và SLA, nên phân bổ theo đúng đặc tính đó."
+ },
+ {
+  "topic": "L40S — sleeper pick",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 3: L40S",
+  "question": "Vì sao L40S được gọi là \"sleeper pick\" cho production inference?",
+  "options": [
+   "Vì nó có VRAM lớn nhất trong các GPU inference",
+   "Vì 48GB VRAM với FP8 Transformer Engine, giá $0.40–0.86/hr — rẻ hơn H100 3–5 lần mà throughput vẫn cạnh tranh cho model ≤48GB",
+   "Vì nó là GPU duy nhất hỗ trợ MIG",
+   "Vì nó có bandwidth cao nhất trong bảng giá 2026"
+  ],
+  "correct_index": 1,
+  "explanation": "L40S kiến trúc Ada Lovelace, 48GB VRAM, hỗ trợ FP8 Transformer Engine, giá chỉ $0.40–0.86/hr so với H100 $2.99–4.31/hr. Với model vừa trong 48GB thì throughput cạnh tranh, nên đây là lựa chọn tối ưu chi phí cho production inference small/medium mà nhiều đội bỏ qua vì mặc định nghĩ tới H100."
+ },
+ {
+  "topic": "SGLang RadixAttention",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 8: SGLang Deep Dive",
+  "question": "RadixAttention của SGLang mang lại lợi ích gì cho ứng dụng multi-turn?",
+  "options": [
+   "Nén KV cache để tiết kiệm VRAM khoảng 50%",
+   "Reuse KV cache giữa các request có chung prefix, mang lại thêm 10–20% nhờ cache hits",
+   "Chạy song song trên nhiều GPU không cần tensor parallel",
+   "Tự động chuyển model sang định dạng Int4"
+  ],
+  "correct_index": 1,
+  "explanation": "RadixAttention tái sử dụng KV cache giữa các request có chung prefix — rất hợp với multi-turn chat và agent nơi system prompt cùng lịch sử lặp lại. SGLang còn có Compressed FSM giúp JSON output nhanh gấp 3 lần, prefill-decode disaggregation tách vai trò GPU, và powers hơn 400.000 GPU toàn cầu (xAI Grok 3, Azure DeepSeek R1)."
+ },
+ {
+  "topic": "LMDeploy TurboMind",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 8: LMDeploy",
+  "question": "Vì sao LMDeploy đạt throughput 1.8 lần so với vLLM baseline?",
+  "options": [
+   "Vì nó chỉ chạy được model nhỏ hơn 13B",
+   "TurboMind engine viết hoàn toàn bằng C++ — không có Python overhead, kèm persistent batch inference và blocked KV cache",
+   "Vì nó bỏ qua bước tokenization",
+   "Vì nó dùng nhiều GPU hơn cho cùng một request"
+  ],
+  "correct_index": 1,
+  "explanation": "TurboMind viết hoàn toàn bằng C++ nên loại bỏ Python overhead trong vòng lặp inference, kết hợp persistent batch inference và blocked KV cache. Ngoài ra Int4 inference nhanh gấp 2.4 lần FP16, khiến LMDeploy đặc biệt phù hợp cho quantized model deployment và ứng dụng nhạy cảm với latency."
+ },
+ {
+  "topic": "Docker image optimization cho AI",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 5: Docker Best Practices",
+  "question": "Kỹ thuật nào giúp giảm image AI từ 18GB xuống 6–8GB?",
+  "options": [
+   "Multi-stage build kết hợp cache pip layer riêng và .dockerignore loại trừ dataset/checkpoint",
+   "Nén image bằng gzip trước khi push lên registry",
+   "Chuyển từ base image CUDA sang Alpine",
+   "Xóa toàn bộ thư viện Python và cài lại lúc runtime"
+  ],
+  "correct_index": 0,
+  "explanation": "Multi-stage build tách giai đoạn build khỏi runtime, cache pip layer riêng (đặt trước COPY source) để tận dụng layer cache, và .dockerignore loại dataset/checkpoint khỏi build context. Base image nên là `nvcr.io/nvidia/cuda:12.1-runtime` chứ không phải bản full. Kết quả trực tiếp: cold start time giảm đáng kể."
+ },
+ {
+  "topic": "Kubernetes GPU config",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 5: K8s GPU Config",
+  "question": "Khi khai báo GPU cho pod trong Kubernetes, quy tắc bắt buộc là gì?",
+  "options": [
+   "requests phải nhỏ hơn limits để cho phép burst",
+   "requests = limits luôn luôn, và không bao giờ overcommit GPU",
+   "Chỉ cần khai báo limits, requests là tùy chọn",
+   "Đặt limits gấp đôi requests để tận dụng GPU rảnh"
+  ],
+  "correct_index": 1,
+  "explanation": "`nvidia.com/gpu: 1` phải có requests bằng limits — GPU không chia sẻ được theo kiểu CPU. Bài cảnh báo rõ: NEVER overcommit GPU, vì fractional sharing rất phức tạp; nếu cần chia nhỏ thì dùng MIG. Đi kèm là GPU Operator tự cài driver/toolkit/plugin và init container pre-download weights từ S3."
+ },
+ {
+  "topic": "Namespace cho ML teams",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 5: K8s Namespaces",
+  "question": "Vì sao nên tách namespace `ml-training`, `ml-serving` và `ml-experiments`?",
+  "options": [
+   "Vì Kubernetes yêu cầu mỗi loại workload một namespace riêng",
+   "Để tách resource quota, cost tracking, RBAC và mức độ ràng buộc phù hợp với từng loại workload",
+   "Để mỗi namespace dùng một phiên bản Kubernetes khác nhau",
+   "Để giảm số lượng node cần provision"
+  ],
+  "correct_index": 1,
+  "explanation": "ml-training cần resource quota riêng và cost tracking tách bạch; ml-serving cần RBAC riêng và cô lập production; ml-experiments là sandbox không đặt giới hạn chặt. Việc tách này biến các đặc tính vận hành khác nhau thành ranh giới rõ ràng thay vì trộn lẫn trong một namespace chung."
+ },
+ {
+  "topic": "GPU-to-GPU networking",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 6: Networking",
+  "question": "NVLink và InfiniBand khác nhau ở phạm vi sử dụng như thế nào?",
+  "options": [
+   "NVLink 900 GB/s cho intra-node; InfiniBand 400 Gbps cho inter-node (multi-node training)",
+   "NVLink cho inter-node; InfiniBand cho intra-node",
+   "Cả hai đều chỉ dùng cho intra-node, khác nhau ở giá",
+   "NVLink dùng cho inference, InfiniBand dùng cho training"
+  ],
+  "correct_index": 0,
+  "explanation": "NVLink 900 GB/s nối các GPU trong CÙNG một node. InfiniBand 400 Gbps nối giữa các node cho distributed training nhiều máy — AWS có EFA làm giải pháp thay thế. Ngoài ra VPC Endpoints (PrivateLink) giúp traffic không đi ra internet, vừa bảo mật vừa tiết kiệm egress cost."
+ },
+ {
+  "topic": "Multi-level cache cho agent",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 7: Agent Infra",
+  "question": "Kiến trúc cache ba tầng cho agent gồm những gì và mục tiêu hit rate là bao nhiêu?",
+  "options": [
+   "L1 in-process LRU, L2 Redis shared, L3 embedding cache — mục tiêu 60–80% hit rate",
+   "L1 Redis, L2 PostgreSQL, L3 S3 — mục tiêu 90% hit rate",
+   "L1 GPU memory, L2 CPU memory, L3 đĩa — mục tiêu 50% hit rate",
+   "L1 CDN, L2 API Gateway, L3 database — mục tiêu 70% hit rate"
+  ],
+  "correct_index": 0,
+  "explanation": "L1 là in-process LRU dict (nhanh nhất, riêng từng instance). L2 là Redis chia sẻ giữa các agent theo TTL. L3 là embedding cache để tránh embed lại cùng một truy vấn. Mục tiêu 60–80% hit rate nhằm giảm số lần gọi LLM API — đòn bẩy chi phí trực tiếp."
+ },
+ {
+  "topic": "Message queue cho agent",
+  "difficulty": "Medium",
+  "slide_ref": "Day 16 - Section 7: Agent Infra",
+  "question": "Khi cần độ trễ dưới 1ms và setup đơn giản cho hệ agent, nên chọn message queue nào?",
+  "options": [
+   "Redis Streams",
+   "Kafka",
+   "RabbitMQ",
+   "Cả ba đều tương đương về độ trễ"
+  ],
+  "correct_index": 0,
+  "explanation": "Redis Streams có latency dưới 1ms và setup đơn giản — phù hợp cho phần lớn trường hợp. Kafka mạnh ở throughput cao, durability và replay, dùng cho hệ agent quy mô lớn. RabbitMQ mạnh ở routing rule phức tạp và dead letter queue. Chọn theo yêu cầu chứ không theo độ phổ biến."
+ },
+ {
+  "topic": "GPU memory utilization",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 8: Practical Deploy Tips",
+  "question": "Vì sao nên đặt `gpu-memory-utilization` ở mức 0.80 thay vì 0.95?",
+  "options": [
+   "Vì 0.95 làm giảm throughput khoảng 15%",
+   "Vì 0.95 gây CUDA OOM khi engine thực hiện graph compilation",
+   "Vì driver NVIDIA không hỗ trợ mức trên 0.90",
+   "Vì 0.80 giúp GPU chạy mát hơn và bền hơn"
+  ],
+  "correct_index": 1,
+  "explanation": "80% là safe zone. Ở 95%, phần bộ nhớ còn lại không đủ cho bước graph compilation của engine, dẫn tới CUDA OOM ngay lúc khởi động hoặc khi gặp batch lớn. Hai tip đi kèm: continuous batching LUÔN bật, và `max_model_len` phải tune theo sử dụng thực tế — đừng set 128K nếu 99% request dưới 4K."
+ },
+ {
+  "topic": "Landing Zone",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 2: Landing Zone",
+  "question": "Vì sao Landing Zone phải được thiết kế đúng ngay từ đầu?",
+  "options": [
+   "Vì nhà cung cấp cloud chỉ cho phép cấu hình một lần duy nhất",
+   "Vì chi phí làm lại (rework) cao gấp khoảng 10 lần",
+   "Vì Landing Zone quyết định GPU nào được phép sử dụng",
+   "Vì Terraform không thể thay đổi cấu trúc account sau khi tạo"
+  ],
+  "correct_index": 1,
+  "explanation": "Rework cost khoảng 10 lần vì Landing Zone chạm vào cấu trúc nền: account structure (workload/shared services/security account), networking (Transit Gateway hub-spoke, private subnet cho GPU), centralized logging (CloudTrail + CloudWatch), và guardrails bằng SCPs. Sửa các thứ này sau khi đã có workload chạy đòi hỏi di chuyển tài nguyên và gián đoạn dịch vụ."
+ },
+ {
+  "topic": "Karpenter và scale-to-zero",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 3 & 5: Auto-provisioning",
+  "question": "Karpenter (AWS) và NAP (GCP) kết hợp với scale-to-zero ngoài giờ mang lại lợi ích gì?",
+  "options": [
+   "Tự động provision đúng GPU type theo pod request và tiết kiệm hơn 60% chi phí GPU idle",
+   "Tự động chuyển model sang GPU rẻ hơn khi phát hiện tải thấp",
+   "Tự động chia GPU thành các MIG instance theo nhu cầu",
+   "Tự động chuyển workload sang region có giá GPU thấp nhất"
+  ],
+  "correct_index": 0,
+  "explanation": "Karpenter auto-provision đúng loại GPU theo yêu cầu của pod thay vì phải cấu hình sẵn node group cố định; NAP là Cluster Autoscaler thông minh hơn của GCP. Kết hợp scale-to-zero ngoài giờ cao điểm giúp tiết kiệm trên 60% chi phí GPU idle — khoản lãng phí lớn nhất trong hạ tầng AI."
+ },
+ {
+  "topic": "Compute pattern cho agent",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 7: Agent Infra Chi Tiết",
+  "question": "Pattern compute được khuyến nghị cho hệ multi-agent là gì?",
+  "options": [
+   "Mọi agent đều chạy trên GPU để đảm bảo tốc độ đồng đều",
+   "Supervisor agent chạy CPU dispatch xuống specialist agent chạy GPU; tool-calling nhẹ dùng serverless",
+   "Toàn bộ hệ chạy serverless để tối ưu chi phí",
+   "Supervisor chạy GPU còn worker chạy CPU"
+  ],
+  "correct_index": 1,
+  "explanation": "GPU chỉ cần cho agent thực sự chạy LLM inference; orchestrator chủ yếu làm routing và quản lý state nên CPU là đủ. Pattern: supervisor agent (CPU) dispatch xuống specialist agent (GPU), còn tool-calling nhẹ đưa lên Lambda/serverless. Đây là cách cắt chi phí GPU mà không ảnh hưởng chất lượng."
+ },
+ {
+  "topic": "Multi-cloud và abstraction layer",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 1: Decision Framework",
+  "question": "Vì sao tổ chức dùng multi-cloud cần abstraction layer như Terraform hoặc Pulumi?",
+  "options": [
+   "Để giảm chi phí license của từng nhà cung cấp",
+   "Để hạ tầng portable — training ở provider GPU rẻ nhất, serving ở nơi latency tốt nhất, data ở nơi đáp ứng compliance",
+   "Vì các nhà cung cấp cloud không cho phép truy cập bằng console khi dùng nhiều provider",
+   "Để tự động chuyển đổi giữa các provider khi có sự cố"
+  ],
+  "correct_index": 1,
+  "explanation": "Chiến lược multi-cloud phân bổ theo thế mạnh: training ở provider có GPU rẻ nhất, serving ở nơi latency tốt nhất, data ở nơi đáp ứng compliance. Nhưng nếu hạ tầng được định nghĩa bằng console hoặc script riêng cho từng cloud thì không thể dịch chuyển; IaC làm cho cấu hình trở thành mã có thể tái tạo ở nhiều nơi."
+ },
+ {
+  "topic": "GPU-as-currency",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 9: Hot Trends 2026",
+  "question": "Câu chuyện Anthropic thuê nguyên Colossus 1 của xAI (220.000 GPU, 300MW, ~$1,25 tỷ/tháng) minh họa xu hướng nào?",
+  "options": [
+   "Các phòng lab AI đang hợp nhất thành một liên minh chung",
+   "\"GPU-as-currency\" — đối thủ trực tiếp thuê chéo compute của nhau khi dư utilization, vì utilization quan trọng hơn sở hữu",
+   "Nvidia đang mất dần vị thế trước custom silicon",
+   "Chi phí GPU đã giảm tới mức mọi công ty đều mua được"
+  ],
+  "correct_index": 1,
+  "explanation": "Trước deal này Colossus 1 chỉ chạy ở 11% công suất — hạ tầng đã xây thì để không cũng tốn tiền. Vì vậy hai đối thủ trực tiếp trên thị trường LLM trở thành khách hàng compute của nhau. Đây là một trong bốn xu hướng 2026, cùng với multi-cloud/multi-silicon là chuẩn mới, custom silicon đấu Nvidia, và power là nút thắt mới."
+ },
+ {
+  "topic": "Power là nút thắt mới",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 9: Hot Trends 2026",
+  "question": "Theo xu hướng 2026, nút thắt lớn nhất của hạ tầng AI đã chuyển từ đâu sang đâu?",
+  "options": [
+   "Từ chip sang điện, đất và hệ thống làm mát",
+   "Từ điện sang chip do thiếu hụt sản xuất",
+   "Từ băng thông mạng sang dung lượng lưu trữ",
+   "Từ nhân lực kỹ thuật sang ngân sách đầu tư"
+  ],
+  "correct_index": 0,
+  "explanation": "\"Power là nút thắt mới, không phải chip — đất/điện/làm mát khan hiếm hơn GPU.\" Điều này giải thích quy mô các dự án được đo bằng GW: OpenAI + Oracle Stargate kế hoạch 7GW, AWS Trainium Project Rainier tới 5GW, Google mở rộng 3.5GW, xAI Colossus khoảng 1–2GW. Việt Nam vẫn ở quy mô MW nên chơi ngách compliance/data residency."
+ },
+ {
+  "topic": "Vị thế cloud Việt Nam",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 1 & 9: VN Cloud",
+  "question": "Đâu là định vị hợp lý nhất của cloud Việt Nam (Viettel/VNG/FPT) trong bức tranh 2026?",
+  "options": [
+   "Cạnh tranh trực tiếp về scale GPU với hyperscaler",
+   "Chơi ngách compliance và data residency — giá 60–70% global, nhưng chưa có H100/H200 và ít availability zone",
+   "Tập trung vào pre-training model nền quy mô lớn",
+   "Trở thành nhà cung cấp specialized GPU cloud giá rẻ toàn cầu"
+  ],
+  "correct_index": 1,
+  "explanation": "VN cloud có GPU T4/V100 với giá khoảng 60–70% mức global và đáp ứng data residency theo NĐ13/PDPD. Hạn chế: chưa có H100/H200 và ít availability zone, quy mô vẫn ở mức MW so với GW của bigtech. Vì vậy lợi thế cạnh tranh thật nằm ở tuân thủ pháp lý chứ không phải năng lực tính toán."
+ },
+ {
+  "topic": "Chọn serving engine theo use case",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 8: 6 Serving Engines",
+  "question": "Hệ thống agent multi-turn cần structured output JSON. Serving engine nào phù hợp nhất và vì sao?",
+  "options": [
+   "vLLM — vì có ecosystem rộng nhất",
+   "SGLang — RadixAttention giúp multi-turn +20% và Compressed FSM cho JSON nhanh gấp 3 lần",
+   "TensorRT-LLM — vì nhanh hơn 30–50% ở concurrency cao",
+   "Ollama — vì dễ chuyển đổi giữa các model"
+  ],
+  "correct_index": 1,
+  "explanation": "Hai yêu cầu của bài toán khớp đúng hai điểm mạnh đặc trưng của SGLang: RadixAttention tái dùng KV cache cho prefix lặp lại trong multi-turn, và Compressed FSM tăng tốc sinh JSON gấp 3 lần. TensorRT-LLM mạnh ở ultra-scale concurrency, LMDeploy mạnh ở quantized/latency, còn vLLM là lựa chọn an toàn khi cần tương thích rộng."
+ },
+ {
+  "topic": "Đọc bảng thị phần cloud 2026",
+  "difficulty": "Hard",
+  "slide_ref": "Day 16 - Section 9: Cloud Market 2026",
+  "question": "AWS dẫn đầu thị phần cloud 28% nhưng chỉ tăng 19% YoY, trong khi Google Cloud 15% thị phần lại tăng 82% YoY. Cách đọc đúng là gì?",
+  "options": [
+   "AWS đang mất khách hàng vào tay Google Cloud",
+   "Thị phần tuyệt đối và tốc độ tăng trưởng là hai chỉ số khác nhau — AWS lớn nhất nhưng tăng chậm nhất, còn động lực tăng trưởng đang nghiêng về Azure (+40%, nhu cầu OpenAI) và GCP (TPU tự chủ)",
+   "Số liệu mâu thuẫn nên không đáng tin",
+   "Google Cloud sẽ vượt AWS về thị phần trong năm tới"
+  ],
+  "correct_index": 1,
+  "explanation": "Nền tăng trưởng khác nhau: 82% trên nền 15% thị phần khác hẳn 19% trên nền 28%. Bối cảnh: Azure +40% được đẩy bởi nhu cầu compute của OpenAI, GCP có TPU tự chủ nên biên lợi nhuận tốt hơn. Tổng doanh thu cloud infra Q2/2026 đạt $142B (+43% YoY), trong đó AI chiếm 19% tổng chi tiêu cloud — tăng từ 8% năm 2023."
+ }
 ]
