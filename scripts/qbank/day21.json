@@ -1,0 +1,422 @@
+[
+ {
+  "topic": "4 thành phần MLflow",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - MLflow: 4 Thành Phần Cốt Lõi",
+  "question": "Thành phần nào của MLflow chịu trách nhiệm quản lý vòng đời None → Staging → Production → Archived?",
+  "options": [
+   "Tracking",
+   "Projects",
+   "Models",
+   "Registry"
+  ],
+  "correct_index": 3,
+  "explanation": "Registry là nơi quản lý lifecycle của từng model version với workflow review & approve. Tracking log params/metrics/artifacts; Projects đóng gói code để reproducibility; Models chuẩn hoá format packaging (mlflow.sklearn, .pytorch, .pyfunc) để deploy nhiều nền tảng."
+ },
+ {
+  "topic": "log_param vs log_metric",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - MLflow Tracking: Log Experiments",
+  "question": "Trong MLflow, điều gì phân biệt `log_param` với `log_metric`?",
+  "options": [
+   "Param là giá trị bất biến trong một run; metric thay đổi theo step/epoch nên có thể vẽ đồ thị",
+   "Param lưu trên server còn metric lưu trong file local",
+   "Param chỉ nhận số nguyên còn metric nhận số thực",
+   "Param được log sau khi train xong còn metric log trước khi train"
+  ],
+  "correct_index": 0,
+  "explanation": "Params (lr, epochs, batch_size, data version) là cấu hình bất biến của một run. Metrics (loss, accuracy) được log kèm `step=epoch` nên MLflow vẽ được đường cong theo thời gian và so sánh giữa các run."
+ },
+ {
+  "topic": "MLflow signature",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - MLflow Tracking: Log Experiments",
+  "question": "`infer_signature(X_val, y_pred)` trong MLflow tạo ra thứ gì và dùng để làm gì?",
+  "options": [
+   "Chữ ký số xác thực model không bị chỉnh sửa sau khi log",
+   "Schema input/output của model, cần thiết khi đưa model ra serving",
+   "Hash của trọng số model dùng cho deduplication trên storage",
+   "Chữ ký của người approve model trước khi promote"
+  ],
+  "correct_index": 1,
+  "explanation": "Signature là schema input/output được suy diễn tự động từ dữ liệu mẫu. Khi serving, endpoint dùng signature để validate payload đến — sai schema bị reject ngay thay vì crash trong lúc predict."
+ },
+ {
+  "topic": "LLM autolog",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - MLflow: So Sánh Runs & LLM Autolog",
+  "question": "Gọi `mlflow.langchain.autolog()` mang lại lợi ích gì?",
+  "options": [
+   "Tự động chọn prompt tốt nhất trong Prompt Hub cho từng request",
+   "Tự động log prompt, input/output, token usage, latency và retrieval context mà không cần sửa code",
+   "Tự động cache kết quả LLM để giảm chi phí gọi API",
+   "Tự động chuyển LangChain chain thành DVC pipeline stage"
+  ],
+  "correct_index": 1,
+  "explanation": "Autolog (MLflow 2.8+) hook vào thư viện và ghi lại prompt template, nội dung input/output, token usage, latency, tên/phiên bản model và retrieval context của RAG — chỉ cần gọi một dòng trước khi chạy. Nó không tối ưu prompt, không cache và không liên quan DVC."
+ },
+ {
+  "topic": "DVC pointer file",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - DVC: Git cho Data",
+  "question": "Sau khi chạy `dvc add data/training_set.parquet`, thứ được commit vào Git là gì?",
+  "options": [
+   "Toàn bộ file parquet dưới dạng Git LFS blob",
+   "File `.dvc` nhỏ chứa hash của data, còn file data được thêm vào .gitignore",
+   "Một symlink trỏ tới bucket S3 chứa data",
+   "Bản nén gzip của file parquet để giảm dung lượng repo"
+  ],
+  "correct_index": 1,
+  "explanation": "DVC tạo pointer file `data/training_set.parquet.dvc` chứa hash nội dung, đồng thời tự thêm data vào .gitignore. Git chỉ track pointer; data thật nằm ở DVC cache/remote và được kéo về bằng `dvc pull`."
+ },
+ {
+  "topic": "dvc repro",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - DVC Pipeline: Reproducible Workflows",
+  "question": "`dvc repro` xử lý pipeline như thế nào?",
+  "options": [
+   "Chạy lại toàn bộ mọi stage từ đầu để đảm bảo kết quả sạch",
+   "Chỉ chạy lại các stage có deps thay đổi, bỏ qua stage còn nguyên vẹn nhờ caching",
+   "Chạy các stage song song theo số CPU có sẵn",
+   "Chỉ chạy stage cuối cùng của dvc.yaml"
+  ],
+  "correct_index": 1,
+  "explanation": "DVC so hash của deps (data, code, params) với lần chạy trước; stage nào stale mới chạy lại. Đây là điểm khác biệt so với việc chạy thủ công cả script — tránh retrain khi chỉ sửa bước evaluate."
+ },
+ {
+  "topic": "Deployment strategy - Shadow",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - 4 Deployment Strategies cho AI Models",
+  "question": "Đặc trưng cốt lõi của Shadow deployment là gì?",
+  "options": [
+   "Model mới nhận và xử lý traffic thật nhưng response chỉ được log, không trả về user",
+   "Model mới nhận 5% traffic thật và trả response cho nhóm user nhỏ",
+   "Model mới chạy song song ở môi trường riêng và load balancer switch toàn bộ khi sẵn sàng",
+   "Model mới thay thế từng pod một trong Kubernetes deployment"
+  ],
+  "correct_index": 0,
+  "explanation": "Shadow (dark launch) forward request tới cả hai model; v1 trả về user, v2 chỉ log để so sánh — rủi ro với user bằng không. Phương án 5% traffic là Canary, switch load balancer là Blue/Green, thay từng pod là Rolling."
+ },
+ {
+  "topic": "Eval gate",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - CI Job: Eval Gate",
+  "question": "Trong script eval gate, `sys.exit(1)` được gọi khi accuracy tụt quá threshold nhằm mục đích gì?",
+  "options": [
+   "Ghi log lỗi vào MLflow để reviewer đọc sau",
+   "Làm job GitHub Actions fail, qua đó chặn bước deploy phía sau",
+   "Xoá model version vừa đăng ký khỏi Registry",
+   "Tự động rollback production về version trước"
+  ],
+  "correct_index": 1,
+  "explanation": "Exit code khác 0 khiến step fail → job fail → các job có `needs` phía sau không chạy, nên deploy bị chặn. Việc xoá version hay rollback là hành động khác, không phải hệ quả của exit code."
+ },
+ {
+  "topic": "Testing pyramid",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - AI Testing Pyramid",
+  "question": "Trong AI Testing Pyramid, tầng nào nằm ở đáy (nhiều test nhất, chạy nhanh nhất)?",
+  "options": [
+   "Load Tests với k6/Locust",
+   "Data Tests với Great Expectations",
+   "Unit Tests với pytest cho preprocessing, tokenization",
+   "Model Tests behavioral và regression"
+  ],
+  "correct_index": 2,
+  "explanation": "Đáy pyramid là unit test cho preprocessing/tokenization/feature engineering — nhanh (toàn bộ suite < 30 giây) và nhiều nhất. Càng lên đỉnh (load test) càng ít test, càng chậm và càng tốn tài nguyên."
+ },
+ {
+  "topic": "Secrets trong GitHub Actions",
+  "difficulty": "Easy",
+  "slide_ref": "Day 21 - GitHub Actions: Cấu Trúc Workflow YAML",
+  "question": "MLFLOW_TRACKING_URI và AWS_ACCESS_KEY_ID nên được cung cấp cho workflow bằng cách nào?",
+  "options": [
+   "Hardcode trong file workflow YAML để mọi người trong team dùng chung",
+   "Đặt trong file .env commit vào repo private",
+   "Tham chiếu từ GitHub Secrets qua ${{ secrets.* }}",
+   "Truyền qua tham số dòng lệnh trong lệnh git push"
+  ],
+  "correct_index": 2,
+  "explanation": "Secrets được lưu mã hoá ở cấp repo/org và inject vào env lúc chạy. Hardcode trong YAML hoặc commit .env đều đưa credential vào lịch sử Git; repo private không phải biện pháp bảo vệ vì mọi collaborator và fork đều đọc được."
+ },
+ {
+  "topic": "CI/CD AI vs software truyền thống",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - CI/CD cho AI: Khác Gì Software Thông Thường?",
+  "question": "Điểm khác biệt nào giữa CI/CD cho AI và CI/CD phần mềm truyền thống buộc pipeline AI phải có eval gate?",
+  "options": [
+   "Model artifact có kích thước lớn hơn Docker image nên cần kiểm tra dung lượng",
+   "Deploy model là non-deterministic: cùng code nhưng chất lượng đầu ra phụ thuộc data và quá trình train",
+   "Thời gian build của AI lâu hơn nên cần checkpoint giữa chừng",
+   "Model weights không thể lưu trong Git nên cần bước xác thực bổ sung"
+  ],
+  "correct_index": 1,
+  "explanation": "Với software, cùng code cho ra cùng binary nên test pass là đủ. Với AI, pipeline input còn gồm data và quá trình train ngẫu nhiên, nên chất lượng phải được đo lại và so với baseline — đó chính là eval gate. Kích thước artifact và thời gian build là hệ quả vận hành, không phải lý do gốc."
+ },
+ {
+  "topic": "Rollback trigger",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - CI/CD cho AI: Khác Gì Software Thông Thường?",
+  "question": "So với hệ thống phần mềm thông thường, tín hiệu rollback nào là đặc thù của hệ thống AI?",
+  "options": [
+   "Error rate 5xx tăng đột biến",
+   "Accuracy sụt giảm và bias metrics vượt ngưỡng dù service vẫn trả 200 OK",
+   "P99 latency vượt SLA",
+   "Memory usage của container tăng liên tục"
+  ],
+  "correct_index": 1,
+  "explanation": "Model lỗi vẫn trả HTTP 200 với dự đoán sai — error rate, latency và memory đều bình thường. Chỉ metric chất lượng (accuracy, fairness gap) mới phát hiện được, nên rollback trigger của AI phải bao gồm cả nhóm metric này."
+ },
+ {
+  "topic": "Path filter cho training job",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - CI Pipeline Architecture cho AI Projects",
+  "question": "Vì sao training job trong workflow được đặt điều kiện chỉ chạy khi `data/` hoặc `src/` thay đổi?",
+  "options": [
+   "Vì GitHub Actions giới hạn số job chạy song song trên mỗi repo",
+   "Để PR chỉ sửa docs không kích hoạt training tốn GPU",
+   "Vì DVC không thể pull data khi commit chỉ chứa file markdown",
+   "Để giữ cache pip không bị invalidate giữa các lần chạy"
+  ],
+  "correct_index": 1,
+  "explanation": "Training là bước đắt nhất (GPU, hàng giờ). Path filter đảm bảo commit chỉ sửa README hay slide không kéo theo retrain. Giới hạn concurrency, khả năng pull của DVC và cache pip đều không phụ thuộc vào path filter này."
+ },
+ {
+  "topic": "Fail fast trong CI",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - CI Pipeline Architecture cho AI Projects",
+  "question": "Nguyên tắc \"fail fast\" trong pipeline AI được thể hiện cụ thể ra sao ở bước data validation?",
+  "options": [
+   "Data validation chạy song song với training để phát hiện lỗi sớm nhất",
+   "Data validation fail thì dừng pipeline ngay, không khởi động training tốn GPU",
+   "Data validation chỉ kiểm tra vài dòng đầu để trả kết quả nhanh",
+   "Data validation chạy sau training để so sánh với data model đã học"
+  ],
+  "correct_index": 1,
+  "explanation": "Data validation là job rẻ, chạy trước; training khai báo `needs: [data-validation]` nên chỉ start khi validation pass. Chạy song song sẽ đánh mất chính lợi ích tiết kiệm GPU; kiểm tra vài dòng đầu là lấy mẫu, không phải fail fast."
+ },
+ {
+  "topic": "Blue/Green trade-off",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - Blue/Green & Shadow Mode",
+  "question": "Blue/Green deployment đánh đổi điều gì để có được rollback tức thì?",
+  "options": [
+   "Phải chấp nhận một khoảng downtime ngắn khi switch load balancer",
+   "Phải chạy song song hai môi trường đầy đủ nên tốn gấp đôi hạ tầng trong thời gian chuyển giao",
+   "Phải viết logic chia traffic theo phần trăm phức tạp",
+   "Phải chấp nhận nhiều version chạy lẫn lộn trong suốt quá trình deploy"
+  ],
+  "correct_index": 1,
+  "explanation": "Rollback tức thì có được vì v1 vẫn sống nguyên vẹn thêm ~30 phút sau khi switch — cái giá là gấp đôi resource. Blue/Green vốn zero downtime; logic chia traffic theo % là của Canary; version lẫn lộn là nhược điểm của Rolling."
+ },
+ {
+  "topic": "Shadow mode giới hạn",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - Blue/Green & Shadow Mode",
+  "question": "Điều gì Shadow mode KHÔNG thể cho bạn biết, dù nó chạy trên traffic thật?",
+  "options": [
+   "Latency của model mới dưới tải thật",
+   "Sự khác biệt giữa prediction của v2 và v1",
+   "Tỷ lệ lỗi/exception của model mới",
+   "Phản ứng thực tế của user với output của model mới, ví dụ CTR"
+  ],
+  "correct_index": 3,
+  "explanation": "Vì response của v2 không bao giờ đến user, mọi metric hành vi (CTR, conversion, khiếu nại) đều không quan sát được. Latency, diff prediction và error rate thì đo được đầy đủ vì v2 vẫn thực thi thật."
+ },
+ {
+  "topic": "A/B routing deterministic",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - A/B Testing cho AI Models",
+  "question": "Vì sao routing A/B dùng `hash(user_id) % 100` thay vì `random()` cho mỗi request?",
+  "options": [
+   "Vì hash nhanh hơn random nên giảm latency của endpoint",
+   "Để cùng một user luôn rơi vào một variant, giữ trải nghiệm nhất quán và phép đo hợp lệ",
+   "Để tỷ lệ chia traffic chính xác tuyệt đối 10/90 trên mọi lô request",
+   "Vì random() không thread-safe trong môi trường serving đa luồng"
+  ],
+  "correct_index": 1,
+  "explanation": "Hash theo user_id là deterministic: user thấy cùng variant qua mọi request và phiên, nên user không bị đổi hành vi model giữa chừng và metric per-user (CTR, conversion) quy được về đúng variant. Random per-request phá cả hai điều đó."
+ },
+ {
+  "topic": "Ý nghĩa p-value",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - A/B Testing cho AI Models",
+  "question": "Trong A/B test, p-value = 0.03 nên được diễn giải thế nào?",
+  "options": [
+   "Xác suất model B tốt hơn model A là 97%",
+   "Model B tốt hơn model A đúng 3% về chỉ số đo",
+   "Nếu hai variant thực sự không khác nhau thì xác suất quan sát được chênh lệch lớn như vậy chỉ là 3%",
+   "Cần thêm 3% mẫu nữa mới đủ kết luận"
+  ],
+  "correct_index": 2,
+  "explanation": "p-value là xác suất của dữ liệu quan sát được (hoặc cực đoan hơn) dưới giả thuyết null là hai variant như nhau. Nó không phải xác suất B thắng, không phải độ lớn hiệu ứng (effect size), cũng không nói gì về cỡ mẫu còn thiếu."
+ },
+ {
+  "topic": "Model test - directional",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - Model Tests · Data Tests · Load Tests",
+  "question": "\"Thêm từ 'not' vào câu thì sentiment phải đảo chiều\" là ví dụ của loại model test nào?",
+  "options": [
+   "Invariance test",
+   "Directional test",
+   "Regression test",
+   "Fairness test"
+  ],
+  "correct_index": 1,
+  "explanation": "Directional test kỳ vọng một thay đổi input làm output đổi theo hướng xác định. Invariance kỳ vọng output KHÔNG đổi (xoay ảnh 90°); regression so accuracy với version trước trên golden set; fairness đo chênh lệch accuracy giữa các subgroup."
+ },
+ {
+  "topic": "Soak test vs spike test",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - Model Tests · Data Tests · Load Tests",
+  "question": "Muốn phát hiện memory leak trong service inference, loại load test nào phù hợp nhất?",
+  "options": [
+   "Stress test: tăng dần đến 500 RPS để tìm breaking point",
+   "Spike test: nhảy từ 0 lên 500 RPS đột ngột",
+   "Soak test: giữ 50 RPS liên tục trong một giờ",
+   "Baseline test: 50 RPS, kiểm tra P95 < 500ms"
+  ],
+  "correct_index": 2,
+  "explanation": "Memory leak lộ ra theo thời gian chứ không theo tải đỉnh, nên cần chạy tải vừa phải kéo dài (soak). Stress tìm giới hạn công suất, spike kiểm tra auto-scaling, baseline xác nhận SLA ở tải bình thường."
+ },
+ {
+  "topic": "Data test - distribution drift",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - CI Job: Data Validation",
+  "question": "Kiểm tra nào trong checkpoint Great Expectations phát hiện được việc phân phối feature đã dịch chuyển so với baseline?",
+  "options": [
+   "Schema validation: đúng columns và dtypes",
+   "Null rate mỗi column ≤ 5%",
+   "KL-divergence / KS test so với baseline distribution",
+   "Volume check: ≥ 10,000 rows mỗi batch"
+  ],
+  "correct_index": 2,
+  "explanation": "Drift là thay đổi hình dạng phân phối, chỉ đo được bằng thống kê so sánh hai phân phối (KL-divergence, KS test). Schema, null rate và volume đều có thể pass hoàn hảo trong khi phân phối đã dịch chuyển hoàn toàn."
+ },
+ {
+  "topic": "MLflow alias",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - MLflow Model Registry: Lifecycle Management",
+  "question": "Lợi ích của việc load model bằng alias `models:/sentiment_classifier@champion` thay vì số version cụ thể là gì?",
+  "options": [
+   "Alias tự động chọn version có accuracy cao nhất trong Registry",
+   "Code serving không phải sửa khi promote version mới — chỉ cần trỏ lại alias trong Registry",
+   "Alias làm model load nhanh hơn nhờ cache phía client",
+   "Alias cho phép load nhiều version cùng lúc trong một tiến trình"
+  ],
+  "correct_index": 1,
+  "explanation": "Alias là con trỏ có tên do người vận hành gán (champion = Production hiện tại, challenger = ứng viên A/B). Đổi model production chỉ là trỏ lại alias, không cần redeploy code. Registry không tự chọn theo accuracy."
+ },
+ {
+  "topic": "DVC vs MLflow",
+  "difficulty": "Medium",
+  "slide_ref": "Day 21 - DVC Experiments",
+  "question": "Phát biểu nào mô tả đúng quan hệ giữa DVC và MLflow trong một dự án AI?",
+  "options": [
+   "Bổ sung nhau: DVC lo pipeline và data versioning, MLflow lo metrics và model registry",
+   "Thay thế nhau: chọn một trong hai tuỳ quy mô team",
+   "MLflow là backend lưu trữ mà DVC gọi tới để đẩy data",
+   "DVC chỉ dùng cho dữ liệu ảnh, MLflow chỉ dùng cho dữ liệu bảng"
+  ],
+  "correct_index": 0,
+  "explanation": "Hai công cụ giải quyết hai lớp khác nhau và được dùng đồng thời: `git commit` version code, `dvc push` version data, MLflow ghi lại metrics và quản lý lifecycle model. Chúng không gọi lẫn nhau và không phân chia theo loại dữ liệu."
+ },
+ {
+  "topic": "OIDC federation",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - CI Best Practices cho AI Repositories",
+  "question": "Vì sao production khuyến nghị dùng OIDC federation thay cho AWS access key lưu trong GitHub Secrets?",
+  "options": [
+   "OIDC cho phép workflow chạy nhanh hơn do bỏ bước xác thực",
+   "OIDC cấp credential ngắn hạn hết hạn sau mỗi run, nên không tồn tại key dài hạn để bị lộ",
+   "OIDC cho phép chia sẻ credential giữa nhiều repo mà không cần cấu hình lại",
+   "OIDC mã hoá secret bằng khoá riêng của repo thay vì khoá của GitHub"
+  ],
+  "correct_index": 1,
+  "explanation": "Rủi ro của access key nằm ở tuổi thọ: một lần rò rỉ là kẻ tấn công dùng được cho tới khi ai đó xoay key. OIDC đổi token ngắn hạn theo từng run và ràng buộc vào repo/branch cụ thể, nên bề mặt tấn công gần như biến mất. Nó không nhanh hơn và mục đích không phải chia sẻ credential rộng hơn."
+ },
+ {
+  "topic": "Eval gate - held-out set cố định",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - CI Job: Eval Gate",
+  "question": "Vì sao eval gate phải dùng held-out test set CỐ ĐỊNH, không shuffle lại mỗi lần chạy?",
+  "options": [
+   "Vì shuffle làm pipeline chậm hơn đáng kể khi dataset lớn",
+   "Vì nếu test set đổi mỗi lần thì chênh lệch accuracy giữa new và prod lẫn nhiễu do đổi mẫu, không còn quy được cho model",
+   "Vì Great Expectations yêu cầu batch request trỏ tới một file bất biến",
+   "Vì MLflow không cho phép log cùng metric name trên hai test set khác nhau"
+  ],
+  "correct_index": 1,
+  "explanation": "Gate so sánh hai model, nên mọi biến khác phải giữ nguyên. Đổi test set đưa vào phương sai lấy mẫu: model mới có thể \"tụt 2%\" chỉ vì bốc phải mẫu khó hơn, khiến ngưỡng chặn deploy vô nghĩa theo cả hai chiều. Tốc độ, Great Expectations và giới hạn của MLflow đều không phải lý do."
+ },
+ {
+  "topic": "Ngưỡng khác nhau theo metric",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - CI Job: Eval Gate",
+  "question": "Eval gate của một team chỉ kiểm tra accuracy với threshold 2%. Model mới pass gate với accuracy +0.3% nhưng gây sự cố production. Nguyên nhân có khả năng nhất theo best practice của bài học là gì?",
+  "options": [
+   "Threshold 2% quá lỏng, đáng lẽ phải đặt 0.5%",
+   "Gate không track các metric khác như latency P95, F1 hay fairness gap — model mới nặng hơn nên phá SLA latency",
+   "Model chưa được register vào Registry trước khi deploy",
+   "Gate chạy trên Staging thay vì trên Production baseline"
+  ],
+  "correct_index": 1,
+  "explanation": "Best practice là track nhiều metric với ngưỡng riêng: accuracy ±2%, latency ±10%, cộng F1/AUC và fairness. Một model chính xác hơn nhưng lớn hơn hoàn toàn có thể pass gate accuracy mà vẫn phá SLA. Siết threshold accuracy không phát hiện được vấn đề nằm ở chiều đo khác."
+ },
+ {
+  "topic": "Canary với model AI",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - Canary Deployment: Deep-Dive",
+  "question": "Ở bước canary 5%, monitoring dựa trên error rate và latency vẫn có thể bỏ lọt regression của model. Bổ sung nào là cần thiết nhất?",
+  "options": [
+   "Tăng thẳng lên 50% traffic để thu thập mẫu nhanh hơn",
+   "Đo metric chất lượng của nhánh canary (accuracy trên traffic có nhãn, hoặc proxy như tỷ lệ từ chối/đổi ý của user) và đặt ngưỡng rollback theo nó",
+   "Chuyển sang Blue/Green để có rollback tức thì",
+   "Kéo dài health check lên 24 giờ trước khi tăng traffic"
+  ],
+  "correct_index": 1,
+  "explanation": "Model hỏng vẫn trả 200 OK đúng SLA, nên hai tín hiệu hạ tầng không đủ; rollout steps của bài học nêu rõ trigger rollback gồm cả \"accuracy drop >2%\". Tăng traffic sớm làm tăng blast radius; Blue/Green rollback nhanh nhưng vẫn không phát hiện được nếu không đo chất lượng; kéo dài chờ không thêm chiều đo mới."
+ },
+ {
+  "topic": "Data leakage test",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - Unit Tests & Integration Tests",
+  "question": "Unit test `test_feature_engineering_no_leakage` assert rằng `\"label\" not in features.columns`. Vì sao kiểm tra này thuộc tầng unit test chứ không phải eval gate?",
+  "options": [
+   "Vì eval gate chỉ chạy trên Production, còn leakage là vấn đề của môi trường dev",
+   "Vì leakage làm accuracy trên test set TĂNG, nên eval gate sẽ cho pass — chỉ kiểm tra cấu trúc code mới bắt được",
+   "Vì eval gate không có quyền truy cập vào DataFrame trung gian",
+   "Vì unit test chạy nhanh hơn nên phù hợp cho các kiểm tra đơn giản"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây là điểm mù của gate dựa trên metric: leak target vào feature làm model trông tốt hơn trên mọi tập offline, nên gate không những không chặn mà còn ưu ái model lỗi. Chỉ kiểm tra ở tầng code/dữ liệu — đúng vai trò unit test — mới phát hiện được."
+ },
+ {
+  "topic": "GitOps cho AI",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - Multi-Environment CD Pipeline",
+  "question": "Với GitOps (ArgoCD/Flux) cho AI, tính chất nào mang lại lợi ích lớn nhất khi cần rollback khẩn cấp?",
+  "options": [
+   "Mọi thay đổi hạ tầng đều là commit trong Git nên rollback là `git revert` và cluster tự sync về trạng thái cũ",
+   "ArgoCD giữ sẵn snapshot của model weights nên khôi phục không cần tải lại",
+   "GitOps cho phép chạy nhiều namespace song song nên luôn có bản dự phòng",
+   "GitOps tự động phát hiện accuracy drop và revert commit tương ứng"
+  ],
+  "correct_index": 0,
+  "explanation": "Bản chất GitOps là declarative: trạng thái mong muốn nằm trong repo, controller liên tục sync cluster về đó. Revert commit là khôi phục toàn bộ manifest về trạng thái đã biết là tốt, không cần thao tác kubectl thủ công. ArgoCD không lưu weights và không tự đo chất lượng model."
+ },
+ {
+  "topic": "Reproducibility hai lớp",
+  "difficulty": "Hard",
+  "slide_ref": "Day 21 - Key Takeaways",
+  "question": "Một run MLflow ghi lại đầy đủ params, metrics, artifacts và git_commit, nhưng team vẫn không reproduce được accuracy. Thiếu sót nào có khả năng nhất?",
+  "options": [
+   "Chưa log signature nên model load sai schema",
+   "Run không gắn với một data version cụ thể (không có .dvc hash / tag data_version), nên train lại trên data đã thay đổi",
+   "Chưa promote model lên Staging trong Registry",
+   "Artifacts chưa được lưu trên remote storage nên bị mất"
+  ],
+  "correct_index": 1,
+  "explanation": "Git commit chỉ pin code; đầu vào còn lại là data. Nếu không tag data_version hoặc gắn .dvc hash vào run thì `git checkout` + train lại sẽ chạy trên data khác — đúng tình huống \"hôm qua 92%, hôm nay 88%\" mà DVC sinh ra để giải quyết. Signature, stage và nơi lưu artifact không ảnh hưởng tới kết quả train."
+ }
+]

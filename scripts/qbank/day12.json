@@ -1,0 +1,422 @@
+[
+ {
+  "topic": "Ba tính chất khiến agent khác web app",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 01: Agent không phải web app",
+  "question": "Ba tính chất khiến agent phá vỡ hạ tầng web thông thường là gì?",
+  "options": [
+   "Long-running, Stateful và Costly",
+   "Fast, Cheap và Reliable",
+   "Stateless, Idempotent và Scalable",
+   "Input, Process và Output"
+  ],
+  "correct_index": 0,
+  "explanation": "① Long-running: reasoning loop chạy 10–60s hoặc lâu hơn, phá vỡ timeout 29–60s của gateway/proxy. ② Stateful: có conversation memory + tool history, mâu thuẫn quy tắc \"stateless process\" của 12-factor. ③ Costly: mỗi call gửi lại cả history nên cost tăng siêu tuyến tính (50–1000× token so với chat)."
+ },
+ {
+  "topic": "Base image cho container Python",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 03: Base Image Showdown",
+  "question": "Vì sao nên TRÁNH `python:3.12-alpine` cho ứng dụng ML/AI?",
+  "options": [
+   "Vì Alpine không hỗ trợ Python 3.12",
+   "Vì Alpine dùng musl libc nên nhiều package không có wheel sẵn và phải compile từ source, khiến build cực chậm",
+   "Vì Alpine có kích thước lớn hơn slim",
+   "Vì Alpine không cho phép chạy container ở chế độ non-root"
+  ],
+  "correct_index": 1,
+  "explanation": "Alpine dùng musl libc thay vì glibc, nên package không có wheel musllinux phải compile từ source — benchmark cũ với pandas + matplotlib: slim mất 30s còn Alpine mất 26 phút. Năm 2026 đã đỡ hơn (numpy, pandas, matplotlib đã có wheel musllinux) nhưng matplotlib chưa có aarch64 nên trên Apple Silicon/Graviton vẫn phải build từ source. `python:3.12-slim` (~150MB) vẫn là default tốt."
+ },
+ {
+  "topic": "SSE cho streaming",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 04: Streaming bằng SSE",
+  "question": "Vì sao SSE được chọn làm chuẩn de-facto cho LLM streaming thay vì WebSocket?",
+  "options": [
+   "Vì SSE nhanh hơn WebSocket khoảng hai lần",
+   "Vì token streaming là một chiều (server→client), chạy trên HTTP/1.1 thường và EventSource tự reconnect",
+   "Vì WebSocket không hỗ trợ định dạng JSON",
+   "Vì SSE mã hóa dữ liệu tốt hơn WebSocket"
+  ],
+  "correct_index": 1,
+  "explanation": "Token streaming vốn một chiều nên không cần kênh song công của WebSocket. SSE chạy trên HTTP/1.1 thường, EventSource tự reconnect kèm Last-Event-ID, và cả OpenAI lẫn Anthropic đều dùng SSE (`stream: true`). Hai bẫy proxy hay gặp: nginx `proxy_buffering on` gom token lại, và agent im lặng quá 60s bị cắt idle nếu không có heartbeat."
+ },
+ {
+  "topic": "Ba loại health probe",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 10: Health Checks",
+  "question": "Probe nào khi fail sẽ gỡ instance khỏi load balancer nhưng KHÔNG restart container?",
+  "options": [
+   "Liveness probe",
+   "Readiness probe",
+   "Startup probe",
+   "Cả ba probe đều restart container khi fail"
+  ],
+  "correct_index": 1,
+  "explanation": "Liveness — \"còn sống?\", fail thì restart container. Readiness — \"sẵn sàng nhận request?\", fail thì gỡ khỏi LB nhưng KHÔNG restart. Startup — cho boot chậm (load weights), gate hai probe kia đến khi pass. Cấu hình nhầm readiness thành liveness sẽ tạo restart loop vô ích."
+ },
+ {
+  "topic": "Bốn tier deployment",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 06: 4 Tier Deployment",
+  "question": "Tier 0 trong phân loại deployment 2026 nghĩa là gì?",
+  "options": [
+   "Chạy trực tiếp trên localhost không cần container",
+   "Managed agent runtime — không phải viết Dockerfile hay quản scaling",
+   "Kubernetes self-managed với toàn quyền kiểm soát",
+   "Deploy lên Railway hoặc Render trong dưới 10 phút"
+  ],
+  "correct_index": 1,
+  "explanation": "Tier 0: managed agent runtime (Bedrock AgentCore, Vertex Agent Runtime) — platform cấp sẵn runtime, session, memory, identity. Tier 1: Railway/Render/Fly.io cho MVP, deploy dưới 10 phút. Tier 2: Cloud Run/ECS Fargate auto-scale cho production. Tier 3: Kubernetes self-managed, full control, large-scale."
+ },
+ {
+  "topic": "Externalize state",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 04: Statefulness",
+  "question": "Agent có memory nhưng 12-factor yêu cầu stateless process. Cách giải quyết đúng là gì?",
+  "options": [
+   "Bỏ nguyên tắc stateless vì agent không áp dụng được",
+   "Externalize state ra Redis/Postgres — không giữ trên instance, nên bất kỳ instance nào cũng phục vụ được request",
+   "Dùng sticky session để mỗi user luôn vào đúng một instance",
+   "Chỉ chạy một instance duy nhất để state không bị phân mảnh"
+  ],
+  "correct_index": 1,
+  "explanation": "Externalize state chứ không bỏ nguyên tắc: conversation/session đưa vào Redis hoặc Postgres, LangGraph checkpointer (PostgresSaver) keyed bằng `thread_id`. Nhờ đó bất kỳ instance nào cũng phục vụ được request nên scale tự do. Sticky session chỉ là best-effort — Cloud Run phá vỡ nó khi instance bị kill."
+ },
+ {
+  "topic": "Cost protection",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 09: Cost Protection",
+  "question": "Bẫy lớn nhất khi dựa vào \"spend alert\" của nhà cung cấp để kiểm soát chi phí là gì?",
+  "options": [
+   "Alert chỉ THÔNG BÁO chứ KHÔNG CHẶN — hard cap là tính năng riêng phải bật thủ công",
+   "Alert chỉ gửi qua email nên dễ bị bỏ sót",
+   "Alert tính phí thêm theo số lần gửi",
+   "Alert chỉ hoạt động với tài khoản doanh nghiệp"
+  ],
+  "correct_index": 0,
+  "explanation": "Spend alert là phản ứng SAU khi tiền đã tiêu. Ví dụ thật trong bài: $47.000 trong 11 ngày do 4 agent retry vô hạn — có log nhưng không có hard limit. Vì vậy cần pre-call admission control: check budget còn lại TRƯỚC khi gọi LLM và từ chối nếu vượt, kèm per-tenant budget, rate limiting và circuit breaker."
+ },
+ {
+  "topic": "Framework vs Runtime",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 07: Framework vs Runtime",
+  "question": "Khác biệt giữa tầng framework và tầng managed runtime là gì?",
+  "options": [
+   "Framework quyết định code bạn viết; runtime quyết định ai bị đánh thức lúc 3h sáng",
+   "Framework dành cho dev, runtime dành cho production",
+   "Framework là mã nguồn mở, runtime luôn là proprietary",
+   "Framework chạy trên client, runtime chạy trên server"
+  ],
+  "correct_index": 0,
+  "explanation": "Ví dụ: Anthropic có Claude Agent SDK (framework) và Claude Managed Agents (runtime); AWS có Strands Agents và Bedrock AgentCore. Đổi framework nghĩa là refactor code; đổi runtime chỉ là re-deploy. So sánh nhầm tầng là lỗi phổ biến nhất khi đọc tài liệu vendor."
+ },
+ {
+  "topic": "MCP transport",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 08: stdio vs Streamable HTTP",
+  "question": "Khi nào một MCP server bắt buộc phải dùng OAuth 2.1?",
+  "options": [
+   "Luôn luôn, kể cả khi chạy stdio trên máy local",
+   "Khi dùng transport Streamable HTTP để phục vụ nhiều client từ xa",
+   "Chỉ khi server xử lý dữ liệu cá nhân",
+   "Chỉ khi server được đăng ký trong Official MCP Registry"
+  ],
+  "correct_index": 1,
+  "explanation": "stdio (local) cho client spawn server làm subprocess, nói chuyện qua stdin/stdout và lấy credential từ env — KHÔNG cần OAuth. Streamable HTTP (remote) là một endpoint phục vụ nhiều client, và theo spec 2026-07-28 thì phải dùng OAuth 2.1. Khoảnh khắc đưa server ra remote, nó là một API công khai với đầy đủ nghĩa vụ."
+ },
+ {
+  "topic": "Model là dependency không kiểm soát",
+  "difficulty": "Easy",
+  "slide_ref": "Day 12 - Section 02: Model là dependency",
+  "question": "Vì sao model được coi là loại dependency khác hẳn thư viện trong `requirements.txt`?",
+  "options": [
+   "Vì model có dung lượng lớn hơn thư viện thông thường",
+   "Vì model sống trên server của người khác, có thể bị khai tử và có trần thông lượng do nhà cung cấp đặt",
+   "Vì model không thể pin phiên bản",
+   "Vì model được cập nhật tự động mỗi tuần"
+  ],
+  "correct_index": 1,
+  "explanation": "Khác thư viện bạn pin trong requirements.txt, model nằm ngoài tầm kiểm soát: provider báo trước tối thiểu 60 ngày rồi request bắt đầu fail (Assistants API gỡ 26/8/2026, gpt-4o/4-turbo/3.5 tắt 23/10/2026), và rate limit RPM/TPM là trần do vendor đặt chứ không phải autoscaler của bạn. Lịch khai tử model trở thành forcing function lên release calendar."
+ },
+ {
+  "topic": "Vấn đề timeout",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 04: Vấn đề timeout",
+  "question": "Agent reasoning loop chạy 90 giây nhưng AWS API Gateway trả 504 sau 29 giây. Hai cách vượt qua vấn đề này là gì?",
+  "options": [
+   "Tăng số instance và giảm số tool mà agent được gọi",
+   "Stream từng token, hoặc route qua private network / chuyển sang async job",
+   "Đổi sang model nhỏ hơn và hạ temperature",
+   "Cache toàn bộ câu trả lời và trả về kết quả cũ"
+  ],
+  "correct_index": 1,
+  "explanation": "Streaming giữ kết nối sống bằng cách gửi token liên tục nên timeout \"initial byte\" và idle không kích hoạt. Cách còn lại là bỏ hẳn mô hình request/response: route qua private network (Railway private network không giới hạn) hoặc chuyển sang async job — API trả `job_id` ngay, client poll hoặc nhận webhook."
+ },
+ {
+  "topic": "Async job pattern",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 04: Chuyển sang async job",
+  "question": "Với tác vụ batch lớn không gấp, phương án nào tiết kiệm chi phí nhất?",
+  "options": [
+   "Chạy nhiều instance song song để rút ngắn thời gian",
+   "Dùng Batch API — rẻ hơn 50%, OpenAI trả trong 24h, Anthropic phần lớn xong dưới 1 giờ",
+   "Tăng rate limit tier lên mức cao nhất",
+   "Chuyển sang self-host model trên GPU riêng"
+  ],
+  "correct_index": 1,
+  "explanation": "Batch API của cả OpenAI lẫn Anthropic giảm 50% chi phí cho khối lượng không cần realtime. Pattern async job chuẩn: client POST lên API, nhận `job_id` ngay, worker chạy agent loop từ queue (Celery/RQ/Cloud Tasks), rồi client poll hoặc nhận webhook khi xong."
+ },
+ {
+  "topic": "Client-side hiếm khi keyless",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 05: Client-side hiếm khi keyless",
+  "question": "Vì sao agent \"client-side\" gọi model frontier vẫn cần backend proxy?",
+  "options": [
+   "Vì trình duyệt không hỗ trợ giao thức HTTPS tới nhà cung cấp LLM",
+   "Vì build tool nhúng biến VITE_/NEXT_PUBLIC_ thẳng vào JS bundle, nên API key sẽ ship xuống trình duyệt và bị lấy cắp",
+   "Vì model frontier chỉ chấp nhận request từ địa chỉ IP cố định",
+   "Vì trình duyệt giới hạn kích thước response tối đa 4.5MB"
+  ],
+  "correct_index": 1,
+  "explanation": "Bất kỳ biến môi trường nào có prefix public đều bị bundler nhúng vào file JS mà ai cũng xem được. Vì vậy key phải được thêm ở tầng Backend-for-Frontend, không bao giờ xuống browser — kèm rate limit. Chỉ on-device hoặc in-browser model (WebGPU, Apple Foundation Models, Chrome Gemini Nano) mới thật sự keyless."
+ },
+ {
+  "topic": "Autoscale theo concurrency",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 10: Horizontal Scaling",
+  "question": "Vì sao không nên autoscale agent theo CPU utilization?",
+  "options": [
+   "Vì CPU utilization không đo được trong container",
+   "Vì agent là I/O-bound — một instance có thể đầy request đang chờ LLM mà CPU vẫn thấp",
+   "Vì CPU utilization thay đổi quá nhanh nên gây flapping",
+   "Vì nhà cung cấp cloud tính phí thêm cho metric CPU"
+  ],
+  "correct_index": 1,
+  "explanation": "Agent phần lớn thời gian ngồi chờ phản hồi từ LLM, nên CPU thấp trong khi worker pool đã cạn. Phải autoscale theo concurrency hoặc queue depth (Knative, KEDA theo `num_requests_running` của vLLM, Ray Serve `target_ongoing_requests`). Điều kiện tiên quyết là agent phải stateless với state nằm ở DB/Redis."
+ },
+ {
+  "topic": "Prompt cache vs Semantic cache",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 10: Cache để cắt cost",
+  "question": "Khác biệt giữa prompt caching của provider và semantic cache tự xây là gì?",
+  "options": [
+   "Prompt cache so khớp prefix từng byte; semantic cache so khớp ý nghĩa nhưng có thể trả câu cũ đã lỗi thời",
+   "Prompt cache chỉ dùng được với model open-source",
+   "Semantic cache luôn rẻ hơn prompt cache trong mọi trường hợp",
+   "Prompt cache lưu ở client còn semantic cache lưu ở server"
+  ],
+  "correct_index": 0,
+  "explanation": "Prompt caching tái dùng KV-cache của prefix chung (system prompt, RAG context) — Anthropic và OpenAI đều cho cache read khoảng 0.1× giá gốc. Semantic cache so embedding của câu hỏi để trả lại câu trả lời cũ cho câu hỏi tương tự nghĩa — mạnh hơn nhưng rủi ro trả nội dung đã lỗi thời."
+ },
+ {
+  "topic": "Concurrency và blocking call",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 04: Concurrency & Cold Start",
+  "question": "Bẫy phổ biến khi viết agent handler bằng `async def` là gì?",
+  "options": [
+   "Không thể dùng await với thư viện HTTP hiện đại",
+   "Blocking call đặt trong `async def` sẽ làm nghẽn cả event loop",
+   "`async def` không tương thích với FastAPI",
+   "Mỗi `async def` tạo một thread riêng nên tốn bộ nhớ"
+  ],
+  "correct_index": 1,
+  "explanation": "Với `async def`, một worker phục vụ nhiều request khi đang await I/O — đúng cho agent vốn I/O-bound (đợi LLM). Nhưng nếu chèn một lời gọi đồng bộ vào trong đó, toàn bộ event loop bị chặn và lợi ích biến mất. Nguyên tắc: giữ blocking code trong `def` thường để framework chạy nó ở thread pool."
+ },
+ {
+  "topic": "Session là đơn vị vận hành của Tier 0",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 07: Session là đơn vị vận hành",
+  "question": "AWS Bedrock AgentCore có session tối đa 8 giờ nhưng chết khi idle 15 phút. Rủi ro thực tế là gì?",
+  "options": [
+   "Chi phí bị tính đủ 8 giờ dù agent chỉ chạy vài phút",
+   "Agent chờ human approval 20 phút thì session chết, và state mất nếu chưa externalize",
+   "Session không thể chạy song song với nhau",
+   "Model bị đổi phiên bản giữa chừng khi session quá dài"
+  ],
+  "correct_index": 1,
+  "explanation": "Idle timeout vừa là bẫy chi phí vừa là bẫy đúng-đắn: HITL chờ người duyệt lâu hơn ngưỡng idle sẽ mất toàn bộ trạng thái. Cách vượt trần vẫn là nguyên tắc cũ — externalize state ra ngoài runtime (AgentCore managed session storage, Modal Filesystem Snapshot), thì trần nào cũng vượt được."
+ },
+ {
+  "topic": "Docker Compose 2026",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 03: Docker Compose",
+  "question": "Thay đổi nào KHÔNG đúng với Docker Compose phiên bản 2026?",
+  "options": [
+   "Dùng lệnh `docker compose up` (V2, không gạch nối)",
+   "Bỏ key `version:` vì đã obsolete",
+   "Dùng `depends_on: condition: service_healthy`",
+   "Phải khai báo IP tĩnh cho từng service để chúng gọi được nhau"
+  ],
+  "correct_index": 3,
+  "explanation": "Các service gọi nhau bằng TÊN qua DNS nội bộ của Compose, ví dụ `qdrant:6333` — không cần IP tĩnh. Ba thay đổi còn lại đều đúng: lệnh V2 không gạch nối, key `version:` đã obsolete, và `depends_on` nay hỗ trợ điều kiện `service_healthy`."
+ },
+ {
+  "topic": "Graceful shutdown cho agent",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 10: Zero-downtime deploy",
+  "question": "Vì sao graceful shutdown của agent cần cấu hình khác so với web app thông thường?",
+  "options": [
+   "Vì agent không nhận được tín hiệu SIGTERM",
+   "Vì một agent turn có thể rất dài nên `terminationGracePeriodSeconds` phải lớn hơn worst-case agent turn",
+   "Vì agent phải ghi toàn bộ log ra đĩa trước khi tắt",
+   "Vì agent cần đăng xuất khỏi nhà cung cấp LLM trước khi dừng"
+  ],
+  "correct_index": 1,
+  "explanation": "Khi nhận SIGTERM, agent phải drain các request đang chạy dở — mà một turn có thể kéo dài hàng chục giây tới vài phút. Nếu grace period ngắn hơn, request bị cắt giữa chừng. Nâng cao: rainbow deployment (Anthropic) giữ cả hai version cùng chạy để không cắt ngang agent đang xử lý."
+ },
+ {
+  "topic": "LLM Gateway / Router",
+  "difficulty": "Medium",
+  "slide_ref": "Day 12 - Section 10: LLM Gateway",
+  "question": "Lợi ích chính của việc đặt một LLM gateway như LiteLLM trước các nhà cung cấp model là gì?",
+  "options": [
+   "Giảm số token cần gửi trong mỗi request",
+   "Vượt trần rate-limit của vendor bằng nhiều key/nhiều provider và sống sót khi một provider hỏng",
+   "Tự động cải thiện chất lượng câu trả lời của model",
+   "Loại bỏ nhu cầu phải xác thực người dùng"
+  ],
+  "correct_index": 1,
+  "explanation": "Gateway cung cấp một endpoint theo format OpenAI cho hàng trăm model, kèm fallback/failover khi model lỗi hoặc rate-limit, load-balance nhiều key, retry/backoff và cost tracking tập trung. LiteLLM tự host không markup; OpenRouter là bản managed có phí nạp credit 5,5%."
+ },
+ {
+  "topic": "Ba cái bẫy OAuth cho MCP",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 08: OAuth 2.1 cho MCP",
+  "question": "Spec MCP cấm \"token passthrough\" — server MUST NOT nhận token không được cấp riêng cho nó. Vì sao điều này nguy hiểm?",
+  "options": [
+   "Vì token sẽ hết hạn sớm hơn dự kiến",
+   "Vì nó vô hiệu hoá rate limiting và audit trail ở service phía sau",
+   "Vì token bị mã hóa hai lần nên không giải mã được",
+   "Vì nó làm tăng độ trễ của mỗi request"
+  ],
+  "correct_index": 1,
+  "explanation": "Khi server chấp nhận token cấp cho bên khác rồi chuyển tiếp xuống downstream, hệ thống phía sau không còn biết ai thực sự đang gọi — rate limit tính nhầm chủ thể và audit trail ghi sai danh tính. Hai bẫy còn lại: confused deputy (proxy phải giữ registry `client_id` đã duyệt theo từng user) và discovery đã đổi theo RFC 9728."
+ },
+ {
+  "topic": "CVE của MCP server",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 08: Ba CVE",
+  "question": "CVE-2026-33032 (nginx-ui, CVSS 9,8) xảy ra vì `/mcp` có `AuthRequired()` còn `/mcp_message` thì không. Bài học deploy rút ra là gì?",
+  "options": [
+   "Nên bỏ hoàn toàn MCP và quay lại tích hợp tool trực tiếp",
+   "Phải xác thực MỌI route — đây là lỗi deploy kinh điển, không phải lỗi protocol",
+   "Chỉ nên host MCP server trên hạ tầng của nhà cung cấp lớn",
+   "Nên đổi tên các endpoint để attacker khó đoán"
+  ],
+  "correct_index": 1,
+  "explanation": "Một route bị bỏ sót auth khiến 12 tool truy cập được không cần credential, đủ để chiếm server trong 2 request. Hai CVE còn lại củng cố cùng thông điệp: mcp-remote có command injection ngay trong OAuth proxy (lớp proxy cũng là attack surface), và GitMCP của chính Anthropic cũng có path traversal — ngay cả server tham chiếu của người tạo protocol cũng có lỗ hổng."
+ },
+ {
+  "topic": "MCP 2026-07-28 stateless",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 08: MCP trở thành stateless",
+  "question": "Spec MCP 2026-07-28 bỏ handshake `initialize` và header `Mcp-Session-Id`. Hệ quả về deploy là gì?",
+  "options": [
+   "Server phải giữ sticky session để đảm bảo tính nhất quán",
+   "Mọi request rơi vào bất kỳ instance nào sau load balancer round-robin — không cần sticky session, scale-to-zero thoải mái",
+   "Server không còn hỗ trợ được nhiều client cùng lúc",
+   "Client phải tự lưu toàn bộ lịch sử hội thoại trên đĩa"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây chính là bài học \"externalize state → tự do scale\" áp dụng ở tầng protocol: khi không còn session ràng buộc client với một instance cụ thể, LB có thể phân phối tự do và instance có thể scale về 0. Lưu ý chuyển tiếp: server đã deploy vẫn phải tương thích ngược với client bản 2025 trong suốt giai đoạn chuyển tiếp."
+ },
+ {
+  "topic": "Hard cap không đồng nhất giữa provider",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 09: Hard cap thật sự nằm ở đâu",
+  "question": "AWS Bedrock KHÔNG có hard cap native mà phải tự ráp Budgets + CloudWatch → Lambda thu hồi IAM. Vì sao cơ chế này chưa đủ?",
+  "options": [
+   "Vì Lambda có trần thời gian chạy 900 giây",
+   "Vì nó là circuit breaker phản ứng SAU, không phải admission control chặn trước",
+   "Vì CloudWatch chỉ cập nhật metric mỗi 24 giờ",
+   "Vì IAM không thể thu hồi quyền của một service đang chạy"
+  ],
+  "correct_index": 1,
+  "explanation": "Circuit breaker chỉ kích hoạt sau khi chi phí đã phát sinh và metric đã được ghi nhận — trong khoảng trễ đó agent vẫn tiếp tục đốt token. Kết luận của bài: enforcement của provider không đồng nhất và không phải lúc nào cũng hoạt động (LiteLLM từng có issue bypass hoàn toàn ở một bản release), nên admission control phía bạn là lớp duy nhất bạn kiểm soát."
+ },
+ {
+  "topic": "Đồng hồ tính tiền thứ hai của Tier 0",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 07: Tier 0 tính tiền thế nào",
+  "question": "Khi đánh giá một managed agent runtime, câu hỏi chi phí quan trọng nhất là gì?",
+  "options": [
+   "Giá mỗi triệu token đầu vào là bao nhiêu",
+   "Đồng hồ có chạy khi agent đang chờ LLM không",
+   "Runtime hỗ trợ được bao nhiêu framework khác nhau",
+   "Region gần nhất cách người dùng bao xa"
+  ],
+  "correct_index": 1,
+  "explanation": "Agent là workload idle-heavy — phần lớn thời gian là đợi LLM. Vì vậy Tier 0 thêm một đồng hồ thứ hai bên cạnh token: thời gian thực của session. AWS AgentCore chỉ tính compute active (idle và I/O-wait miễn phí), Cloudflare tính Active CPU, còn Claude Managed Agents tính $0,08/session-giờ khi status = running."
+ },
+ {
+  "topic": "Open source không có nghĩa tự host miễn phí",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 07: Open Source không có nghĩa là tự host miễn phí",
+  "question": "LangGraph library lõi là MIT nhưng `langgraph-api` (server) lại là Elastic-2.0 cần license key và egress tới beacon. Bài học rút ra là gì?",
+  "options": [
+   "Nên tránh mọi thư viện có nhiều thành phần",
+   "Licence của SERVER thường khác licence của LIBRARY — phải kiểm tra riêng khi tự host",
+   "Elastic-2.0 luôn tương đương MIT về mặt pháp lý",
+   "Chỉ cần đọc licence ở file README của repo chính"
+  ],
+  "correct_index": 1,
+  "explanation": "Ba câu hỏi khi thấy chữ \"open source\": licence của server có giống licence của library không? Có thư mục `ee/` không? Có phải gọi về nhà để xác thực licence không? Các ví dụ khác trong bài: n8n Sustainable Use License (chỉ nội bộ/phi thương mại), Dify Apache-2.0 sửa đổi (cấm chạy multi-tenant SaaS), Claude Code là proprietary."
+ },
+ {
+  "topic": "Runtime cũng là dependency",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 07: Runtime cũng là dependency",
+  "question": "OpenAI Agent Builder đóng 30/11/2026 sau vòng đời 13 tháng. Ba câu hỏi cần đặt ra trước khi chọn runtime là gì?",
+  "options": [
+   "Pin cái gì? Thoát bằng đường nào? Mất bao lâu?",
+   "Giá bao nhiêu? Có SLA không? Hỗ trợ region nào?",
+   "Ai đang dùng? Có bao nhiêu sao trên GitHub? Cộng đồng lớn không?",
+   "Có tương thích với Docker không? Có hỗ trợ Python không? Có SDK không?"
+  ],
+  "correct_index": 0,
+  "explanation": "Đây chính là bộ câu hỏi đã dùng cho model, nay áp cho runtime: pin cái gì (SDK version, API version, image base), thoát bằng đường nào (export được state/config không), mất bao lâu (ước lượng thật). Các bằng chứng trong bài: OpenAI Evals cũng bị khai tử, AWS App Runner chuyển sang ECS Express Mode, LangGraph Platform đổi tên thành LangSmith Deployment — đổi tên cũng là rủi ro vì docs/IaC của bạn trỏ tên cũ."
+ },
+ {
+  "topic": "Data residency và ZDR",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 09: Dữ liệu chạy ở đâu",
+  "question": "Vì sao Claude Managed Agents KHÔNG đủ điều kiện cho ZDR (Zero Data Retention) lẫn HIPAA BAA?",
+  "options": [
+   "Vì nó chưa được kiểm định bảo mật độc lập",
+   "Vì nó cố ý lưu history, sandbox state và output ở server — đó là bản chất của dịch vụ",
+   "Vì nó chỉ chạy ở region US",
+   "Vì nó dùng model không được huấn luyện trên dữ liệu y tế"
+  ],
+  "correct_index": 1,
+  "explanation": "ZDR yêu cầu loại nội dung khỏi log và ép `store=false`, mâu thuẫn trực tiếp với việc managed runtime phải giữ session state để agent chạy dài. Lưu ý phân biệt: Claude Platform on AWS khác Bedrock — hạ tầng do Anthropic vận hành và ZDR xin được. Việt Nam không nằm trong danh sách region, nên mặc định dữ liệu rời lãnh thổ."
+ },
+ {
+  "topic": "Bảo mật container image",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 03: Image Security",
+  "question": "SBOM (Software Bill of Materials) trong quy trình build container hiện nay có ý nghĩa gì?",
+  "options": [
+   "Là tài liệu nội bộ giúp đội dev nhớ đã cài package gì",
+   "Là yêu cầu pháp lý (US EO 14028, EU CRA) liệt kê mọi package trong image",
+   "Là công cụ nén image để giảm dung lượng khi pull",
+   "Là bản ghi log các lần build image trong CI/CD"
+  ],
+  "correct_index": 1,
+  "explanation": "SBOM (định dạng SPDX/CycloneDX) sinh bằng syft hoặc `docker buildx --sbom`, và nay là yêu cầu pháp lý. Mốc gần nhất: 11/9/2026 CRA buộc báo ENISA trong 24h; nghĩa vụ đầy đủ kèm SBOM là 11/12/2027. Ba việc bắt buộc khác: scan CVE bằng Trivy/Scout/Grype, chạy non-root, và pin digest thay vì tag mềm."
+ },
+ {
+  "topic": "Deploy Deep Agents — filesystem backend",
+  "difficulty": "Hard",
+  "slide_ref": "Day 12 - Section 07: Deploy Deep Agents",
+  "question": "Docs khuyến cáo KHÔNG dùng `FilesystemBackend` và `LocalShellBackend` trong agent đã deploy. Lý do là gì?",
+  "options": [
+   "Vì chúng chậm hơn StateBackend khoảng mười lần",
+   "Vì chúng truy cập thẳng vào host — phá vỡ cô lập giữa agent và máy chủ",
+   "Vì chúng không hỗ trợ chia sẻ dữ liệu cross-thread",
+   "Vì chúng chỉ tương thích với Python 3.10 trở xuống"
+  ],
+  "correct_index": 1,
+  "explanation": "StateBackend (mặc định) theo thread và không chia sẻ cross-thread; StoreBackend/CompositeBackend cho phép chia sẻ. Nhưng hai backend truy cập host trực tiếp thì phá cô lập — trên môi trường deploy đó là đường dẫn thẳng từ nội dung không tin cậy tới hệ thống tệp máy chủ. Bẫy liên quan: shared memory là vector prompt injection, phải scope namespace theo user."
+ }
+]

@@ -1,0 +1,422 @@
+[
+ {
+  "topic": "Artifact chính của LLMOps",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - MLOps vs LLMOps: So Sánh",
+  "question": "Trong LLMOps, artifact chính được version hoá là gì?",
+  "options": [
+   "Model weights và dataset huấn luyện",
+   "Prompt + context + model pin",
+   "Docker image của service inference",
+   "Tập hyperparameter của quá trình fine-tune"
+  ],
+  "correct_index": 1,
+  "explanation": "LLMOps giả định đã có foundation model — bạn thường không train nó. Thứ bạn thực sự kiểm soát và phải version là những gì gửi vào model: prompt, context, và model snapshot được pin. Weights + dataset là artifact của MLOps truyền thống."
+ },
+ {
+  "topic": "Version bất biến + label di động",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Mô Hình Chuẩn",
+  "question": "Trong mô hình prompt registry chuẩn, rollback được thực hiện bằng cách nào?",
+  "options": [
+   "Ghi đè nội dung của version hiện tại bằng nội dung version cũ",
+   "Dời con trỏ label `production` về version cũ",
+   "Revert commit trong git rồi chờ CI build lại",
+   "Xoá version mới khỏi registry để hệ thống tự dùng version trước đó"
+  ],
+  "correct_index": 1,
+  "explanation": "Version là bản ghi append-only bất biến; label (production, staging) chỉ là con trỏ được SDK phân giải lúc fetch. Deploy = trỏ label sang version mới, rollback = trỏ ngược lại — không build lại, không deploy code."
+ },
+ {
+  "topic": "Nguyên lý prompt caching",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Bất Biến Duy Nhất Cần Nhớ",
+  "question": "Prompt caching hoạt động theo nguyên lý nào?",
+  "options": [
+   "So khớp tiền tố: đổi byte thứ N huỷ cache của mọi thứ từ N trở đi",
+   "So khớp ngữ nghĩa: prompt tương tự nhau vẫn dùng chung cache",
+   "Băm toàn bộ prompt: chỉ prompt giống hệt 100% mới hit cache",
+   "Cache theo user: mỗi user có một vùng cache riêng"
+  ],
+  "correct_index": 0,
+  "explanation": "Cache là prefix match. Do đó nội dung ổn định phải đặt trước, nội dung biến động đặt sau, theo đúng thứ tự render tools → system → messages."
+ },
+ {
+  "topic": "Thứ tự render",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Bất Biến Duy Nhất Cần Nhớ",
+  "question": "Thứ tự render của prompt (từ ổn định nhất tới biến động nhất) là gì?",
+  "options": [
+   "messages → system → tools",
+   "system → tools → messages",
+   "tools → system → messages",
+   "tools → messages → system"
+  ],
+  "correct_index": 2,
+  "explanation": "Tools được render trước, rồi system, rồi messages. Vì cache là prefix match, thứ tự này giải thích vì sao đổi tool definition huỷ cache của cả system lẫn messages, còn đổi message chỉ huỷ phần messages."
+ },
+ {
+  "topic": "Cache read vs cache write",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Kinh Tế Học: Đọc Rẻ, Ghi Đắt",
+  "question": "So với input token thường, giá của một lần cache read khoảng bao nhiêu?",
+  "options": [
+   "~0.1×",
+   "~0.5×",
+   "1.25×",
+   "2×"
+  ],
+  "correct_index": 0,
+  "explanation": "Cache read rẻ khoảng 10 lần (~0.1×) ở cả Anthropic và OpenAI. Còn 1.25× là cache write TTL 5 phút và 2× là cache write TTL 1 giờ (Anthropic) — ghi đắt, đọc rẻ."
+ },
+ {
+  "topic": "Local cache và fallback",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Ba Lớp Phòng Vệ",
+  "question": "Vì sao SDK không nên fetch prompt từ registry ngay trên đường đi của mỗi request?",
+  "options": [
+   "Vì registry tính phí theo số lần gọi API",
+   "Vì thêm 80–300ms latency và biến registry thành điểm chết chung: registry sập thì app sập",
+   "Vì prompt fetch qua mạng có thể bị chỉnh sửa trên đường truyền",
+   "Vì mỗi lần fetch tạo ra một version mới trong registry"
+  ],
+  "correct_index": 1,
+  "explanation": "Đặt một network call trên critical path vừa cộng latency vừa tạo phụ thuộc cứng. Lời giải chuẩn: local cache (TTL mặc định 60s), fallback prompt built-in khi registry không tới được, và pre-fetch lúc startup."
+ },
+ {
+  "topic": "Golden set",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Golden Set: Ít Mà Tinh",
+  "question": "Công thức 2026 cho golden set dùng trong eval gate là gì?",
+  "options": [
+   "Sinh hàng chục nghìn case bằng LLM để phủ tối đa tình huống",
+   "Khoảng 100 case ban đầu, tối đa ~500, gán nhãn tay và bổ sung từ trace production thật",
+   "Dùng nguyên bộ test set công khai của benchmark phổ biến",
+   "Lấy toàn bộ log production của 7 ngày gần nhất"
+  ],
+  "correct_index": 1,
+  "explanation": "Chất lượng hơn số lượng: ~100 đến ~500 case gán nhãn tay, 3–5 metric tương quan với hành vi sản phẩm. Sinh hàng loạt bằng LLM rồi không lọc tạo ra \"AI slop\" — suite to, chạy lâu, tốn tiền, không bắt được regression thật."
+ },
+ {
+  "topic": "A/B routing sticky",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Cơ Chế Định Tuyến Theo Version",
+  "question": "Khi canary một prompt version mới, việc định tuyến phải sticky theo user thay vì random theo request. Lý do chính là gì?",
+  "options": [
+   "Random theo request làm tỷ lệ chia traffic không chính xác",
+   "Nếu không sticky, cùng một người sẽ thấy giọng văn đổi giữa chừng trong một hội thoại",
+   "Hash user_id chạy nhanh hơn hàm random",
+   "Registry chỉ hỗ trợ phân giải label một lần cho mỗi user"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây là khác biệt so với A/B test một nút bấm: prompt quyết định giọng văn và hành vi xuyên suốt hội thoại. Sticky theo user giữ trải nghiệm nhất quán và giúp quy metric per-user về đúng version."
+ },
+ {
+  "topic": "Commit message cho prompt",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Commit Message Cho Prompt",
+  "question": "Khuôn mẫu 3 phần cho commit message của một prompt version gồm những gì?",
+  "options": [
+   "Ai sửa — sửa lúc nào — sửa ở dòng nào",
+   "Đổi gì — vì sao/bằng chứng nào — đánh đổi đo được",
+   "Version cũ — version mới — người approve",
+   "Mô tả — ví dụ — hướng dẫn rollback"
+  ],
+  "correct_index": 1,
+  "explanation": "Ví dụ hữu ích: \"Thêm ràng buộc JSON-only vì 3% output làm hỏng parser (ticket #4412). Eval: faithfulness 0.81→0.83, cost +4%.\" Khác với code, bạn không đọc ra ý định từ diff của prompt — dòng \"Answer concisely.\" không tự nói rằng nó tồn tại để cắt 40% token cost."
+ },
+ {
+  "topic": "Bảng giá có version",
+  "difficulty": "Easy",
+  "slide_ref": "Day 22 - Bốn Quy Tắc Vận Hành",
+  "question": "Vì sao bảng giá dùng để tính cost phải được version hoá?",
+  "options": [
+   "Vì nhà cung cấp yêu cầu lưu bảng giá để đối soát hoá đơn",
+   "Vì giá thay đổi theo thời gian; định giá lại dữ liệu lịch sử bằng bảng giá hôm nay làm mọi so sánh theo thời gian trở nên sai",
+   "Vì mỗi prompt version dùng một bảng giá riêng",
+   "Vì gateway cần bảng giá để cưỡng chế hard cap"
+  ],
+  "correct_index": 1,
+  "explanation": "Chi phí được tính lúc đóng span theo bảng giá có version. Nếu áp giá hiện tại lên dữ liệu cũ, một thay đổi giá của nhà cung cấp sẽ trông như một regression (hoặc cải thiện) của prompt — kết luận sai hoàn toàn."
+ },
+ {
+  "topic": "temperature=0 và reproducibility",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Bẫy Nền Tảng",
+  "question": "Vì sao `temperature=0` KHÔNG đảm bảo cùng một output giữa các lần gọi?",
+  "options": [
+   "Vì provider vẫn thêm nhiễu ngẫu nhiên nhỏ để tránh trùng lặp output",
+   "Vì thay đổi batch size làm đổi thứ tự cộng floating-point, dẫn tới kết quả khác — không phải lỗi seed và app không sửa được",
+   "Vì seed mặc định được sinh lại mỗi request và cần truyền seed cố định",
+   "Vì cache trả về kết quả từ version prompt cũ"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây là đặc tính của hạ tầng inference: batching thay đổi thứ tự phép cộng dấu chấm động nên logits khác chút xíu, đủ để đổi token được chọn. Hệ quả vận hành: gate trên \"% pass ≥ X\" kèm khoảng tin cậy, không gate trên so khớp chuỗi."
+ },
+ {
+  "topic": "Model ID trong artifact",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Vì Sao Model ID Phải Nằm Trong Artifact",
+  "question": "Vì sao model snapshot phải là một phần của prompt artifact chứ không phải cấu hình riêng?",
+  "options": [
+   "Vì registry yêu cầu trường model để phân giải label",
+   "Vì prompt được tune cho một model cụ thể — gửi cùng chuỗi text sang model khác là một thí nghiệm chưa từng chạy, nên kết quả eval chỉ có giá trị trên đúng cặp (prompt_version, model_snapshot)",
+   "Vì model ID quyết định bảng giá dùng để tính cost",
+   "Vì thiếu model ID thì SDK không biết gọi endpoint nào"
+  ],
+  "correct_index": 1,
+  "explanation": "Đơn vị có ý nghĩa là cặp (prompt_version, model_snapshot), không phải riêng cái nào. Ba hệ quả trực tiếp: eval chỉ đúng trên cặp đó, rollback prompt thất bại nếu model đã bị khai tử, và đổi model là mất toàn bộ prompt cache."
+ },
+ {
+  "topic": "Prompt supply chain",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Prompt Supply Chain",
+  "question": "Ưu điểm lớn nhất của registry — \"đổi prompt không cần deploy app\" — đồng thời tạo ra rủi ro quản trị nào?",
+  "options": [
+   "Prompt mới lan ra chậm do TTL cache",
+   "Prompt đổi không qua CI, không qua code review, không qua deploy — tức là một đường đẩy thay đổi hành vi thẳng lên prod mà không ai gác",
+   "Registry trở thành single point of failure của runtime",
+   "Nội dung prompt rời khỏi repo nên không backup được"
+  ],
+  "correct_index": 1,
+  "explanation": "Mọi chốt kiểm soát mà code đang có (PR review, CI gate, approval) biến mất. Kiểm soát tối thiểu phải bù lại: protected label, bắt buộc eval gate pass trước khi dời label, audit log ai/khi nào/version nào/lý do, và cảnh báo khi label prod đổi."
+ },
+ {
+  "topic": "Offboarding và quyền dời label",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Prompt Supply Chain",
+  "question": "Câu hỏi diễn tập \"Người vừa nghỉ việc tuần trước còn quyền dời label production không?\" nêu bật điều gì?",
+  "options": [
+   "Registry cần bật MFA cho mọi tài khoản",
+   "Prompt registry là một bề mặt quyền MỚI thường chưa được đưa vào quy trình offboarding vốn đã có cho code",
+   "Label production nên được đổi tên định kỳ để tránh bị đoán",
+   "Nên tắt hoàn toàn quyền dời label và chỉ deploy qua CI"
+  ],
+  "correct_index": 1,
+  "explanation": "Với code, offboarding đã có quy trình chuẩn. Với prompt registry — thường là chưa, dù nó cho phép thay đổi hành vi production trong vài giây. Đây là khoảng trống quản trị mới mà LLMOps tạo ra."
+ },
+ {
+  "topic": "TTL cache = RTO",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Ba Lớp Phòng Vệ",
+  "question": "Đội bạn đặt `cache_ttl_seconds=300` cho prompt fetch. Điều này có ý nghĩa gì với rollback?",
+  "options": [
+   "Rollback vẫn tức thì vì label được phân giải lại ngay khi dời",
+   "RTO thực tế là khoảng 5 phút: thời gian rollback = thời gian dời label + TTL cache",
+   "Rollback mất 300 giây × số instance vì cache không chia sẻ",
+   "TTL chỉ ảnh hưởng tới prompt mới, không ảnh hưởng rollback"
+  ],
+  "correct_index": 1,
+  "explanation": "TTL là thời gian tối đa để một lần dời label có hiệu lực trên toàn cụm. Chọn TTL chính là chọn RTO: TTL dài thì tiết kiệm gọi registry nhưng rollback lan chậm hơn."
+ },
+ {
+  "topic": "Rủi ro vendor",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Rủi Ro Nhà Cung Cấp Là Có Thật",
+  "question": "Đường di trú do chính OpenAI đề xuất cho người dùng Prompt Objects (`/v1/prompts`) khi dịch vụ này bị tắt là gì?",
+  "options": [
+   "Chuyển sang OpenAI Agent Builder",
+   "Chuyển sang W&B Weave",
+   "Đưa nội dung prompt vào application code",
+   "Chuyển sang MLflow Prompt Registry"
+  ],
+  "correct_index": 2,
+  "explanation": "Chính nhà cung cấp hưởng lợi nhất từ việc khoá chân lại khuyên đưa prompt về code ứng dụng. Suy ra quy tắc: một registry bạn không export được ra file phẳng là một tình huống con tin. W&B Weave là đường di trú của Humanloop; Promptfoo là của OpenAI Evals."
+ },
+ {
+  "topic": "Bài kiểm tra hai câu hỏi",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Ba Nơi Artifact Có Thể Sống",
+  "question": "Trước khi cam kết với một nơi lưu prompt artifact, bài kiểm tra hai câu hỏi cần chạy là gì?",
+  "options": [
+   "Có UI cho PM không? Có tích hợp LangChain không?",
+   "Artifact có export được ra file phẳng không? Con trỏ có dời được không?",
+   "Có self-host được không? Có miễn phí không?",
+   "Có audit log không? Có SSO không?"
+  ],
+  "correct_index": 1,
+  "explanation": "Hai câu này tách được lựa chọn bền vững khỏi lựa chọn khoá chân: export bảo vệ bạn khỏi vendor biến mất, con trỏ dời được cho bạn rollback trong vài giây. Claude Code có cả hai miễn phí nhờ git; bản hosted của OpenAI không giữ được cái nào và đã bị khai tử."
+ },
+ {
+  "topic": "Điều kiện đủ để rollback",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Rollback Nhanh",
+  "question": "Trong bốn điều kiện đủ để rollback prompt thành công, điều kiện nào hỏng thường xuyên nhất và ít ai kiểm tra?",
+  "options": [
+   "Version cũ còn tồn tại, không bị ghi đè",
+   "Model snapshot mà version cũ được tune cho vẫn còn được phục vụ",
+   "Tool schema / output schema cũ còn tương thích với code đang chạy",
+   "TTL cache đủ ngắn để label mới lan ra kịp"
+  ],
+  "correct_index": 1,
+  "explanation": "Prompt v2 vẫn nằm nguyên trong registry, nhưng model nó được tune cho đã bị khai tử ba tháng trước — rollback thất bại đúng lúc bạn cần nó nhất. Đây chính là mối nối giữa mô hình registry (§3) và model deprecation treadmill (§10)."
+ },
+ {
+  "topic": "Silent behavioral regression",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Vì Sao Đây Là Việc Của Day 22",
+  "question": "\"Silent behavioral regression\" khi migrate model snapshot có đặc trưng gì khiến nó nguy hiểm?",
+  "options": [
+   "Endpoint trả 5xx nhưng client retry nên lỗi bị che",
+   "Endpoint vẫn trả 200, không có exception nào trong log, nhưng định dạng tool-call đổi, độ tuân thủ JSON lỏng ra, ranh giới từ chối dịch chuyển",
+   "Latency tăng dần theo thời gian nên khó phát hiện bằng alert tức thời",
+   "Model mới từ chối toàn bộ request nên traffic tụt về 0"
+  ],
+  "correct_index": 1,
+  "explanation": "Không có tín hiệu hạ tầng nào kêu lên — đó là lý do gọi là \"silent\". Chỉ eval liên tục trên model n+1 (nightly, ~100 case) mới phát hiện được trước khi email khai tử đến."
+ },
+ {
+  "topic": "Phân tầng context",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Hai Tầng, Hai Hoá Đơn",
+  "question": "Quy tắc phân loại nội dung vào tầng \"luôn nạp\" (tầng 1) và \"nạp lười\" (tầng 2) là gì?",
+  "options": [
+   "Nội dung ngắn vào tầng 1, nội dung dài vào tầng 2",
+   "Fact (luôn đúng, luôn liên quan) vào tầng 1; procedure (chỉ đúng trong một loại việc) vào tầng 2",
+   "Nội dung do engineer viết vào tầng 1, do PM viết vào tầng 2",
+   "Nội dung có version vào tầng 1, không version vào tầng 2"
+  ],
+  "correct_index": 1,
+  "explanation": "System prompt, facts/memory và tool schema thuộc tầng 1 — mọi request đều trả tiền. Procedures, tài liệu tham khảo và few-shot theo loại thuộc tầng 2. Claude Code hiện thực đúng phép chia này bằng CLAUDE.md (luôn nạp) và thân SKILL.md (nạp lười)."
+ },
+ {
+  "topic": "Ba dạng URI prompt",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Phân Giải Con Trỏ",
+  "question": "Trong ba dạng URI `prompts:/name@latest`, `prompts:/name/3` và `prompts:/name@production`, dạng nào được phép xuất hiện trong code production?",
+  "options": [
+   "`prompts:/name@latest` — luôn lấy bản mới nhất",
+   "`prompts:/name/3` — ghim chính xác version đã test",
+   "`prompts:/name@production` — phân giải qua alias",
+   "Cả ba đều được, tuỳ môi trường"
+  ],
+  "correct_index": 2,
+  "explanation": "Code production không bao giờ chứa số version: chỉ trỏ alias để deploy/rollback là thao tác trên registry. Dạng `@latest` và `/3` dành cho debug và eval — nơi bạn cố ý ghim một version. Langfuse dùng `label=`, LangSmith dùng `:tag` — cú pháp khác, kỷ luật giống hệt."
+ },
+ {
+  "topic": "Guardrail config là artifact",
+  "difficulty": "Medium",
+  "slide_ref": "Day 22 - Góc Nhìn Day 22 Về Guardrails",
+  "question": "Theo Day 22, nới ngưỡng toxicity từ 0.7 xuống 0.5 nên được xử lý như thế nào?",
+  "options": [
+   "Là chỉnh cấu hình runtime, áp dụng ngay để giảm false positive",
+   "Là một thay đổi hành vi an toàn, phải qua đúng cổng như thay đổi prompt: review, eval, audit log, rollback được",
+   "Là quyết định của Day 11 nên không thuộc vòng đời prompt",
+   "Chỉ cần ghi lại trong changelog và thông báo cho team an toàn"
+  ],
+  "correct_index": 1,
+  "explanation": "Guardrail config (ngưỡng toxicity, danh sách PII entity, output schema, hành vi on_fail) là tham số quyết định hành vi và thuộc cùng một version với prompt. Tách rời chúng dẫn tới prompt v3 chạy với guardrail config của v1 mà không ai biết."
+ },
+ {
+  "topic": "Ngưỡng prefix tối thiểu",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Ngưỡng Tối Thiểu Không Tăng Đều",
+  "question": "Một team hạ cấp model để \"tối ưu chi phí\" và thấy hoá đơn TĂNG. Giải thích phù hợp nhất theo bài học là gì?",
+  "options": [
+   "Model nhỏ hơn cần nhiều retry hơn nên tổng số request tăng",
+   "Ngưỡng prefix tối thiểu để cache không đơn điệu theo thế hệ — prompt 3K token có cache trên model cũ nhưng im lặng không cache trên model mới hạ cấp, không có lỗi nào được ném ra",
+   "Model nhỏ hơn sinh output dài hơn nên output token tăng",
+   "Đổi model làm reset bảng giá nên chi phí được tính lại theo giá cao hơn"
+  ],
+  "correct_index": 1,
+  "explanation": "Ngưỡng dao động 512 / 1.024 / 2.048 / 4.096 token tuỳ model và không tăng đều theo đời. Dưới ngưỡng, provider chỉ trả `cache_creation_input_tokens: 0` — không exception. Mất cache read (~0.1×) và phải trả full giá input đủ để nuốt trọn phần tiết kiệm từ model rẻ hơn."
+ },
+ {
+  "topic": "Thứ bậc huỷ cache",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Thứ Bậc Huỷ Cache",
+  "question": "Thay đổi nào KHÔNG huỷ cache của phần `tools` và `system`?",
+  "options": [
+   "Thêm/bớt/đổi thứ tự tool definitions",
+   "Đổi model snapshot",
+   "Bật/tắt thinking và đổi `tool_choice`",
+   "Sửa nội dung system prompt"
+  ],
+  "correct_index": 2,
+  "explanation": "`tool_choice`, images và bật/tắt thinking chỉ huỷ phần messages — tools + system vẫn giữ. Chỉ tool definitions và đổi model mới buộc dựng lại cache từ đầu; sửa nội dung system prompt giữ được tools nhưng huỷ system và messages."
+ },
+ {
+  "topic": "Silent invalidator",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Silent Invalidators",
+  "question": "Đoạn nào sau đây là silent cache invalidator KHÔNG thể sửa bằng cách chỉ thêm `sort_keys=True`?",
+  "options": [
+   "`system = json.dumps(cfg)`",
+   "`system = f\"Today: {datetime.now()}\"`",
+   "Một dict config được serialize không theo thứ tự khoá cố định",
+   "Một danh sách feature flag được dump ra JSON"
+  ],
+  "correct_index": 1,
+  "explanation": "`sort_keys=True` chỉ làm việc serialize trở nên xác định. Timestamp thì bản thân giá trị đổi mỗi request, nên prefix luôn khác — cách sửa duy nhất là xoá nó khỏi phần luôn-nạp hoặc chuyển ra sau breakpoint cuối. Ba phương án còn lại đều là bài toán xác định hoá."
+ },
+ {
+  "topic": "Đọc số token",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Silent Invalidators",
+  "question": "Tổng số token của prompt trong một request có cache được tính như thế nào?",
+  "options": [
+   "`input_tokens` — đã bao gồm cả phần đọc từ cache",
+   "`input_tokens + cache_creation + cache_read`",
+   "`cache_creation + cache_read` — phần chưa cache tính riêng vào output",
+   "`input_tokens + output_tokens`"
+  ],
+  "correct_index": 1,
+  "explanation": "Bẫy đọc số: `input_tokens` CHỈ là phần chưa được cache. Nhìn riêng nó, một request cache hit tốt trông như prompt đã ngắn đi. Muốn biết prompt thật sự dài bao nhiêu phải cộng cả ba, và muốn biết cache có chạy không thì đọc `cache_read_input_tokens`."
+ },
+ {
+  "topic": "Cửa sổ 20 block",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Hai Cái Bẫy Ít Người Biết",
+  "question": "Một agent loop dài đột nhiên miss cache dù system prompt không đổi. Nguyên nhân và cách sửa theo bài học là gì?",
+  "options": [
+   "TTL 5 phút đã hết giữa các lượt; sửa bằng cách chuyển sang TTL 1 giờ",
+   "Mỗi breakpoint chỉ dò ngược tối đa 20 content block; lượt agent nhiều cặp tool_use/tool_result dễ vượt 20 block — sửa bằng cách đặt breakpoint trung gian mỗi ~15 block",
+   "Tool result chứa timestamp nên phá prefix; sửa bằng cách bỏ timestamp",
+   "Số breakpoint vượt quá 4 nên các breakpoint sau bị bỏ qua"
+  ],
+  "correct_index": 1,
+  "explanation": "Đây là giới hạn tra cứu của cơ chế cache: quá 20 block thì request kế tiếp miss trong im lặng. TTL hết hạn và timestamp là những nguyên nhân khác có triệu chứng riêng; giới hạn 4 breakpoint mỗi request là ràng buộc độc lập, không gây ra tình huống này."
+ },
+ {
+  "topic": "Request song song và cache",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Hai Cái Bẫy Ít Người Biết",
+  "question": "Bắn N request giống hệt nhau cùng lúc để tận dụng cache dẫn tới kết quả gì, và cách khắc phục?",
+  "options": [
+   "Chỉ request đầu tiên thành công, N−1 cái còn lại bị rate limit; sửa bằng exponential backoff",
+   "Cả N request đều trả giá đầy đủ vì cache entry chỉ đọc được sau khi response đầu tiên bắt đầu stream; sửa bằng cách gửi 1 request, chờ token đầu tiên, rồi mới bắn N−1 cái còn lại",
+   "Cache bị ghi N lần nên chi phí cache write nhân N; sửa bằng cách giảm số breakpoint",
+   "Các request ghi đè cache của nhau gây kết quả không nhất quán; sửa bằng cách khoá phân tán"
+  ],
+  "correct_index": 1,
+  "explanation": "Cache entry chỉ khả dụng sau khi response đầu tiên bắt đầu stream. Fan-out đồng thời khiến không request nào thấy cache của request nào — tất cả trả giá write. Mẫu đúng là warm cache trước rồi mới fan-out."
+ },
+ {
+  "topic": "Tách nguyên nhân cost tăng",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Thêm Một Chiều Bắt Buộc: Cache Hit Rate",
+  "question": "Cost/request tăng 40% sau khi deploy prompt v5. Vì sao phải đo cache hit rate cùng lúc mới kết luận được?",
+  "options": [
+   "Vì cache hit rate quyết định latency P95, mà latency ảnh hưởng tới cost theo thời gian tính",
+   "Vì cost tăng có thể do prompt dài hơn HOẶC do cache hit rate rơi — hai nguyên nhân này cần hai cách chữa khác nhau (sửa nội dung vs tìm silent invalidator)",
+   "Vì bảng giá cache read và input thường khác nhau nên phải quy đổi trước khi so sánh",
+   "Vì cache hit rate là metric duy nhất không bị ảnh hưởng bởi non-determinism"
+  ],
+  "correct_index": 1,
+  "explanation": "Không tách được hai nguyên nhân thì bạn sẽ tối ưu nhầm chỗ — cắt bớt chữ trong prompt trong khi vấn đề thật là một timestamp mới lọt vào system prompt. Đó là lý do bảng tối thiểu theo version phải có đủ 5 cột: cost/request, token in/out, cache read %, latency P50/P95, điểm chất lượng."
+ },
+ {
+  "topic": "Ba điều kiện để so sánh có nghĩa",
+  "difficulty": "Hard",
+  "slide_ref": "Day 22 - Ba Điều Kiện Để Con Số So Sánh Có Nghĩa",
+  "question": "Team chạy canary prompt v5 và đồng thời nâng model snapshot cho nhánh canary. Kết quả canary tốt hơn 8%. Vấn đề lớn nhất là gì?",
+  "options": [
+   "8% chưa đủ ý nghĩa thống kê với cỡ mẫu canary 10%",
+   "Đổi hai biến cùng lúc nên cải thiện không quy được cho prompt hay cho model",
+   "Nhánh canary có cache hit rate thấp hơn nên cost bị đội lên",
+   "Trace của nhánh canary chưa được tag prompt_version"
+  ],
+  "correct_index": 1,
+  "explanation": "Quy tắc thứ nhất trong ba điều kiện: chỉ đổi một biến. Đây chính là lý do model ID phải nằm trong artifact — để mỗi lần đổi model là một version mới, tách bạch được với thay đổi câu chữ. Ý nghĩa thống kê, cache và tag đều là vấn đề thật nhưng không phải lỗi thiết kế thí nghiệm ở đây."
+ }
+]
